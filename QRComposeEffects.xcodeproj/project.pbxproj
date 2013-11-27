@@ -22,6 +22,7 @@
 		965C77701845EF7D00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
 		965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 965C77761845EF7D00A29836 /* InfoPlist.strings */; };
 		965C777A1845EF7D00A29836 /* QRComposeEffectsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 965C77791845EF7D00A29836 /* QRComposeEffectsTests.m */; };
+		965C778418460E0B00A29836 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C778318460E0B00A29836 /* CoreImage.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		965C77751845EF7D00A29836 /* QRComposeEffectsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QRComposeEffectsTests-Info.plist"; sourceTree = "<group>"; };
 		965C77771845EF7D00A29836 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		965C77791845EF7D00A29836 /* QRComposeEffectsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRComposeEffectsTests.m; sourceTree = "<group>"; };
+		965C778318460E0B00A29836 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */,
+				965C778418460E0B00A29836 /* CoreImage.framework in Frameworks */,
 				965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */,
 				965C774C1845EF7C00A29836 /* Foundation.framework in Frameworks */,
 			);
@@ -103,6 +106,7 @@
 		965C774A1845EF7C00A29836 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				965C778318460E0B00A29836 /* CoreImage.framework */,
 				965C774B1845EF7C00A29836 /* Foundation.framework */,
 				965C774D1845EF7C00A29836 /* CoreGraphics.framework */,
 				965C774F1845EF7C00A29836 /* UIKit.framework */,
@@ -475,6 +479,7 @@
 				965C777F1845EF7D00A29836 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		965C77801845EF7D00A29836 /* Build configuration list for PBXNativeTarget "QRComposeEffectsTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +488,7 @@
 				965C77821845EF7D00A29836 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
