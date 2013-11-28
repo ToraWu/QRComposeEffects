@@ -41,12 +41,64 @@ static NSArray *effectNameKeys;
     self.pageControl.numberOfPages = [effectNameKeys count];
     [self pageChanged:self.pageControl];
     
+    self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.boardView.layer.shadowOffset = CGSizeMake(0,2);
+    self.boardView.layer.shadowOpacity = 0.5;
+    self.boardView.layer.shadowRadius = 10;
+    [self registerEffectForView:self.boardView depth:-10];
+    [self registerShadowEffectForView:self.boardView depth:4*self.boardView.layer.shadowRadius];
+    
+    
+    self.resultView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.resultView.layer.shadowOffset = CGSizeMake(0,-2);
+    self.resultView.layer.shadowOpacity = 0.5;
+    self.resultView.layer.shadowRadius = 5;
+    [self registerEffectForView:self.resultView depth:5];
+    [self registerShadowEffectForView:self.resultView depth:-4*self.resultView.layer.shadowRadius];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)registerShadowEffectForView:(UIView *)aView depth:(CGFloat)depth;
+{
+	UIInterpolatingMotionEffect *effectX;
+	UIInterpolatingMotionEffect *effectY;
+    effectX = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"shadowOffset.width"
+                                                              type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    effectY = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"shadowOffset.height"
+                                                              type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+	
+	
+	effectX.maximumRelativeValue = @(depth);
+	effectX.minimumRelativeValue = @(-depth);
+	effectY.maximumRelativeValue = @(depth);
+	effectY.minimumRelativeValue = @(-depth);
+	
+	[aView addMotionEffect:effectX];
+	[aView addMotionEffect:effectY];
+}
+
+- (void)registerEffectForView:(UIView *)aView depth:(CGFloat)depth;
+{
+	UIInterpolatingMotionEffect *effectX;
+	UIInterpolatingMotionEffect *effectY;
+    effectX = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
+                                                              type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    effectY = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
+                                                              type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+	
+	
+	effectX.maximumRelativeValue = @(depth);
+	effectX.minimumRelativeValue = @(-depth);
+	effectY.maximumRelativeValue = @(depth);
+	effectY.minimumRelativeValue = @(-depth);
+	
+	[aView addMotionEffect:effectX];
+	[aView addMotionEffect:effectY];
 }
 
 - (void)generateResultImageOfIndex:(NSInteger)index {
