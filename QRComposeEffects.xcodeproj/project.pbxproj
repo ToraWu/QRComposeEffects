@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63AD48B51847302400CA3E75 /* bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48A31847302400CA3E75 /* bitstream.c */; };
+		63AD48B61847302400CA3E75 /* mask.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48A51847302400CA3E75 /* mask.c */; };
+		63AD48B71847302400CA3E75 /* QRCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48A81847302400CA3E75 /* QRCodeGenerator.m */; };
+		63AD48B81847302400CA3E75 /* qrencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48A91847302400CA3E75 /* qrencode.c */; };
+		63AD48B91847302400CA3E75 /* qrinput.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48AB1847302400CA3E75 /* qrinput.c */; };
+		63AD48BA1847302400CA3E75 /* qrspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48AD1847302400CA3E75 /* qrspec.c */; };
+		63AD48BB1847302400CA3E75 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48AF1847302400CA3E75 /* rscode.c */; };
+		63AD48BC1847302400CA3E75 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B11847302400CA3E75 /* split.c */; };
+		63AD48BD1847302400CA3E75 /* TRFilterGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B41847302400CA3E75 /* TRFilterGenerator.m */; };
 		965C774C1845EF7C00A29836 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774B1845EF7C00A29836 /* Foundation.framework */; };
 		965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774D1845EF7C00A29836 /* CoreGraphics.framework */; };
 		965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
@@ -36,6 +45,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63AD48A31847302400CA3E75 /* bitstream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitstream.c; sourceTree = "<group>"; };
+		63AD48A41847302400CA3E75 /* bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+		63AD48A51847302400CA3E75 /* mask.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mask.c; sourceTree = "<group>"; };
+		63AD48A61847302400CA3E75 /* mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mask.h; sourceTree = "<group>"; };
+		63AD48A71847302400CA3E75 /* QRCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeGenerator.h; sourceTree = "<group>"; };
+		63AD48A81847302400CA3E75 /* QRCodeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeGenerator.m; sourceTree = "<group>"; };
+		63AD48A91847302400CA3E75 /* qrencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrencode.c; sourceTree = "<group>"; };
+		63AD48AA1847302400CA3E75 /* qrencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrencode.h; sourceTree = "<group>"; };
+		63AD48AB1847302400CA3E75 /* qrinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrinput.c; sourceTree = "<group>"; };
+		63AD48AC1847302400CA3E75 /* qrinput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrinput.h; sourceTree = "<group>"; };
+		63AD48AD1847302400CA3E75 /* qrspec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qrspec.c; sourceTree = "<group>"; };
+		63AD48AE1847302400CA3E75 /* qrspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qrspec.h; sourceTree = "<group>"; };
+		63AD48AF1847302400CA3E75 /* rscode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rscode.c; sourceTree = "<group>"; };
+		63AD48B01847302400CA3E75 /* rscode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rscode.h; sourceTree = "<group>"; };
+		63AD48B11847302400CA3E75 /* split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = split.c; sourceTree = "<group>"; };
+		63AD48B21847302400CA3E75 /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = split.h; sourceTree = "<group>"; };
+		63AD48B31847302400CA3E75 /* TRFilterGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRFilterGenerator.h; sourceTree = "<group>"; };
+		63AD48B41847302400CA3E75 /* TRFilterGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRFilterGenerator.m; sourceTree = "<group>"; };
 		965C77481845EF7C00A29836 /* QRComposeEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRComposeEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		965C774B1845EF7C00A29836 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		965C774D1845EF7C00A29836 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -84,6 +111,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63AD48A21847302400CA3E75 /* libqrencode */ = {
+			isa = PBXGroup;
+			children = (
+				63AD48A31847302400CA3E75 /* bitstream.c */,
+				63AD48A41847302400CA3E75 /* bitstream.h */,
+				63AD48A51847302400CA3E75 /* mask.c */,
+				63AD48A61847302400CA3E75 /* mask.h */,
+				63AD48A71847302400CA3E75 /* QRCodeGenerator.h */,
+				63AD48A81847302400CA3E75 /* QRCodeGenerator.m */,
+				63AD48A91847302400CA3E75 /* qrencode.c */,
+				63AD48AA1847302400CA3E75 /* qrencode.h */,
+				63AD48AB1847302400CA3E75 /* qrinput.c */,
+				63AD48AC1847302400CA3E75 /* qrinput.h */,
+				63AD48AD1847302400CA3E75 /* qrspec.c */,
+				63AD48AE1847302400CA3E75 /* qrspec.h */,
+				63AD48AF1847302400CA3E75 /* rscode.c */,
+				63AD48B01847302400CA3E75 /* rscode.h */,
+				63AD48B11847302400CA3E75 /* split.c */,
+				63AD48B21847302400CA3E75 /* split.h */,
+			);
+			path = libqrencode;
+			sourceTree = "<group>";
+		};
 		965C773F1845EF7C00A29836 = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +168,9 @@
 		965C77511845EF7C00A29836 /* QRComposeEffects */ = {
 			isa = PBXGroup;
 			children = (
+				63AD48A21847302400CA3E75 /* libqrencode */,
+				63AD48B31847302400CA3E75 /* TRFilterGenerator.h */,
+				63AD48B41847302400CA3E75 /* TRFilterGenerator.m */,
 				965C775A1845EF7C00A29836 /* TRAppDelegate.h */,
 				965C775B1845EF7C00A29836 /* TRAppDelegate.m */,
 				965C775D1845EF7C00A29836 /* Main_iPhone.storyboard */,
@@ -258,9 +311,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63AD48B61847302400CA3E75 /* mask.c in Sources */,
+				63AD48BA1847302400CA3E75 /* qrspec.c in Sources */,
 				965C775C1845EF7C00A29836 /* TRAppDelegate.m in Sources */,
+				63AD48BB1847302400CA3E75 /* rscode.c in Sources */,
 				965C77581845EF7C00A29836 /* main.m in Sources */,
 				965C77651845EF7C00A29836 /* TRViewController.m in Sources */,
+				63AD48B81847302400CA3E75 /* qrencode.c in Sources */,
+				63AD48B91847302400CA3E75 /* qrinput.c in Sources */,
+				63AD48BC1847302400CA3E75 /* split.c in Sources */,
+				63AD48BD1847302400CA3E75 /* TRFilterGenerator.m in Sources */,
+				63AD48B51847302400CA3E75 /* bitstream.c in Sources */,
+				63AD48B71847302400CA3E75 /* QRCodeGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
