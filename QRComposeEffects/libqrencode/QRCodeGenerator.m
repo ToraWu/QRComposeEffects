@@ -84,13 +84,13 @@ static QRCodeGenerator *instance = nil;
     
 	// draw QR on this context
     
-    if (!QRcolor) {
-        
+//    if (!QRcolor) {
+    
         QRcolor = [UIColor blackColor];
-    }
+//    }
    
-    CGColorSpaceRef colorSpace2 =CGColorGetColorSpace(QRcolor.CGColor);
-    NSLog(@"color space: %@", colorSpace2);
+//    CGColorSpaceRef colorSpace2 =CGColorGetColorSpace(QRcolor.CGColor);
+//    NSLog(@"color space: %@", colorSpace2);
     
     
         [[QRCodeGenerator shareInstance] drawliquidQRCode:code context:ctx size:size  withMargin:marginXY];
@@ -350,7 +350,8 @@ static QRCodeGenerator *instance = nil;
     CGContextClosePath(ctx);
     CGContextSetStrokeColor(ctx,CGColorGetComponents([UIColor clearColor].CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+     CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     CGContextDrawPath(ctx, kCGPathFillStroke);
     
     
@@ -404,11 +405,12 @@ static QRCodeGenerator *instance = nil;
     
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
+    
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
     
-    
+      CGContextSetFillColor(ctx,CGColorGetComponents(QRcolor.CGColor) );
     
 }
 - (void)printOnUpperRightR:(CGContextRef)ctx  withX:(double)x withY:(double)y  withSize:(double)zoom withRad:(float)radious{
@@ -442,10 +444,10 @@ static QRCodeGenerator *instance = nil;
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
      CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
  
-    
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
     
     
@@ -481,8 +483,9 @@ static QRCodeGenerator *instance = nil;
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
     
 }
@@ -516,8 +519,9 @@ static QRCodeGenerator *instance = nil;
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
 }
 
@@ -546,8 +550,9 @@ static QRCodeGenerator *instance = nil;
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
 }
 - (void)printOffUpperRightR:(CGContextRef)ctx  withX:(double)x withY:(double)y  withSize:(double)zoom withRad:(float)radious{
@@ -574,8 +579,9 @@ static QRCodeGenerator *instance = nil;
     
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
     
 }
@@ -595,8 +601,9 @@ static QRCodeGenerator *instance = nil;
     
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+      CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
     
 }
@@ -616,8 +623,9 @@ static QRCodeGenerator *instance = nil;
     
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+    CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     
 }
 
