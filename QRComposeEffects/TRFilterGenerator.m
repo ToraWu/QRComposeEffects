@@ -23,13 +23,19 @@ static CIContext *ciContextSingleton = nil;
 
 
 
-#define  QRImageSize 600
-#define  QRPixSize 16
 
+#define pixSize 16
+#define QRModeBig 14
+#define QRModeNormal 7
+#define QRMargin 2
+
+#define BigImageSize (21+((QRModeBig-1)*4))*pixSize
+#define SmallImageSize (21+((QRModeNormal-1)*4)+QRMargin*2)*pixSize
 @implementation TRFilterGenerator
 
 
 #pragma mark ====滤镜方法
+
 /**
  * @brief 公共方法返回滤镜后的图片 CIDissolveTransition inputTime = 0.65
  * @param inputImage 源图片
@@ -75,8 +81,12 @@ static CIContext *ciContextSingleton = nil;
     [filter setValue:forwardImage forKey:@"inputImage"];
     CGImageRef cgiimage = [context createCGImage:filter.outputImage fromRect:filter.outputImage.extent];
     UIImage *newImage = [UIImage imageWithCGImage:cgiimage scale:1.0f orientation:inputImage.imageOrientation];
+    CGImageRef cr = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newImage.size.width-scale, newImage.size.height-scale));
+    //    裁掉多余的一条边
+	UIImage *croppedImage =[UIImage imageWithCGImage:cr];
+    
     CGImageRelease(cgiimage);
-    return newImage;
+    return croppedImage;
 
 }
 
@@ -86,22 +96,31 @@ static CIContext *ciContextSingleton = nil;
 
 #pragma mark === 第一种二维码效果 像素化背景+二维码
 /**
- * @brief 公共方法返回像素化效果的二维码图片 默认容错为H
- * @param inputImage 头像图片作为背景
- * @param scale 需要编码的字符串
+ * @brief 公共方法返回 像素化效果的二维码图片 默认容错为H 头像与二维码合成后的头片
+ * @param avatarImage 头像图片作为背景
+ * @param string 需要编码的字符串
+   @param margin 二维码边界
+   @param mode  二维码级别
  */
-+(UIImage *)qrEncodeWithAatarPixellate:(UIImage *)avatarImage withQRString:(NSString *)string{
++(UIImage *)qrEncodeWithAatarPixellate:(UIImage *)avatarImage
+                          withQRString:(NSString *)string
+                            withMargin:(int)margin
+                              withMode:(int)mode{
 
-    //重新压缩大小
-    UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage scaledToSize:CGSizeMake(QRImageSize, QRImageSize)];
+    int sizeOfPix = 16;//偶数最好
+    
     int leverl = [[QRCodeGenerator shareInstance] QRVersionForString:string withErrorLevel:QR_ECLEVEL_H];
-    float widthCount = (leverl-1)*4+21;
+    float imageWidth = (leverl+2*margin )*sizeOfPix;
+        UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage scaledToSize:CGSizeMake(imageWidth, imageWidth)];
     
-//    像素化
-   newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:( newAvtarImage.size.width/widthCount)];
+    //像素化
+   newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
+    
+    [QRCodeGenerator shareInstance].QRRadious = 0;
 
-   UIImage *qrImage =  [[QRCodeGenerator shareInstance] qrImageForString:string imageSize:newAvtarImage.size.width withMargin:0];
-    
+//QRENCODE
+   UIImage *qrImage =  [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:0];
+//    滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
    
     return newImage;
@@ -111,6 +130,101 @@ static CIContext *ciContextSingleton = nil;
 
 
 
+#pragma mark === 第二种二维码效果 圆形二维码类似微信的效果
+/**
+ * @brief 公共方法返回 圆形二维码类似微信的效果
+ * @param avatarImage 头像图片作为背景
+ * @param string 需要编码的字符串
+ @param margin 二维码边界
+ */
+
+
+
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin
+//=======================
+{
+
+    //        绘制QR背景图
+    UIImage *QRBackImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:margin withMode:QRModeBig];
+//    [QRCodeGenerator qrImageForString:_codeContent imageSize:BigImageSize withMode:QRModeBig  withColor:codeColor withMargin:0];
+    
+    //      绘制 真正的QR图
+    UIImage *QRNormalImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:QRMargin withMode:QRModeNormal];
+  
+    
+    //       两张图片叠加（中间部分透明 然后将小图添加上去）
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    //        float size = cirQRImage.size.width;
+    CGContextRef ctx = CGBitmapContextCreate(0, BigImageSize, BigImageSize, 8, BigImageSize * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+    
+    CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -BigImageSize);
+    CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    
+    CGRect touchRect = CGRectMake(0,0, BigImageSize, BigImageSize);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    CGContextDrawImage(ctx, touchRect,QRBackImage.CGImage);
+    
+    int blendMode = kCGBlendModeClear;
+    CGContextSetBlendMode(ctx, (CGBlendMode) blendMode);
+    
+    CGRect Rect = CGRectMake((BigImageSize-SmallImageSize)/2,(BigImageSize-SmallImageSize)/2,SmallImageSize, SmallImageSize);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    CGContextFillRect(ctx, Rect);
+    CGContextFillPath(ctx);
+    
+    CGContextSetBlendMode(ctx,  kCGBlendModeNormal);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    CGContextDrawImage(ctx, Rect,QRNormalImage.CGImage);
+    
+    CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
+    
+    UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
+    //        切圆
+    
+    UIImage *cirQRImage = [TRFilterGenerator createRoundedRectImage:qrImage size:qrImage.size radius:qrImage.size.width/2];
+
+    //      清空画布
+    CGContextSetBlendMode(ctx,  kCGBlendModeClear);
+    Rect = CGRectMake(0,0,BigImageSize, BigImageSize);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    CGContextFillRect(ctx, Rect);
+    CGContextFillPath(ctx);
+    
+    //        重新绘制背景图片大小
+ 
+    CGContextSetBlendMode(ctx,  kCGBlendModeNormal);
+    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+    CGContextDrawImage(ctx, Rect,avatarImage.CGImage);
+    
+    qrCGImage = CGBitmapContextCreateImage(ctx);
+    
+    qrImage = [UIImage imageWithCGImage:qrCGImage];
+    
+    // some releases
+    CGContextRelease(ctx);
+    CGImageRelease(qrCGImage);
+    CGColorSpaceRelease(colorSpace);
+    
+   
+    //头像像素化
+
+   UIImage *newImage =  [TRFilterGenerator CIPixellateWithImage:qrImage withInputScale:pixSize];
+
+    //       头像圆角化
+    UIImage *cirAvatarImage = [self createRoundedRectImage:newImage size:newImage.size radius:newImage.size.width/2];
+    
+    //滤镜合成
+    
+  UIImage *resultImage =   [TRFilterGenerator CIDissolveTransitionWithImage:cirAvatarImage WithBackImage:cirQRImage];
+    return resultImage;
+   
+    
+}
+
+
+//========================
 
 #pragma mark ===图片压缩
 //图片压缩
@@ -165,7 +279,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
  当r= size.width/2 时候。为最大圆
  r为圆形弧的半径
  */
-- (UIImage *)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r
++ (UIImage *)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r
 {
     // the size of CGContextRef
     r = r;
