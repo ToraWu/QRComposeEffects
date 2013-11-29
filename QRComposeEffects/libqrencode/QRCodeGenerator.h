@@ -50,9 +50,6 @@ typedef enum{
 @property (nonatomic,assign) float  QRRadious;
 @property (nonatomic,strong) UIColor * QRcolor;
 
-
-
-
 /*
  *获取二维码生成器单例
  */
@@ -61,9 +58,9 @@ typedef enum{
 /**
  * @brief 公共方法返回一张二维码的图片。qrencode库 默认为最低等级 容错为最低L QRencodeMode 为QRMODE8
  * @param string 源字符串
- @param size 二维码中每个色块的大小 16
+   @param size 二维码中每个色块的大小 16
  * @param marginXY 二维码距离画布边界
- @param mode 二维码级别
+   @param mode 二维码级别
  
  */
 - (UIImage *)qrImageForString:(NSString *)string
