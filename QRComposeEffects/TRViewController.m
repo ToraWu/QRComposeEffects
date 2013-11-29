@@ -36,7 +36,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
+        effectNameKeys = @[@"CIPixellate",@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
     [self pageChanged:self.pageControl];
@@ -195,6 +195,7 @@ static NSArray *effectNameKeys;
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
     if (0 == index) {
+       return  [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:@"我是二维码 赶紧扫我啊 你倒是扫啊" withMargin:0 withMode:0];
         
     } else if (1 == index) {
         

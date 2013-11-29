@@ -11,6 +11,7 @@
 @implementation TRContect
 //=========================================================
 static CIContext *ciContextSingleton = nil;
+
 + (CIContext *)sharedCiContextrManager {
     if (!ciContextSingleton) {
         EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -117,9 +118,9 @@ static CIContext *ciContextSingleton = nil;
    newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
     
     [QRCodeGenerator shareInstance].QRRadious = 0;
+    [QRCodeGenerator shareInstance].QRcolor = [UIColor blackColor];
 
-//QRENCODE
-   UIImage *qrImage =  [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:0];
+   UIImage *qrImage =  [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:0 withOutputSize:0];
 //    滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
    
@@ -140,16 +141,16 @@ static CIContext *ciContextSingleton = nil;
 
 
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin
-//=======================
-{
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin{
 
+    
+    [QRCodeGenerator shareInstance].QRcolor = [UIColor blackColor];
     //        绘制QR背景图
-    UIImage *QRBackImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:margin withMode:QRModeBig];
-//    [QRCodeGenerator qrImageForString:_codeContent imageSize:BigImageSize withMode:QRModeBig  withColor:codeColor withMargin:0];
+    UIImage *QRBackImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:margin withMode:QRModeBig withOutputSize:0];
+
     
     //      绘制 真正的QR图
-    UIImage *QRNormalImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:QRMargin withMode:QRModeNormal];
+    UIImage *QRNormalImage = [[QRCodeGenerator shareInstance] qrImageForString:string withPixSize:pixSize withMargin:QRMargin withMode:QRModeNormal withOutputSize:0];
   
     
     //       两张图片叠加（中间部分透明 然后将小图添加上去）
@@ -192,7 +193,7 @@ static CIContext *ciContextSingleton = nil;
     CGContextFillRect(ctx, Rect);
     CGContextFillPath(ctx);
     
-    //        重新绘制背景图片大小
+    //   重新绘制背景图片大小
  
     CGContextSetBlendMode(ctx,  kCGBlendModeNormal);
     CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
@@ -224,7 +225,6 @@ static CIContext *ciContextSingleton = nil;
 }
 
 
-//========================
 
 #pragma mark ===图片压缩
 //图片压缩
