@@ -42,12 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407328290.035904"
+            timestampString = "407417091.590273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "-generateResultImageOfIndex:"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "-registerShadowEffectForView:depth:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407328726.738796"
+            timestampString = "407417091.590273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
-            landmarkName = "-pageChanged:"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "-registerEffectForView:depth:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,13 +74,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407328920.920023"
+            timestampString = "407417091.590273"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "-generateResultImageOfIndex:"
-            landmarkType = "5">
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "@implementation TRViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

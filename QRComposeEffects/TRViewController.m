@@ -9,15 +9,20 @@
 #import "TRViewController.h"
 #import <CoreImage/CoreImage.h>
 #import "TRFilterGenerator.h"
-@interface TRViewController ()
+#import "QRCodeGenerator.h"
+
+@interface TRViewController () {
+    UIImage *_qrImage;
+}
 
 @property (nonatomic, strong) IBOutlet UIImageView *resultView;
 @property (nonatomic, strong) IBOutlet UIPageControl *pageControl;
 @property (nonatomic, strong) IBOutlet UIView *boardView;
 
-@property (nonatomic, strong) UIImage *qrImage;
+@property (nonatomic, readonly) UIImage *qrImage;
 @property (nonatomic, strong) UIImage *userImage;
 @property (nonatomic, strong) NSMutableDictionary *resultImageDict;
+@property (nonatomic, copy) NSString *qrString;
 
 @property (nonatomic, strong) CIContext *ciContext;
 
@@ -27,11 +32,13 @@ static NSArray *effectNameKeys;
 
 @implementation TRViewController
 
+#pragma mark ==== Life Cycle ====
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    // Init required objects
     EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
@@ -39,8 +46,10 @@ static NSArray *effectNameKeys;
         effectNameKeys = @[@"CIPixellate",@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
-    [self pageChanged:self.pageControl];
     
+    self.qrString = @"http://roundqr.sinaapp.com/index.php";
+    
+    // Motion Effects
     self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.boardView.layer.shadowOffset = CGSizeMake(0,2);
     self.boardView.layer.shadowOpacity = 0.5;
@@ -62,6 +71,22 @@ static NSArray *effectNameKeys;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self updateUI];
+}
+
+- (UIImage *)qrImage {
+    if (!_qrImage) {
+      //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
+        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:400];
+    }
+    
+    return _qrImage;
+}
+
+#pragma mark ==== Motion Effects ====
 
 - (void)registerShadowEffectForView:(UIView *)aView depth:(CGFloat)depth;
 {
@@ -99,6 +124,13 @@ static NSArray *effectNameKeys;
 	
 	[aView addMotionEffect:effectX];
 	[aView addMotionEffect:effectY];
+}
+
+#pragma mark ==== UI Actions ====
+
+- (void)updateUI {
+    [self.pageControl updateCurrentPageDisplay];
+    [self pageChanged:self.pageControl];
 }
 
 - (void)generateResultImageOfIndex:(NSInteger)index {
@@ -169,8 +201,7 @@ static NSArray *effectNameKeys;
     
     if (selectedImage) {
         self.userImage = selectedImage;
-        //test
-        [self changeResultImage:selectedImage];
+        [self updateUI];
     }
     
     [self dismissViewControllerAnimated:YES completion:^{
@@ -189,16 +220,20 @@ static NSArray *effectNameKeys;
     UIImage *resultImage = nil;
     
     if (!self.userImage) {
-        return nil;
+        return self.qrImage;
     }
     
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
     if (0 == index) {
+ 
        return  [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:@"我是二维码 赶紧扫我啊 你倒是扫啊" withMargin:0 withMode:0];
         
+ 
+        resultImage = self.userImage;
+ 
     } else if (1 == index) {
-        
+//        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString];
     } else if (2 == index) {
         // Apply clamp filter:
         
@@ -218,16 +253,39 @@ static NSArray *effectNameKeys;
         
         [gaussianBlur setValue:clampResult
                         forKey:kCIInputImageKey];
-        [gaussianBlur setValue:[NSNumber numberWithFloat:3.0]
+        [gaussianBlur setValue:[NSNumber numberWithFloat:20.0]
                         forKey:@"inputRadius"];
         
         CIImage *gaussianBlurResult = [gaussianBlur valueForKey:kCIOutputImageKey];
         
-        // Apply Mask filter
+        // Adjust Brightness of frontground
+        NSString *colorControlFilterName = @"CIColorControls";
+        CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
+        [colorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
+        [colorControl setValue:@(0.15) forKey:kCIInputBrightnessKey];
+        CIImage *frontground = [colorControl valueForKey:kCIOutputImageKey];
         
-        NSString *maskFilterName = @"CIBlendWithMask";
+        // Adjust Brightness of background
+        CIFilter *bgcolorControl = [CIFilter filterWithName:colorControlFilterName];
+        [bgcolorControl setValue:scrImage forKey:kCIInputImageKey];
+        [bgcolorControl setValue:@(-0.15) forKey:kCIInputBrightnessKey];
+        CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
         
-        resultImage = [UIImage imageWithCGImage:[self.ciContext createCGImage:gaussianBlurResult
+        
+        // Compose with Mask filter
+        NSString *maskFilterName = @"CIBlendWithAlphaMask";
+        CIFilter *mask = [CIFilter filterWithName:maskFilterName];
+        
+//        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2  withOutputSize:(float)outImagesize].CGImage];
+        
+         CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:0].CGImage];
+                               
+        [mask setValue:frontground forKey:kCIInputImageKey];
+        [mask setValue:maskImage forKey:kCIInputMaskImageKey];
+        [mask setValue:background forKey:kCIInputBackgroundImageKey];
+        CIImage *maskResult = [mask valueForKey:kCIOutputImageKey];
+        
+        resultImage = [UIImage imageWithCGImage:[self.ciContext createCGImage:maskResult
                                            fromRect:scrImage.extent]];
     }
     
