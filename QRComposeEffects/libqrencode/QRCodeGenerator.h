@@ -66,7 +66,11 @@ typedef enum{
  @param mode 二维码级别
  
  */
-- (UIImage *)qrImageForString:(NSString *)string withPixSize:(float)sizeOfPix withMargin:(float)marginXY withMode :(int)mode;
+- (UIImage *)qrImageForString:(NSString *)string
+                  withPixSize:(float)sizeOfPix
+                   withMargin:(float)marginXY
+                    withMode :(int)mode
+                    withOutputSize:(float)outImagesize;
 
 
 /**

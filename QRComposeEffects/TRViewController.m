@@ -43,7 +43,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
+        effectNameKeys = @[@"CIPixellate",@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
     
@@ -81,9 +81,8 @@ static NSArray *effectNameKeys;
 
 - (UIImage *)qrImage {
     if (!_qrImage) {
-        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:5];
+        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:self.resultView.bounds.size.width];
     }
-    
     return _qrImage;
 }
 
@@ -225,6 +224,7 @@ static NSArray *effectNameKeys;
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5];
     } else if (1 == index) {
         resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1];
+
     } else if (2 == index) {
         // Apply clamp filter:
         
@@ -266,9 +266,12 @@ static NSArray *effectNameKeys;
         // Compose with Mask filter
         NSString *maskFilterName = @"CIBlendWithAlphaMask";
         CIFilter *mask = [CIFilter filterWithName:maskFilterName];
+ 
+        
+//        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2  withOutputSize:(float)outImagesize].CGImage];
         
         [QRCodeGenerator shareInstance].QRRadious = 0.5;
-        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:60 withMargin:2 withMode:5].CGImage];
+        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:60 withMargin:2 withMode:5 withOutputSize:self.userImage.size.width].CGImage];
         [mask setValue:frontground forKey:kCIInputImageKey];
         [mask setValue:maskImage forKey:kCIInputMaskImageKey];
         [mask setValue:background forKey:kCIInputBackgroundImageKey];
