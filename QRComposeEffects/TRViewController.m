@@ -79,9 +79,11 @@ static NSArray *effectNameKeys;
 
 - (UIImage *)qrImage {
     if (!_qrImage) {
+ 
       //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
         _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:400];
-    }
+ 
+     }
     
     return _qrImage;
 }
@@ -227,13 +229,16 @@ static NSArray *effectNameKeys;
     
     if (0 == index) {
  
-       return  [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:@"我是二维码 赶紧扫我啊 你倒是扫啊" withMargin:0 withMode:0];
+ 
+//       return  [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:@"我是二维码 赶紧扫我啊 你倒是扫啊" withMargin:0 withMode:0];
         
  
-        resultImage = self.userImage;
+//        resultImage = self.userImage;
  
     } else if (1 == index) {
 //        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString];
+ 
+ 
     } else if (2 == index) {
         // Apply clamp filter:
         
@@ -275,11 +280,13 @@ static NSArray *effectNameKeys;
         // Compose with Mask filter
         NSString *maskFilterName = @"CIBlendWithAlphaMask";
         CIFilter *mask = [CIFilter filterWithName:maskFilterName];
+ 
         
 //        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2  withOutputSize:(float)outImagesize].CGImage];
         
          CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:0].CGImage];
                                
+ 
         [mask setValue:frontground forKey:kCIInputImageKey];
         [mask setValue:maskImage forKey:kCIInputMaskImageKey];
         [mask setValue:background forKey:kCIInputBackgroundImageKey];
