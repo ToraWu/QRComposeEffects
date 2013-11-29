@@ -47,7 +47,9 @@ static NSArray *effectNameKeys;
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
     
+    // Sample data
     self.qrString = @"http://roundqr.sinaapp.com/index.php";
+    self.userImage = [UIImage imageNamed:@"IMG_5623.JPG"];
     
     // Motion Effects
     self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -79,7 +81,7 @@ static NSArray *effectNameKeys;
 
 - (UIImage *)qrImage {
     if (!_qrImage) {
-        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
+        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:5];
     }
     
     return _qrImage;
@@ -206,11 +208,6 @@ static NSArray *effectNameKeys;
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
-    
-//    test
-    
-    self.resultView.image =[TRFilterGenerator qrEncodeWithCircle:selectedImage withQRString:@"我是二维码 快来扫我啊 你快扫我啊 看到我了么？ 我 真的是二维码啊" withMargin:0];
-
 }
 
 #pragma mark ==== ImageCompose ====
@@ -225,9 +222,9 @@ static NSArray *effectNameKeys;
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
     if (0 == index) {
-        resultImage = self.userImage;
+        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5];
     } else if (1 == index) {
-        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString];
+        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1];
     } else if (2 == index) {
         // Apply clamp filter:
         
@@ -255,14 +252,14 @@ static NSArray *effectNameKeys;
         // Adjust Brightness of frontground
         NSString *colorControlFilterName = @"CIColorControls";
         CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
-        [colorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
-        [colorControl setValue:@(0.15) forKey:kCIInputBrightnessKey];
+        [colorControl setValue:scrImage forKey:kCIInputImageKey];
+        [colorControl setValue:@(-0.1) forKey:kCIInputBrightnessKey];
         CIImage *frontground = [colorControl valueForKey:kCIOutputImageKey];
         
         // Adjust Brightness of background
         CIFilter *bgcolorControl = [CIFilter filterWithName:colorControlFilterName];
-        [bgcolorControl setValue:scrImage forKey:kCIInputImageKey];
-        [bgcolorControl setValue:@(-0.15) forKey:kCIInputBrightnessKey];
+        [bgcolorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
+        [bgcolorControl setValue:@(0.25) forKey:kCIInputBrightnessKey];
         CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
         
         
@@ -270,7 +267,8 @@ static NSArray *effectNameKeys;
         NSString *maskFilterName = @"CIBlendWithAlphaMask";
         CIFilter *mask = [CIFilter filterWithName:maskFilterName];
         
-        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2].CGImage];
+        [QRCodeGenerator shareInstance].QRRadious = 0.5;
+        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:60 withMargin:2 withMode:5].CGImage];
         [mask setValue:frontground forKey:kCIInputImageKey];
         [mask setValue:maskImage forKey:kCIInputMaskImageKey];
         [mask setValue:background forKey:kCIInputBackgroundImageKey];
