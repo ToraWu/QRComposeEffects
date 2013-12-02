@@ -53,7 +53,7 @@ static CIContext *ciContextSingleton = nil;
     [filter setValue: inputBackImage forKey:@"inputTargetImage"];
     
     
-    [filter setValue:[NSNumber numberWithFloat:0.65] forKey:@"inputTime"];
+    [filter setValue:[NSNumber numberWithFloat:0.75] forKey:@"inputTime"];
     
     
     CGImageRef cgiimage = [context createCGImage:filter.outputImage fromRect:filter.outputImage.extent];
@@ -109,9 +109,10 @@ static CIContext *ciContextSingleton = nil;
                             withMargin:(int)margin
                               withMode:(int)mode
                            withRadius :(float)radius
-                        withOutPutSize:(float)imagSize{
+                        withOutPutSize:(float)imagSize withQRColor:(UIColor*)color
+{
     
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
     int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:mode];
     
     int sizeOfPix = (floor)(imagSize/(leverl+2*margin));
@@ -147,13 +148,13 @@ static CIContext *ciContextSingleton = nil;
 
 
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize{
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color{
 
     
     //        绘制QR背景图
     int versionNormal =  7;
     int versionBig = 14;
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
     int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:versionBig];
     int sizeOfPix = (floor)(imagSize/(leverl));
     if (sizeOfPix%2!= 0) {

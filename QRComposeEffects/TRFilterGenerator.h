@@ -41,7 +41,7 @@
                             withMargin:(int)margin
                               withMode:(int)mode
                            withRadius :(float)radius
-                        withOutPutSize:(float)imagSize;
+                        withOutPutSize:(float)imagSize withQRColor:(UIColor*)color;
 
 /**
  * @brief 公共方法返回 圆形二维码类似微信的效果
@@ -52,7 +52,7 @@
 
 
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize;
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor*)color;;
 
 /**
  * @brief 返回模糊遮罩处理的效果

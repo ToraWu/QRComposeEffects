@@ -43,7 +43,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"CIPixellate",@"circum",@"liquefied", @"Circle Mosaic", @"Blur Mask"];
+        effectNameKeys = @[@"CIPixellate",@"circum",@"liquefied", @"Circle Mosaic", @"Blur Mask" ,@"gold"];
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
     
@@ -234,19 +234,24 @@ static NSArray *effectNameKeys;
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
     if (0 == index) {
- 
-        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:800];
+  resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:400 withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
+        
    
     } else if (1 == index) {
-//        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1];
-        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:500];
+
+        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:400 withQRColor:[UIColor blackColor]];
     } else if (2 == index) {
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:1.0 withOutPutSize:500];
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:1.0 withOutPutSize:500 withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     
     } else if (3 == index) {
-    resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:400];
+    resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:400 withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     }
-
+    else if (5 ==index){
+       
+        
+        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:800 withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+        
+    }
     else if (4 == index) {
         // Apply clamp filter:
        
