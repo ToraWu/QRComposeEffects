@@ -16,6 +16,7 @@
 		63AD48BB1847302400CA3E75 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48AF1847302400CA3E75 /* rscode.c */; };
 		63AD48BC1847302400CA3E75 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B11847302400CA3E75 /* split.c */; };
 		63AD48BD1847302400CA3E75 /* TRFilterGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B41847302400CA3E75 /* TRFilterGenerator.m */; };
+		63DECF62184C7BF600EA0D21 /* fb16c5d7d7f5c5af813254b2097da6e6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63DECF61184C7BF600EA0D21 /* fb16c5d7d7f5c5af813254b2097da6e6.jpg */; };
 		965C774C1845EF7C00A29836 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774B1845EF7C00A29836 /* Foundation.framework */; };
 		965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774D1845EF7C00A29836 /* CoreGraphics.framework */; };
 		965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
@@ -66,6 +67,7 @@
 		63AD48B21847302400CA3E75 /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = split.h; sourceTree = "<group>"; };
 		63AD48B31847302400CA3E75 /* TRFilterGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRFilterGenerator.h; sourceTree = "<group>"; };
 		63AD48B41847302400CA3E75 /* TRFilterGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRFilterGenerator.m; sourceTree = "<group>"; };
+		63DECF61184C7BF600EA0D21 /* fb16c5d7d7f5c5af813254b2097da6e6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = fb16c5d7d7f5c5af813254b2097da6e6.jpg; path = ../../fb16c5d7d7f5c5af813254b2097da6e6.jpg; sourceTree = "<group>"; };
 		965C77481845EF7C00A29836 /* QRComposeEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRComposeEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		965C774B1845EF7C00A29836 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		965C774D1845EF7C00A29836 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -183,6 +185,7 @@
 				965C77641845EF7C00A29836 /* TRViewController.m */,
 				965C77851848AC6B00A29836 /* Images.xcassets */,
 				965C77881848AC7C00A29836 /* IMG_5623.JPG */,
+				63DECF61184C7BF600EA0D21 /* fb16c5d7d7f5c5af813254b2097da6e6.jpg */,
 				965C77521845EF7C00A29836 /* Supporting Files */,
 			);
 			path = QRComposeEffects;
@@ -302,6 +305,7 @@
 				965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */,
 				965C77561845EF7C00A29836 /* InfoPlist.strings in Resources */,
+				63DECF62184C7BF600EA0D21 /* fb16c5d7d7f5c5af813254b2097da6e6.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

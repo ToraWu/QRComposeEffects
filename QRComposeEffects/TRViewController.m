@@ -43,7 +43,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"CIPixellate",@"Mosaic", @"Circle Mosaic", @"Blur Mask"];
+        effectNameKeys = @[@"CIPixellate",@"circum",@"liquefied", @"Circle Mosaic", @"Blur Mask"];
     }
     self.pageControl.numberOfPages = [effectNameKeys count];
     
@@ -85,7 +85,7 @@ static NSArray *effectNameKeys;
  
       //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
       QRCodeGenerator *qr=  [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor blackColor]];
-        _qrImage = [qr qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:self.resultView.bounds.size.width];
+        _qrImage = [qr qrImageForString:self.qrString withMargin:0 withMode:0 withOutputSize:self.resultView.bounds.size.width];
  
      }
     
@@ -215,6 +215,9 @@ static NSArray *effectNameKeys;
         
     }];
 
+//    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:1 withColor:nil];
+//        self.resultView.image = [qr qrImageForString:@"test.test" withPixSize:32 withMargin:0 withMode:4 withOutputSize:800];
+//  self.resultView.image = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:5 withOutPutSize:800];
 
  
 }
@@ -231,15 +234,22 @@ static NSArray *effectNameKeys;
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
     if (0 == index) {
-//        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5];
-        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withOutPutSize:self.resultView.bounds.size.width];
+ 
+        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:800];
+   
     } else if (1 == index) {
 //        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1];
-        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withOutPutSize:self.resultView.bounds.size.width];
-
+        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:500];
     } else if (2 == index) {
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:1.0 withOutPutSize:500];
+    
+    } else if (3 == index) {
+    resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:400];
+    }
+
+    else if (4 == index) {
         // Apply clamp filter:
-        
+       
         NSString *clampFilterName = @"CIAffineClamp";
         CIFilter *clamp = [CIFilter filterWithName:clampFilterName];
         
@@ -287,7 +297,7 @@ static NSArray *effectNameKeys;
         
  
  
-        CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:self.qrString withPixSize:60 withMargin:2 withMode:5 withOutputSize:self.userImage.size.width].CGImage];
+        CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:self.qrString   withMargin:2 withMode:5 withOutputSize:self.userImage.size.width].CGImage];
  
         [mask setValue:frontground forKey:kCIInputImageKey];
         [mask setValue:maskImage forKey:kCIInputMaskImageKey];

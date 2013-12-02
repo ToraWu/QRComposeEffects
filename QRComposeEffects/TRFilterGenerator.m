@@ -84,7 +84,7 @@ static CIContext *ciContextSingleton = nil;
     UIImage *newImage = [UIImage imageWithCGImage:cgiimage scale:1.0f orientation:inputImage.imageOrientation];
     CGImageRef cr = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newImage.size.width-scale, newImage.size.height-scale));
     //    裁掉多余的一条边
-	UIImage *croppedImage =[UIImage imageWithCGImage:cr];
+	UIImage *croppedImage = [UIImage imageWithCGImage:cr];
     
     CGImageRelease(cgiimage);
     return croppedImage;
@@ -108,21 +108,28 @@ static CIContext *ciContextSingleton = nil;
                           withQRString:(NSString *)string
                             withMargin:(int)margin
                               withMode:(int)mode
+                           withRadius :(float)radius
                         withOutPutSize:(float)imagSize{
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:mode];
     
     int sizeOfPix = (floor)(imagSize/(leverl+2*margin));
-    UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage scaledToSize:CGSizeMake(imagSize,imagSize)];
+    if (sizeOfPix%2!=0) {
+        sizeOfPix --;
+    }
+    //生成二维码 不压缩
+    UIImage *qrImage =  [qr qrImageForString:string withMargin:margin withMode:mode withOutputSize:imagSize];
+    
+    UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage scaledToSize:(qrImage.size)];
     
     //像素化 并裁掉了多余的一个边
-   newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
- 
+    newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
 
-   UIImage *qrImage =  [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:mode withOutputSize:imagSize];
 //    滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
    
+    newImage = [TRFilterGenerator imageWithImageSimple:newImage scaledToSize:CGSizeMake(imagSize, imagSize)];
     return newImage;
     
 }
@@ -140,13 +147,13 @@ static CIContext *ciContextSingleton = nil;
 
 
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withOutPutSize:(float)imagSize{
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize{
 
     
     //        绘制QR背景图
     int versionNormal =  7;
     int versionBig = 14;
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:versionBig];
     int sizeOfPix = (floor)(imagSize/(leverl));
     if (sizeOfPix%2!= 0) {
@@ -159,11 +166,11 @@ static CIContext *ciContextSingleton = nil;
     float bigImageSize = (21+ (versionBig-1)*4) * sizeOfPix;
     float  smallImageSize = (21+ (versionNormal-1)*4) * sizeOfPix;
     
-    UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig withOutputSize:0];
+    UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig];
 
     
     //      绘制 真正的QR图
-    UIImage *QRNormalImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:versionNormal withOutputSize:0];
+    UIImage *QRNormalImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:versionNormal ];
   
     
     //       两张图片叠加（中间部分透明 然后将小图添加上去）

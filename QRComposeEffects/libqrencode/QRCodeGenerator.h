@@ -85,10 +85,14 @@ typedef enum{
  
  */
 - (UIImage *)qrImageForString:(NSString *)string
-                  withPixSize:(float)sizeOfPix
                    withMargin:(float)marginXY
                     withMode :(int)mode
                     withOutputSize:(float)outImagesize;
+
+- (UIImage *)qrImageForString:(NSString *)string
+                  withPixSize:(float)size
+                   withMargin:(float)marginXY
+                    withMode :(int)mode;
 
 
 /**

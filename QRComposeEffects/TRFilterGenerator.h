@@ -40,6 +40,7 @@
                           withQRString:(NSString *)string
                             withMargin:(int)margin
                               withMode:(int)mode
+                           withRadius :(float)radius
                         withOutPutSize:(float)imagSize;
 
 /**
@@ -50,7 +51,8 @@
  */
 
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withOutPutSize:(float)imagSize;
+
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize;
 
 /**
  * @brief 返回模糊遮罩处理的效果
