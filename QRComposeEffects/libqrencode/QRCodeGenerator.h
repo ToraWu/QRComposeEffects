@@ -46,14 +46,35 @@ typedef enum{
 #import <Foundation/Foundation.h>
 #import "qrencode.h"
 
-@interface QRCodeGenerator : NSObject
-@property (nonatomic,assign) float  QRRadious;
-@property (nonatomic,strong) UIColor * QRcolor;
+@interface QRCodeGenerator : NSObject{
+
+    float  QRRadius;
+    UIColor * QRcolor;
+}
+
 
 /*
  *获取二维码生成器单例
  */
-+(QRCodeGenerator*)shareInstance;
+//+(QRCodeGenerator*)shareInstance;
+
+-(id)initWithRadius :(float)radius withColor:(UIColor*)color;
+
+
+/*
+ *设置二维码颜色
+ *
+ */
+
+-(void)setQRcolor:(UIColor *)QRcolor;
+
+/*
+ *设置二维码液化半径
+ *
+ */
+
+-(void)setQRRadius:(float )radius;
+
 
 /**
  * @brief 公共方法返回一张二维码的图片。qrencode库 默认为最低等级 容错为最低L QRencodeMode 为QRMODE8
@@ -75,5 +96,5 @@ typedef enum{
  * @param string 源字符串
  * @param level 容错级别
  */
-- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level;
+- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode;
 @end

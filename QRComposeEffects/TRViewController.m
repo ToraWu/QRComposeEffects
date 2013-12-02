@@ -81,7 +81,8 @@ static NSArray *effectNameKeys;
     if (!_qrImage) {
  
       //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
-        _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:400];
+      QRCodeGenerator *qr=  [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor blackColor]];
+        _qrImage = [qr qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:400];
  
      }
     
@@ -212,7 +213,9 @@ static NSArray *effectNameKeys;
     
 //    test
     
-    self.resultView.image =[TRFilterGenerator qrEncodeWithCircle:selectedImage withQRString:@"我是二维码 快来扫我啊 你快扫我啊 看到我了么？ 我 真的是二维码啊" withMargin:0];
+//    self.resultView.image =[TRFilterGenerator qrEncodeWithCircle:selectedImage withQRString:@"我是二维码 快来扫我啊 你快扫我啊 看到我了么？ 我 真的是二维码啊" withMargin:0];
+//    [self.resultView setImage:[TRFilterGenerator qrEncodeWithAatarPixellate:selectedImage withQRString:@"abc" withMargin:0 withMode:2 withOutPutSize:500]];
+    [self.resultView setImage:[TRFilterGenerator qrEncodeWithCircle:selectedImage withQRString:@"abc de" withMargin:2 withOutPutSize:600]];
 
 }
 
@@ -283,8 +286,8 @@ static NSArray *effectNameKeys;
  
         
 //        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2  withOutputSize:(float)outImagesize].CGImage];
-        
-         CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:0].CGImage];
+        QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:1 withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+         CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:self.qrString withPixSize:16 withMargin:2 withMode:0 withOutputSize:0].CGImage];
                                
  
         [mask setValue:frontground forKey:kCIInputImageKey];

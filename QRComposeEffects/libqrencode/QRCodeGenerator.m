@@ -30,22 +30,29 @@
 static QRCodeGenerator *instance = nil;
 
 @implementation QRCodeGenerator
-@synthesize QRRadious;
-@synthesize QRcolor;
-+(QRCodeGenerator*)shareInstance
-{
-    @synchronized(self){
-        if (!instance) {
-            instance = [[QRCodeGenerator alloc]init];
-        }
+//@synthesize QRRadious;
+//@synthesize QRcolor;
+//+(QRCodeGenerator*)shareInstance
+//{
+//    @synchronized(self){
+//        if (!instance) {
+//            instance = [[QRCodeGenerator alloc]init];
+//        }
+//    }
+//    
+//    return instance;
+//}
+
+
+-(id)initWithRadius :(float)radius withColor:(UIColor*)color{
+    self = [super init];
+    if (self) {
+       QRRadius =  radius ;
+    QRcolor = color;
     }
-    
-    return instance;
+    return self;
+
 }
-
-
-
-
 #pragma mark===公共方法 获取二维码图片
 /**
  * @brief 公共方法返回一张二维码的图片。qrencode库 默认为最低等级 容错为最低L QRencodeMode 为QRMODE8
@@ -86,22 +93,34 @@ static QRCodeGenerator *instance = nil;
     
 //    if (!QRcolor) {
     
-        QRcolor = [UIColor blackColor];
+//    QRcolor = [UIColor colorWithRed:0 green:0  blue:0 alpha:1.0];
 //    }
+    if (QRcolor == [UIColor blackColor]) {
+        QRcolor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1.0];
+    }
+    
+    
+    //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
+ const CGFloat *  components = CGColorGetComponents([UIColor blackColor].CGColor);
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+    CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
+    
+//    CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
    
 //    CGColorSpaceRef colorSpace2 =CGColorGetColorSpace(QRcolor.CGColor);
 //    NSLog(@"color space: %@", colorSpace2);
     
     
-        [[QRCodeGenerator shareInstance] drawliquidQRCode:code context:ctx size:size  withMargin:marginXY];
+        [self drawliquidQRCode:code context:ctx size:size  withMargin:marginXY];
     
 	// get image
 	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
 	UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
     
-    if (outImagesize != 0) {//压缩
+    if (outImagesize != 0) {//压缩会导致像素大小发生变化
         qrImage = [TRFilterGenerator imageWithImageSimple:qrImage scaledToSize:CGSizeMake(outImagesize, outImagesize)];
     }
+    
 	// some releases
 	CGContextRelease(ctx);
 	CGImageRelease(qrCGImage);
@@ -118,10 +137,10 @@ static QRCodeGenerator *instance = nil;
  * @param string 源字符串
  * @param level 容错级别
  */
-- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level{
+- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode{
     
     
-	QRcode *code = QRcode_encodeString([string UTF8String], 0, level, QR_MODE_8, 1);
+	QRcode *code = QRcode_encodeString([string UTF8String], mode, level, QR_MODE_8, 1);
 	if (!code) {
 		return 0;
 	}else
@@ -176,7 +195,7 @@ static QRCodeGenerator *instance = nil;
 	width = code->width;
     
 	float zoom =( (double)size / (code->width + 2.0 * marginXY));//每个色块的尺寸
-    float radius = (floor)(QRRadious*zoom*0.5);
+    float radius = (floor)(QRRadius*zoom*0.5);
     
     double qr_startX = marginXY *zoom;
     double qr_startY = marginXY *zoom;
@@ -238,32 +257,32 @@ static QRCodeGenerator *instance = nil;
                 {
                     //There is nothing to above or to the left so this should be rounded
                     //
-                    [[QRCodeGenerator shareInstance] printOnUpperLeftR :ctx withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
+                    [self printOnUpperLeftR :ctx withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
                     topLeftRounded=true;
                 }else{
-                    [[QRCodeGenerator shareInstance] printOnNormal:ctx withX:byte_xpos withY:byte_ypos withSize:zoom];
+                    [self printOnNormal:ctx withX:byte_xpos withY:byte_ypos withSize:zoom];
                 }
                 
                 //Figure out upper right
                 if( right == 0  && above == 0  )
                 {
                     //There is nothing to above or to the left so this should be rounded
-                     [[QRCodeGenerator shareInstance]printOnUpperRightR:ctx  withX:(byte_xpos+zoom/2) withY:byte_ypos withSize:zoom withRad:radius];
+                     [self printOnUpperRightR:ctx  withX:(byte_xpos+zoom/2) withY:byte_ypos withSize:zoom withRad:radius];
                     topRightRounded=true;
                 }else{
         
-                    [[QRCodeGenerator shareInstance]printOnNormal:ctx withX:byte_xpos+zoom/2 withY:byte_ypos withSize:zoom];
+                    [self printOnNormal:ctx withX:byte_xpos+zoom/2 withY:byte_ypos withSize:zoom];
                 }
                 
                 //Figure out lower rigt
                 if( right == 0  && below == 0  )
                 {
                     //There is nothing to above or to the left so this should be rounded
-                     [[QRCodeGenerator shareInstance]printOnLowerRightR:ctx  withX:byte_xpos+zoom/2 withY:byte_ypos+zoom/2 withSize:zoom withRad:radius];
+                     [self printOnLowerRightR:ctx  withX:byte_xpos+zoom/2 withY:byte_ypos+zoom/2 withSize:zoom withRad:radius];
                     bottomRightRounded=true;
                 }else{
 
-                     [[QRCodeGenerator shareInstance] printOnNormal:ctx  withX:byte_xpos+zoom/2 withY:byte_ypos+zoom/2 withSize:zoom];
+                     [self printOnNormal:ctx  withX:byte_xpos+zoom/2 withY:byte_ypos+zoom/2 withSize:zoom];
                 }
                 
                 //Figure out lower left
@@ -271,18 +290,18 @@ static QRCodeGenerator *instance = nil;
                 if( left == 0  && below == 0  )
                 {
                     //There is nothing to below or to the left so this should be rounded
-                     [[QRCodeGenerator shareInstance] printOnLowerLeftR:ctx  withX:byte_xpos withY:byte_ypos+zoom/2 withSize:zoom withRad:radius];
+                     [self printOnLowerLeftR:ctx  withX:byte_xpos withY:byte_ypos+zoom/2 withSize:zoom withRad:radius];
                     bottomLeftRounded=true;
                 }else{
 
-                     [[QRCodeGenerator shareInstance] printOnNormal:ctx  withX:byte_xpos withY:byte_ypos+zoom/2 withSize:zoom];
+                     [self printOnNormal:ctx  withX:byte_xpos withY:byte_ypos+zoom/2 withSize:zoom];
                 }
                 
                 
                 if(topLeftRounded && topRightRounded && bottomRightRounded && bottomLeftRounded)
                 {	//This is a solitary dot so lets color it differently to add interest
 
-                    [[QRCodeGenerator shareInstance] printOnRounded:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom];
+                    [self printOnRounded:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom];
                 }
                 
                 
@@ -294,7 +313,7 @@ static QRCodeGenerator *instance = nil;
                 {
                     //There is nothing to above or to the left so this should be rounded
    
-                    [[QRCodeGenerator shareInstance] printOffUpperLeftR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
+                    [self printOffUpperLeftR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
                 }else{
                     //Do nothing, this is supposed to be blank
                 }
@@ -305,7 +324,7 @@ static QRCodeGenerator *instance = nil;
                     //There is nothing to above or to the left so this should be rounded
  
                     
-                     [[QRCodeGenerator shareInstance] printOffUpperRightR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
+                     [self printOffUpperRightR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
                 }else{
                     
                 }
@@ -315,7 +334,7 @@ static QRCodeGenerator *instance = nil;
                 {
                     //There is nothing to above or to the left so this should be rounded
  
-                     [[QRCodeGenerator shareInstance] printOffLowerRightR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
+                     [self printOffLowerRightR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
                 }else{
                     
                 }
@@ -325,7 +344,7 @@ static QRCodeGenerator *instance = nil;
                     //There is nothing to below or to the left so this should be rounded
 
                     
-                   [[QRCodeGenerator shareInstance] printOffLowerLeftR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
+                   [self printOffLowerLeftR:ctx  withX:byte_xpos withY:byte_ypos withSize:zoom withRad:radius];
                 }else{
                     
                 }
@@ -350,8 +369,8 @@ static QRCodeGenerator *instance = nil;
     CGContextClosePath(ctx);
     CGContextSetStrokeColor(ctx,CGColorGetComponents([UIColor clearColor].CGColor));
     const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
-     CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+//     CGContextSetFillColor(ctx, CGColorGetComponents(QRcolor.CGColor));
     CGContextDrawPath(ctx, kCGPathFillStroke);
     
     
@@ -375,7 +394,8 @@ static QRCodeGenerator *instance = nil;
 }
 
 - (void)printOnUpperLeftR:(CGContextRef)ctx  withX:(double)x withY:(double)y  withSize:(double)zoom withRad:(float)radious{
-    
+    const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     //  CGContextSetStrokeColor(ctx,CGColorGetComponents([UIColor clearColor].CGColor));
     //
     //    CGContextMoveToPoint(ctx,x+zoom/2, y+zoom/2);
@@ -406,11 +426,11 @@ static QRCodeGenerator *instance = nil;
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
 //    CGContextSetStrokeColor(ctx,CGColorGetComponents(QRcolor.CGColor));
     
-    const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
-//    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+    components = CGColorGetComponents(QRcolor.CGColor);
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
     CGContextSetStrokeColorWithColor(ctx, QRcolor.CGColor);
     
-      CGContextSetFillColor(ctx,CGColorGetComponents(QRcolor.CGColor) );
+//      CGContextSetFillColor(ctx,CGColorGetComponents(QRcolor.CGColor) );
     
 }
 - (void)printOnUpperRightR:(CGContextRef)ctx  withX:(double)x withY:(double)y  withSize:(double)zoom withRad:(float)radious{
@@ -631,6 +651,14 @@ static QRCodeGenerator *instance = nil;
 
 
 
+-(void)setQRcolor:(UIColor *)color{
 
+    QRcolor = color;
+}
+
+-(void)setQRRadius:(float)radius{
+    QRRadius = radius;
+
+}
 
 @end

@@ -36,7 +36,11 @@
  @param margin 二维码的边界
  */
 
-+(UIImage *)qrEncodeWithAatarPixellate:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withMode:(int)mode;
++(UIImage *)qrEncodeWithAatarPixellate:(UIImage *)avatarImage
+                          withQRString:(NSString *)string
+                            withMargin:(int)margin
+                              withMode:(int)mode
+                        withOutPutSize:(float)imagSize;
 
 /**
  * @brief 公共方法返回 圆形二维码类似微信的效果
@@ -45,7 +49,8 @@
  @param margin 二维码边界
  */
 
-+(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin;
+
++(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withOutPutSize:(float)imagSize;
 
 
 /*
