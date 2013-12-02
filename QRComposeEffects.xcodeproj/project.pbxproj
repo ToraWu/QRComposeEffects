@@ -25,13 +25,16 @@
 		965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 965C775D1845EF7C00A29836 /* Main_iPhone.storyboard */; };
 		965C77621845EF7C00A29836 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 965C77601845EF7C00A29836 /* Main_iPad.storyboard */; };
 		965C77651845EF7C00A29836 /* TRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 965C77641845EF7C00A29836 /* TRViewController.m */; };
-		965C77671845EF7C00A29836 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 965C77661845EF7C00A29836 /* Images.xcassets */; };
 		965C776E1845EF7C00A29836 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C776D1845EF7C00A29836 /* XCTest.framework */; };
 		965C776F1845EF7D00A29836 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774B1845EF7C00A29836 /* Foundation.framework */; };
 		965C77701845EF7D00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
 		965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 965C77761845EF7D00A29836 /* InfoPlist.strings */; };
 		965C777A1845EF7D00A29836 /* QRComposeEffectsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 965C77791845EF7D00A29836 /* QRComposeEffectsTests.m */; };
 		965C778418460E0B00A29836 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C778318460E0B00A29836 /* CoreImage.framework */; };
+		965C77861848AC6B00A29836 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 965C77851848AC6B00A29836 /* Images.xcassets */; };
+		965C77871848AC6B00A29836 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 965C77851848AC6B00A29836 /* Images.xcassets */; };
+		965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 965C77881848AC7C00A29836 /* IMG_5623.JPG */; };
+		965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 965C77881848AC7C00A29836 /* IMG_5623.JPG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,13 +80,14 @@
 		965C77611845EF7C00A29836 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		965C77631845EF7C00A29836 /* TRViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TRViewController.h; sourceTree = "<group>"; };
 		965C77641845EF7C00A29836 /* TRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TRViewController.m; sourceTree = "<group>"; };
-		965C77661845EF7C00A29836 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		965C776C1845EF7C00A29836 /* QRComposeEffectsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QRComposeEffectsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		965C776D1845EF7C00A29836 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		965C77751845EF7D00A29836 /* QRComposeEffectsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "QRComposeEffectsTests-Info.plist"; sourceTree = "<group>"; };
 		965C77771845EF7D00A29836 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		965C77791845EF7D00A29836 /* QRComposeEffectsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRComposeEffectsTests.m; sourceTree = "<group>"; };
 		965C778318460E0B00A29836 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		965C77851848AC6B00A29836 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		965C77881848AC7C00A29836 /* IMG_5623.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_5623.JPG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,7 +181,8 @@
 				965C77601845EF7C00A29836 /* Main_iPad.storyboard */,
 				965C77631845EF7C00A29836 /* TRViewController.h */,
 				965C77641845EF7C00A29836 /* TRViewController.m */,
-				965C77661845EF7C00A29836 /* Images.xcassets */,
+				965C77851848AC6B00A29836 /* Images.xcassets */,
+				965C77881848AC7C00A29836 /* IMG_5623.JPG */,
 				965C77521845EF7C00A29836 /* Supporting Files */,
 			);
 			path = QRComposeEffects;
@@ -260,6 +265,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Tora Wu";
 				TargetAttributes = {
+					965C77471845EF7C00A29836 = {
+						DevelopmentTeam = 29BYGG9DBC;
+					};
 					965C776B1845EF7C00A29836 = {
 						TestTargetID = 965C77471845EF7C00A29836;
 					};
@@ -290,7 +298,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				965C77621845EF7C00A29836 /* Main_iPad.storyboard in Resources */,
-				965C77671845EF7C00A29836 /* Images.xcassets in Resources */,
+				965C77861848AC6B00A29836 /* Images.xcassets in Resources */,
+				965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */,
 				965C77561845EF7C00A29836 /* InfoPlist.strings in Resources */,
 			);
@@ -301,6 +310,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */,
+				965C77871848AC6B00A29836 /* Images.xcassets in Resources */,
+				965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,10 +470,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QRComposeEffects/QRComposeEffects-Prefix.pch";
 				INFOPLIST_FILE = "QRComposeEffects/QRComposeEffects-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -472,10 +486,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QRComposeEffects/QRComposeEffects-Prefix.pch";
 				INFOPLIST_FILE = "QRComposeEffects/QRComposeEffects-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -119,7 +119,7 @@ static CIContext *ciContextSingleton = nil;
    newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
  
 
-   UIImage *qrImage =  [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:mode withOutputSize:0];
+   UIImage *qrImage =  [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:mode withOutputSize:imagSize];
 //    滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
    

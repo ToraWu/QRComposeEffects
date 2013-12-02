@@ -52,6 +52,11 @@
 
 +(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withOutPutSize:(float)imagSize;
 
+/**
+ * @brief 返回模糊遮罩处理的效果
+ *
+ */
+
 
 /*
  *图片压缩

@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407657850.996099"
+            timestampString = "407658911.344794"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "-registerShadowEffectForView:depth:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407657850.996099"
+            timestampString = "407658911.344794"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
             landmarkName = "-registerEffectForView:depth:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "407657850.996099"
+            timestampString = "407658911.344794"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "-registerShadowEffectForView:depth:"
             landmarkType = "5">
          </BreakpointContent>
@@ -287,6 +287,22 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "106"
             endingLineNumber = "106"
+            landmarkName = "-qrImageForString:withPixSize:withMargin:withMode:withOutputSize:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QRComposeEffects/libqrencode/QRCodeGenerator.m"
+            timestampString = "407659019.73288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
             landmarkName = "-qrImageForString:withPixSize:withMargin:withMode:withOutputSize:"
             landmarkType = "5">
          </BreakpointContent>
