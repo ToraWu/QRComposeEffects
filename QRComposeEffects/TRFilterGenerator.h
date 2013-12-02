@@ -58,7 +58,7 @@
  * @brief 返回模糊遮罩处理的效果
  *
  */
-
++(UIImage *)qrEncodeWithGussianBlur:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color;
 
 /*
  *图片压缩

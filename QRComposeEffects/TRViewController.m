@@ -254,63 +254,8 @@ static NSArray *effectNameKeys;
     }
     else if (4 == index) {
         // Apply clamp filter:
-       
-        NSString *clampFilterName = @"CIAffineClamp";
-        CIFilter *clamp = [CIFilter filterWithName:clampFilterName];
-        
-        [clamp setValue:scrImage
-                 forKey:kCIInputImageKey];
-        
-        CIImage *clampResult = [clamp valueForKey:kCIOutputImageKey];
-        
-        
-        // Apply Gaussian Blur filter
-        
-        NSString *gaussianBlurFilterName = @"CIGaussianBlur";
-        CIFilter *gaussianBlur           = [CIFilter filterWithName:gaussianBlurFilterName];
-        
-        [gaussianBlur setValue:clampResult
-                        forKey:kCIInputImageKey];
-        [gaussianBlur setValue:[NSNumber numberWithFloat:20.0]
-                        forKey:@"inputRadius"];
-        
-        CIImage *gaussianBlurResult = [gaussianBlur valueForKey:kCIOutputImageKey];
-        
-        // Adjust Brightness of frontground
-        NSString *colorControlFilterName = @"CIColorControls";
-        CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
-        [colorControl setValue:scrImage forKey:kCIInputImageKey];
-        [colorControl setValue:@(-0.1) forKey:kCIInputBrightnessKey];
-        CIImage *frontground = [colorControl valueForKey:kCIOutputImageKey];
-        
-        // Adjust Brightness of background
-        CIFilter *bgcolorControl = [CIFilter filterWithName:colorControlFilterName];
-        [bgcolorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
-        [bgcolorControl setValue:@(0.25) forKey:kCIInputBrightnessKey];
-        CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
-        
-        
-        // Compose with Mask filter
-        NSString *maskFilterName = @"CIBlendWithAlphaMask";
-        CIFilter *mask = [CIFilter filterWithName:maskFilterName];
- 
-        
-//        CIImage *maskImage = [CIImage imageWithCGImage:[[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:self.userImage.size.width withMargin:2  withOutputSize:(float)outImagesize].CGImage];
- 
-        QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:0.5 withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
-//         CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:self.qrString withPixSize:60 withMargin:2 withMode:0 withOutputSize:s].CGImage];
-        
- 
- 
-        CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:self.qrString   withMargin:2 withMode:5 withOutputSize:self.userImage.size.width].CGImage];
- 
-        [mask setValue:frontground forKey:kCIInputImageKey];
-        [mask setValue:maskImage forKey:kCIInputMaskImageKey];
-        [mask setValue:background forKey:kCIInputBackgroundImageKey];
-        CIImage *maskResult = [mask valueForKey:kCIOutputImageKey];
-        
-        resultImage = [UIImage imageWithCGImage:[self.ciContext createCGImage:maskResult
-                                           fromRect:scrImage.extent]];
+    
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:self.userImage.size.width withQRColor:[UIColor blackColor]];
     }
     
     return resultImage;

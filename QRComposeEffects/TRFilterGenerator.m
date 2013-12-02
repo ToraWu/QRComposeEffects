@@ -249,6 +249,105 @@ static CIContext *ciContextSingleton = nil;
 }
 
 
++(UIImage *)qrEncodeWithGussianBlur:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color{
+
+       CIImage *scrImage = [CIImage imageWithCGImage: avatarImage.CGImage];
+    
+
+
+    
+
+    
+  CIImage *outPutImage   = scrImage;
+    
+    
+    
+    NSString *clampFilterName = @"CIAffineClamp";
+    CIFilter *clamp = [CIFilter filterWithName:clampFilterName];
+    //
+    //modify bylh
+    [clamp setValue:outPutImage
+             forKey:kCIInputImageKey];
+    
+    CIImage *clampResult = [clamp valueForKey:kCIOutputImageKey];
+    
+    
+    // Apply Gaussian Blur filter
+    
+    NSString *gaussianBlurFilterName = @"CIGaussianBlur";
+    CIFilter *gaussianBlur           = [CIFilter filterWithName:gaussianBlurFilterName];
+    
+    [gaussianBlur setValue:clampResult
+                    forKey:kCIInputImageKey];
+    [gaussianBlur setValue:[NSNumber numberWithFloat:20.0]
+                    forKey:@"inputRadius"];
+    
+    CIImage *gaussianBlurResult = [gaussianBlur valueForKey:kCIOutputImageKey];
+    
+    // Adjust Brightness of frontground
+    NSString *colorControlFilterName = @"CIColorControls";
+    CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
+    [colorControl setValue:scrImage forKey:kCIInputImageKey];
+    [colorControl setValue:@(-0.2) forKey:kCIInputBrightnessKey];
+    CIImage *frontground = [colorControl valueForKey:kCIOutputImageKey];
+    
+    
+    
+    NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
+    CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
+    [colorMonochrome setValue:gaussianBlurResult forKey:kCIInputImageKey];
+    [colorMonochrome setValue:[CIColor colorWithCGColor:[UIColor yellowColor].CGColor] forKey:kCIInputColorKey];
+    [colorMonochrome setValue:[NSNumber numberWithFloat:1] forKey:kCIInputIntensityKey];
+    CIImage *outImage = [colorMonochrome  valueForKey:kCIOutputImageKey];
+    
+    
+    
+    
+    // Adjust Brightness of background
+    CIFilter *bgcolorControl = [CIFilter filterWithName:colorControlFilterName];
+    [bgcolorControl setValue:outImage forKey:kCIInputImageKey];
+    [bgcolorControl setValue:@(0.25) forKey:kCIInputBrightnessKey];
+    CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
+    
+    
+    // Compose with Mask filter
+    NSString *maskFilterName = @"CIBlendWithAlphaMask";
+    CIFilter *mask = [CIFilter filterWithName:maskFilterName];
+
+    
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:0.5 withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+
+    
+    
+    
+    CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:5 withOutputSize:avatarImage.size.width].CGImage];
+    
+    [mask setValue:frontground forKey:kCIInputImageKey];
+    [mask setValue:maskImage forKey:kCIInputMaskImageKey];
+    [mask setValue:background forKey:kCIInputBackgroundImageKey];
+    CIImage *maskResult = [mask valueForKey:kCIOutputImageKey];
+    CIContext *context = [TRContect sharedCiContextrManager];
+ UIImage*   resultImage = [UIImage imageWithCGImage:[context createCGImage:maskResult
+                                                                 fromRect:scrImage.extent]];
+    return resultImage;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #pragma mark ===图片压缩
 //图片压缩
