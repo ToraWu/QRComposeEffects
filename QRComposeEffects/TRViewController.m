@@ -45,6 +45,7 @@ static NSArray *effectNameKeys;
     if (!effectNameKeys) {
         effectNameKeys = @[@"CIPixellate",@"circum",@"liquefied", @"Circle Mosaic", @"Blur Mask" ,@"gold"];
     }
+    self.resultImageDict = [NSMutableDictionary new];
     self.pageControl.numberOfPages = [effectNameKeys count];
     
     // Sample data
@@ -208,18 +209,13 @@ static NSArray *effectNameKeys;
     
     if (selectedImage) {
         self.userImage = selectedImage;
+        [self.resultImageDict removeAllObjects];
         [self updateUI];
     }
     
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
-
-//    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:1 withColor:nil];
-//        self.resultView.image = [qr qrImageForString:@"test.test" withPixSize:32 withMargin:0 withMode:4 withOutputSize:800];
-//  self.resultView.image = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:5 withOutPutSize:800];
-
- 
 }
 
 #pragma mark ==== ImageCompose ====
@@ -246,7 +242,7 @@ static NSArray *effectNameKeys;
     } else if (3 == index) {
     resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     }
-    else if (5 ==index){
+    else if (5 ==index) {
        
         
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];

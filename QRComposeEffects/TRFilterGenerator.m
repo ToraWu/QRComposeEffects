@@ -279,34 +279,39 @@ static CIContext *ciContextSingleton = nil;
     
     // Adjust Brightness of frontground
     
-    NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
-    CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
-    [colorMonochrome setValue:scrImage forKey:kCIInputImageKey];
-    [colorMonochrome setValue:[CIColor colorWithCGColor:[UIColor blackColor].CGColor] forKey:kCIInputColorKey];
-    [colorMonochrome setValue:[NSNumber numberWithFloat:0.5] forKey:kCIInputIntensityKey];
-    CIImage *outImage = [colorMonochrome  valueForKey:kCIOutputImageKey];
+//    NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
+//    CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
+//    [colorMonochrome setValue:scrImage forKey:kCIInputImageKey];
+//    [colorMonochrome setValue:[CIColor colorWithCGColor:[UIColor blackColor].CGColor] forKey:kCIInputColorKey];
+//    [colorMonochrome setValue:[NSNumber numberWithFloat:0.5] forKey:kCIInputIntensityKey];
+//    CIImage *outImage = [colorMonochrome  valueForKey:kCIOutputImageKey];
+    
+    CIFilter *darkcolorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator" keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"0 0 0 0.5"], nil];
+    CIImage *darkColor = [darkcolorGenerateFilter valueForKey:kCIOutputImageKey];
+    
+    CIFilter *blendFilter = [CIFilter filterWithName:@"CIMultiplyBlendMode" keysAndValues:kCIInputImageKey, scrImage, kCIInputBackgroundImageKey, darkColor, nil];
+    CIImage *frontground = [blendFilter valueForKey:kCIOutputImageKey];
     
     
-    NSString *colorControlFilterName = @"CIColorControls";
-    CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
-    [colorControl setValue:outImage forKey:kCIInputImageKey];
-    [colorControl setValue:@(-0.15) forKey:kCIInputBrightnessKey];
-    CIImage *frontground = [colorControl valueForKey:kCIOutputImageKey];
-    
-
-    
-    
+//    NSString *fgColorControlFilterName = @"CIGammaAdjust";
+//    CIFilter *fgcolorControl = [CIFilter filterWithName:fgColorControlFilterName];
+//    [fgcolorControl setValue:scrImage forKey:kCIInputImageKey];
+//    [fgcolorControl setValue:@(1.50) forKey:@"inputPower"];
+//    CIImage *frontground = [fgcolorControl valueForKey:kCIOutputImageKey];
     
     
     // Adjust Brightness of background
-    CIFilter *bgcolorControl = [CIFilter filterWithName:colorControlFilterName];
-    [bgcolorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
-    [bgcolorControl setValue:@(0.25) forKey:kCIInputBrightnessKey];
-    CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
+//    NSString *bgColorControlFilterName = @"CIColorControls";
+//    CIFilter *bgcolorControl = [CIFilter filterWithName:bgColorControlFilterName];
+//    [bgcolorControl setValue:gaussianBlurResult forKey:kCIInputImageKey];
+//    [bgcolorControl setValue:@(0.20) forKey:kCIInputBrightnessKey];
+//    CIImage *background = [bgcolorControl valueForKey:kCIOutputImageKey];
     
+    CIFilter *lightcolorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator" keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"1 1 1 0.5"], nil];
+    CIImage *lightColor = [lightcolorGenerateFilter valueForKey:kCIOutputImageKey];
     
-    
-//    //
+    CIFilter *bgblendFilter = [CIFilter filterWithName:@"CISourceAtopCompositing" keysAndValues:kCIInputImageKey, lightColor, kCIInputBackgroundImageKey, gaussianBlurResult, nil];
+    CIImage *background = [bgblendFilter valueForKey:kCIOutputImageKey];
 
     
 //    CIImage *outImage =  background;
