@@ -151,22 +151,36 @@ static CIContext *ciContextSingleton = nil;
 
 +(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color{
 
-    
-    //        绘制QR背景图
-    int versionNormal =  7;
-    int versionBig = 14;
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
-    int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:versionBig];
-    int sizeOfPix = (floor)(imagSize/(leverl));
-    if (sizeOfPix%2!= 0) {
+     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
+    int widthQR = 2*margin + [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:0];
+
+    int sizeOfPix = floor(imagSize/widthQR);
+    if (sizeOfPix%2 !=0) {
         sizeOfPix--;
     }
- 
     
-
- 
-    float bigImageSize = (21+ (versionBig-1)*4) * sizeOfPix;
-    float  smallImageSize = (21+ (versionNormal-1)*4) * sizeOfPix;
+    int widthBackQR = 1.414*widthQR + 6;
+    int versionNormal = (widthQR - 2*margin -21)/4.0 +1;
+    int versionBig = (ceilf)((widthBackQR - 21)/4.0)+1;
+    
+    float bigImageSize = ((versionBig -1)*4+21)*sizeOfPix;
+    float smallImageSize = widthQR * sizeOfPix;
+    
+    
+    
+    //        绘制QR背景图
+//    int versionNormal =  7;
+//    int versionBig = 14;
+//    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
+//    int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:versionBig];
+//    int sizeOfPix = (floor)(imagSize/(leverl+margin*2));
+//    if (sizeOfPix%2!= 0) {
+//        sizeOfPix--;
+//    }
+// 
+//    
+//    float bigImageSize = (21+ (versionBig-1)*4) * sizeOfPix;
+//    float  smallImageSize = (21+ (versionNormal-1)*4+2*margin) * sizeOfPix;
     
     UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig];
 
