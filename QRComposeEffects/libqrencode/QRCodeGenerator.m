@@ -116,6 +116,7 @@ static QRCodeGenerator *instance = nil;
 	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
 	UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
 
+    qrImage = [TRFilterGenerator imageWithImageSimple:qrImage scaledToSize:CGSizeMake(outImagesize, outImagesize)];
     
 	// some releases
 	CGContextRelease(ctx);

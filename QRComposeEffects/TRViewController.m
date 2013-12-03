@@ -233,7 +233,7 @@ static NSArray *effectNameKeys;
     
     CIImage *scrImage = [CIImage imageWithCGImage:self.userImage.CGImage];
     
-    if (0 == index) {
+    if (4 == index) {
   resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:400 withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
         
    
@@ -252,10 +252,10 @@ static NSArray *effectNameKeys;
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:800 withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
         
     }
-    else if (4 == index) {
+    else if (0 == index) {
         // Apply clamp filter:
     
-        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:self.userImage.size.width withQRColor:[UIColor blackColor]];
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:800 withQRColor:[UIColor blackColor]];
     }
     
     return resultImage;
