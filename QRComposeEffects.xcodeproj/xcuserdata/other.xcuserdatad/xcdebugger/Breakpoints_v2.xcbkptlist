@@ -122,27 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRFilterGenerator.m"
-            timestampString = "407732599.76391"
+            timestampString = "407760692.739371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
-            landmarkName = "+qrEncodeWithCircle:withQRString:withMargin:withRadius:withOutPutSize:withQRColor:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QRComposeEffects/TRFilterGenerator.m"
-            timestampString = "407732599.76391"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
             landmarkName = "+qrEncodeWithCircle:withQRString:withMargin:withRadius:withOutPutSize:withQRColor:"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRComposeEffects/TRFilterGenerator.m"
-            timestampString = "407734696.365862"
+            timestampString = "407760692.739371"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
             landmarkName = "+qrEncodeWithGussianBlur:withQRString:withMargin:withRadius:withOutPutSize:withQRColor:"
             landmarkType = "5">
          </BreakpointContent>
@@ -288,6 +272,22 @@
             startingLineNumber = "122"
             endingLineNumber = "122"
             landmarkName = "-qrImageForString:withMargin:withMode:withOutputSize:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QRComposeEffects/TRFilterGenerator.m"
+            timestampString = "407760833.339026"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "+qrEncodeWithCircle:withQRString:withMargin:withRadius:withOutPutSize:withQRColor:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
