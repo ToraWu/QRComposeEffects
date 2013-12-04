@@ -343,32 +343,26 @@ static CIContext *ciContextSingleton = nil;
     [mask setValue:maskImage forKey:kCIInputMaskImageKey];
     [mask setValue:background forKey:kCIInputBackgroundImageKey];
 
-    CIImage *maskResult = [mask valueForKey:kCIOutputImageKey];
+    CIImage *finalResult = [mask valueForKey:kCIOutputImageKey];
     
     
+    // Monochromelize final result
+    if (color) {
+        NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
+        CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
+        [colorMonochrome setValue:finalResult forKey:kCIInputImageKey];
+        [colorMonochrome setValue:[CIColor colorWithCGColor:color.CGColor] forKey:kCIInputColorKey];
+        [colorMonochrome setValue:[NSNumber numberWithFloat:1.0] forKey:kCIInputIntensityKey];
+        finalResult = [colorMonochrome  valueForKey:kCIOutputImageKey];
+    }
     
     
+    // Output UIImage
     CIContext *context = [TRContect sharedCiContextrManager];
-    UIImage*   resultImage = [UIImage imageWithCGImage:[context createCGImage:maskResult
+    UIImage*   resultImage = [UIImage imageWithCGImage:[context createCGImage:finalResult
                                                                  fromRect:scrImage.extent]];
     return resultImage;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #pragma mark ===图片压缩

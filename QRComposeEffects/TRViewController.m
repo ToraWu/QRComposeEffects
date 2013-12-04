@@ -10,12 +10,13 @@
 #import <CoreImage/CoreImage.h>
 #import "TRFilterGenerator.h"
 #import "QRCodeGenerator.h"
+#import "TransitionView.h"
 
 @interface TRViewController () {
     UIImage *_qrImage;
 }
 
-@property (nonatomic, strong) IBOutlet UIImageView *resultView;
+@property (nonatomic, strong) IBOutlet TransitionView *resultView;
 @property (nonatomic, strong) IBOutlet UIPageControl *pageControl;
 @property (nonatomic, strong) IBOutlet UIView *boardView;
 
@@ -43,7 +44,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"CIPixellate",@"circum",@"liquefied", @"Circle Mosaic", @"Blur Mask" ,@"gold"];
+        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold"];
     }
     self.resultImageDict = [NSMutableDictionary new];
     self.pageControl.numberOfPages = [effectNameKeys count];
@@ -170,15 +171,21 @@ static NSArray *effectNameKeys;
 - (IBAction)swipeRight:(UISwipeGestureRecognizer *)swipeGestureRecognizer {
     if (self.pageControl.currentPage > 0) {
         self.pageControl.currentPage --;
-        [self pageChanged:self.pageControl];
+    } else {
+        self.pageControl.currentPage = self.pageControl.numberOfPages - 1;
     }
+    
+    [self pageChanged:self.pageControl];
 }
 
 - (IBAction)swipeLeft:(UISwipeGestureRecognizer *)swipeGestureRecognizer {
     if (self.pageControl.currentPage < (self.pageControl.numberOfPages - 1)) {
         self.pageControl.currentPage ++;
-        [self pageChanged:self.pageControl];
+    } else {
+        self.pageControl.currentPage = 0;
     }
+    
+    [self pageChanged:self.pageControl];
 }
 
 #pragma mark ==== UIImagePicker ====
@@ -229,29 +236,32 @@ static NSArray *effectNameKeys;
     
     CGFloat qrWidth = self.userImage.size.width;
     
-    if (4 == index) {
-  resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
-        
-   
-    } else if (1 == index) {
-
-        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor blackColor]];
-    } else if (2 == index) {
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
-    
-    } else if (3 == index) {
-    resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
-    }
-    else if (5 ==index) {
-       
-        
+    if (0 == index) {
+        // Pixellate
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
         
-    }
-    else if (0 == index) {
-        // Apply clamp filter:
+    } else if (1 == index) {
+        // Pixellate : Golden
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
+
+    } else if (2 == index) {
+        // Pixellate : rounded corner
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:0.5 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
     
-        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor blackColor]];
+    } else if (3 == index) {
+        // Circum
+        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor blackColor]];
+    }
+    else if (4 ==index) {
+        // Circum : rounded corner
+        resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:0.5 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    }
+    else if (5 == index) {
+        // Blur mask
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:nil];
+    } else if (6 == index) {
+        // Blur mask : golden
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.1 alpha:1]];
     }
     
     return resultImage;

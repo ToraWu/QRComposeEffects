@@ -16,6 +16,13 @@
 		63AD48BB1847302400CA3E75 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48AF1847302400CA3E75 /* rscode.c */; };
 		63AD48BC1847302400CA3E75 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B11847302400CA3E75 /* split.c */; };
 		63AD48BD1847302400CA3E75 /* TRFilterGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AD48B41847302400CA3E75 /* TRFilterGenerator.m */; };
+		96528DCC184F001300282341 /* CITransitionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 96528DCB184F001300282341 /* CITransitionHelper.m */; };
+		96528DCD184F001300282341 /* CITransitionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 96528DCB184F001300282341 /* CITransitionHelper.m */; };
+		96528DD0184F001E00282341 /* TransitionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96528DCF184F001E00282341 /* TransitionView.m */; };
+		96528DD1184F001E00282341 /* TransitionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96528DCF184F001E00282341 /* TransitionView.m */; };
+		96528DD3184F013A00282341 /* mask.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD2184F013A00282341 /* mask.jpg */; };
+		96528DD4184F013A00282341 /* mask.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD2184F013A00282341 /* mask.jpg */; };
+		96528DD6184F070100282341 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96528DD5184F070100282341 /* GLKit.framework */; };
 		965C774C1845EF7C00A29836 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774B1845EF7C00A29836 /* Foundation.framework */; };
 		965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774D1845EF7C00A29836 /* CoreGraphics.framework */; };
 		965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
@@ -66,6 +73,12 @@
 		63AD48B21847302400CA3E75 /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = split.h; sourceTree = "<group>"; };
 		63AD48B31847302400CA3E75 /* TRFilterGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRFilterGenerator.h; sourceTree = "<group>"; };
 		63AD48B41847302400CA3E75 /* TRFilterGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRFilterGenerator.m; sourceTree = "<group>"; };
+		96528DCA184F001300282341 /* CITransitionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CITransitionHelper.h; sourceTree = "<group>"; };
+		96528DCB184F001300282341 /* CITransitionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CITransitionHelper.m; sourceTree = "<group>"; };
+		96528DCE184F001E00282341 /* TransitionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionView.h; sourceTree = "<group>"; };
+		96528DCF184F001E00282341 /* TransitionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionView.m; sourceTree = "<group>"; };
+		96528DD2184F013A00282341 /* mask.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mask.jpg; sourceTree = "<group>"; };
+		96528DD5184F070100282341 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		965C77481845EF7C00A29836 /* QRComposeEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRComposeEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		965C774B1845EF7C00A29836 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		965C774D1845EF7C00A29836 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -95,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96528DD6184F070100282341 /* GLKit.framework in Frameworks */,
 				965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */,
 				965C778418460E0B00A29836 /* CoreImage.framework in Frameworks */,
 				965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */,
@@ -138,6 +152,18 @@
 			path = libqrencode;
 			sourceTree = "<group>";
 		};
+		96528DC9184F001300282341 /* CITransitionHelper */ = {
+			isa = PBXGroup;
+			children = (
+				96528DCA184F001300282341 /* CITransitionHelper.h */,
+				96528DCB184F001300282341 /* CITransitionHelper.m */,
+				96528DCE184F001E00282341 /* TransitionView.h */,
+				96528DCF184F001E00282341 /* TransitionView.m */,
+				96528DD2184F013A00282341 /* mask.jpg */,
+			);
+			path = CITransitionHelper;
+			sourceTree = "<group>";
+		};
 		965C773F1845EF7C00A29836 = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +186,7 @@
 		965C774A1845EF7C00A29836 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96528DD5184F070100282341 /* GLKit.framework */,
 				965C778318460E0B00A29836 /* CoreImage.framework */,
 				965C774B1845EF7C00A29836 /* Foundation.framework */,
 				965C774D1845EF7C00A29836 /* CoreGraphics.framework */,
@@ -173,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				63AD48A21847302400CA3E75 /* libqrencode */,
+				96528DC9184F001300282341 /* CITransitionHelper */,
 				63AD48B31847302400CA3E75 /* TRFilterGenerator.h */,
 				63AD48B41847302400CA3E75 /* TRFilterGenerator.m */,
 				965C775A1845EF7C00A29836 /* TRAppDelegate.h */,
@@ -298,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				965C77621845EF7C00A29836 /* Main_iPad.storyboard in Resources */,
+				96528DD3184F013A00282341 /* mask.jpg in Resources */,
 				965C77861848AC6B00A29836 /* Images.xcassets in Resources */,
 				965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */,
@@ -312,6 +341,7 @@
 				965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */,
 				965C77871848AC6B00A29836 /* Images.xcassets in Resources */,
 				965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */,
+				96528DD4184F013A00282341 /* mask.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63AD48B61847302400CA3E75 /* mask.c in Sources */,
+				96528DCC184F001300282341 /* CITransitionHelper.m in Sources */,
 				63AD48BA1847302400CA3E75 /* qrspec.c in Sources */,
 				965C775C1845EF7C00A29836 /* TRAppDelegate.m in Sources */,
 				63AD48BB1847302400CA3E75 /* rscode.c in Sources */,
@@ -334,6 +365,7 @@
 				63AD48BD1847302400CA3E75 /* TRFilterGenerator.m in Sources */,
 				63AD48B51847302400CA3E75 /* bitstream.c in Sources */,
 				63AD48B71847302400CA3E75 /* QRCodeGenerator.m in Sources */,
+				96528DD0184F001E00282341 /* TransitionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +373,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96528DD1184F001E00282341 /* TransitionView.m in Sources */,
+				96528DCD184F001300282341 /* CITransitionHelper.m in Sources */,
 				965C777A1845EF7D00A29836 /* QRComposeEffectsTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

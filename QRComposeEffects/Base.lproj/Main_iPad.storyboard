@@ -35,11 +35,11 @@
                                 <rect key="frame" x="64" y="129" width="640" height="640"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Tf-B9-cAv">
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DHq-rx-k9Z" customClass="TransitionView">
                                         <rect key="frame" x="20" y="20" width="600" height="600"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <color key="backgroundColor" red="0.76818710369999998" green="0.87007135869999996" blue="0.89119819970000003" alpha="1" colorSpace="calibratedRGB"/>
-                                    </imageView>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
@@ -75,7 +75,7 @@
                     <connections>
                         <outlet property="boardView" destination="BOk-uE-euh" id="Ath-ha-9ls"/>
                         <outlet property="pageControl" destination="aAj-O1-Ynw" id="cwS-zI-6dM"/>
-                        <outlet property="resultView" destination="1Tf-B9-cAv" id="QDx-zK-7gc"/>
+                        <outlet property="resultView" destination="DHq-rx-k9Z" id="Qqg-Vd-Ip7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
