@@ -55,10 +55,16 @@
 +(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor*)color;;
 
 /**
- * @brief 返回模糊遮罩处理的效果
+ * @brief 返回模糊遮罩处理的效果，可附加着色和纹理
  *
  */
-+(UIImage *)qrEncodeWithGussianBlur:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color;
++(UIImage *)qrEncodeWithGussianBlur:(UIImage *)inputImage
+                   maskWithQRString:(NSString *)string
+                             margin:(int)margin
+                             radius:(float)radius
+                         outPutSize:(float)imagSize
+                    monochromeColor:(UIColor *)color
+               compositeWithTexture:(UIImage *)textureImage;
 
 /*
  *图片压缩

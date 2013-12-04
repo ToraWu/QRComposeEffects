@@ -78,6 +78,10 @@ static NSArray *effectNameKeys;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    //For test
+    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    
     [self updateUI];
 }
 
@@ -258,10 +262,22 @@ static NSArray *effectNameKeys;
     }
     else if (5 == index) {
         // Blur mask
-        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:nil];
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage
+                                                 maskWithQRString:self.qrString
+                                                           margin:2
+                                                           radius:0.5
+                                                       outPutSize:qrWidth
+                                                  monochromeColor:nil
+                                             compositeWithTexture:nil];
     } else if (6 == index) {
         // Blur mask : golden
-        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage withQRString:self.qrString withMargin:2 withRadius:1.0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.1 alpha:1]];
+        resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage
+                                                 maskWithQRString:self.qrString
+                                                           margin:2
+                                                           radius:0.5
+                                                       outPutSize:qrWidth
+                                                  monochromeColor:[UIColor colorWithRed:0.87 green:0.66 blue:0.08 alpha:1]
+                                             compositeWithTexture:[UIImage imageNamed:@"gold_texture.jpg"]];
     }
     
     return resultImage;

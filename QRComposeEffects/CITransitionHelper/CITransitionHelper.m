@@ -24,7 +24,7 @@
         case kCITransitionTypeDissolve:
         default:
         {
-            transition = [CIFilter filterWithName: @"CIDissolveTransition"];
+            transition = [CIFilter filterWithName: @"CIBarsSwipeTransition"];
             
             break;
         }
