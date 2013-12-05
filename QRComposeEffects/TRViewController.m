@@ -12,6 +12,8 @@
 #import "QRCodeGenerator.h"
 #import "TransitionView.h"
 
+
+
 @interface TRViewController () {
     UIImage *_qrImage;
 }
@@ -68,7 +70,305 @@ static NSArray *effectNameKeys;
     self.resultView.layer.shadowRadius = 5;
     [self registerEffectForView:self.resultView depth:5];
     [self registerShadowEffectForView:self.resultView depth:-4*self.resultView.layer.shadowRadius];
+    
+    
+    
+    //    test
+    
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [self.navigationController.navigationBar addGestureRecognizer:gesture];
+    [gesture setMinimumPressDuration:1.0f];
+    [gesture setAllowableMovement:50.0];
+    
+    [self.navigationController.navigationBar addGestureRecognizer:gesture];
+    
+    
 }
+- (void)longPress:(UILongPressGestureRecognizer*)gesture {
+    
+    if( gesture.state == UIGestureRecognizerStateBegan &&[gesture isKindOfClass:[UILongPressGestureRecognizer class]])
+    {
+        
+        /*扫描二维码部分：
+         导入ZBarSDK文件并引入一下框架
+         AVFoundation.framework
+         CoreMedia.framework
+         CoreVideo.framework
+         QuartzCore.framework
+         libiconv.dylib
+         引入头文件#import “ZBarSDK.h” 即可使用
+         */
+        ZBarReaderViewController *reader = [ZBarReaderViewController new];
+        reader.readerDelegate = self;
+        reader.videoQuality= UIImagePickerControllerQualityTypeHigh;
+        reader.supportedOrientationsMask = ZBarOrientationMaskAll;
+//        reader.showsZBarControls = NO;
+//        reader.tracksSymbols = NO;
+        reader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+        
+        reader.showsHelpOnFail = NO;
+        //    reader.showsCameraControls = YES;
+        ZBarImageScanner *scanner = reader.scanner;
+        
+        [self setOverlayPickerView:reader];
+        
+        
+        [scanner setSymbology:ZBAR_I25 config:ZBAR_CFG_ENABLE to:0];
+        
+        [self presentViewController:reader animated:YES completion:^{
+            NSLog(@"跳转成功");
+        }];
+    }
+    
+    
+#pragma mark ===自定义解码界面  或者使用ios 7 解码
+    /*自定义扫描
+     // Do any additional setup after loading the view.
+     ZBarImageScanner * scanner = [ZBarImageScanner new];
+     [scanner setSymbology: ZBAR_I25
+     config: ZBAR_CFG_ENABLE
+     to: 0];
+     readView = [[ZBarReaderView alloc] initWithImageScanner:scanner];
+     
+     
+     readView.readerDelegate = self;
+     
+     readView.frame = self.view.frame;
+     
+     [self.view addSubview:readView];
+     [self.view bringSubviewToFront:readView];
+     readView.showsFPS = YES;
+     readView.scanCrop = CGRectMake(0, 0, 1, 1);
+     [readView start];
+     
+     */
+}
+- (void)setOverlayPickerView:(ZBarReaderViewController *)reader
+
+{
+    
+    //清除原有控件
+    
+    for (UIView *temp in [reader.view subviews]) {
+        
+        for (UIButton *button in [temp subviews]) {
+            
+            if ([button isKindOfClass:[UIButton class]]) {
+                
+                [button removeFromSuperview];
+                
+            }
+            
+        }
+        
+        for (UIToolbar *toolbar in [temp subviews]) {
+            
+            if ([toolbar isKindOfClass:[UIToolbar class]]) {
+                
+                [toolbar setHidden:YES];
+                
+                [toolbar removeFromSuperview];
+                
+            }
+            
+        }
+        
+    }
+    
+    //画中间的基准线
+    
+    UIView* line = [[UIView alloc] initWithFrame:CGRectMake(40, 220, 240, 1)];
+    
+    line.backgroundColor = [UIColor redColor];
+    
+    [reader.view addSubview:line];
+    
+    //最上部view
+    
+    UIView* upView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 80)];
+    
+    upView.alpha = 0.3;
+    
+    upView.backgroundColor = [UIColor blackColor];
+    
+    [reader.view addSubview:upView];
+    
+    //用于说明的label
+    
+    labIntroudction= [[UILabel alloc] init];
+    
+    labIntroudction.backgroundColor = [UIColor clearColor];
+    
+    labIntroudction.frame=CGRectMake(15, 20, 290, 50);
+    
+    labIntroudction.numberOfLines=2;
+    
+    labIntroudction.textColor=[UIColor whiteColor];
+    
+    labIntroudction.text=@"将二维码图像置于矩形方框内，离手机摄像头10CM左右，系统会自动识别。";
+    
+    [upView addSubview:labIntroudction];
+    
+    
+    //左侧的view
+    
+    UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 80, 20, 280)];
+    
+    leftView.alpha = 0.3;
+    
+    leftView.backgroundColor = [UIColor blackColor];
+    
+    [reader.view addSubview:leftView];
+    
+    
+    //右侧的view
+    
+    UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(300, 80, 20, 280)];
+    
+    rightView.alpha = 0.3;
+    
+    rightView.backgroundColor = [UIColor blackColor];
+    
+    [reader.view addSubview:rightView];
+    
+    
+    
+    //底部view
+    
+    UIView * downView = [[UIView alloc] initWithFrame:CGRectMake(0, 360, 320, self.view.frame.size.height - 360)];
+    
+    downView.alpha = 0.3;
+    
+    downView.backgroundColor = [UIColor blackColor];
+    
+    [reader.view addSubview:downView];
+    
+    
+    //用于取消操作的button
+    
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    cancelButton.alpha = 0.4;
+    
+    [cancelButton setFrame:CGRectMake(20, 390, 280, 40)];
+    
+    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    
+    [cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    
+    [cancelButton addTarget:self action:@selector(dismissOverlayView:)forControlEvents:UIControlEventTouchUpInside];
+    
+    [reader.view addSubview:cancelButton];
+    
+}
+
+//取消button方法
+
+- (void)dismissOverlayView:(id)sender{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
+}
+
+#pragma mark ===  delegate  zbarReaderController
+
+
+- (void) readerControllerDidFailToRead: (ZBarReaderController*) reader
+                             withRetry: (BOOL) retry{
+    
+    [   self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    NSLog(@"失败了  ！~~~");
+    
+}
+
+- (void) readerView: (ZBarReaderView*) readerView
+     didReadSymbols: (ZBarSymbolSet*) symbols
+          fromImage: (UIImage*) image{
+    ;;;
+}
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    NSLog(@"取消相册 ！~~~");
+    
+}
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    
+    
+    if (![picker isKindOfClass:[ZBarReaderViewController class]]) {
+        UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
+        
+        if (selectedImage) {
+            self.userImage = selectedImage;
+            [self.resultImageDict removeAllObjects];
+            [self updateUI];
+        }
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+        return;
+    }
+    
+
+    
+    id<NSFastEnumeration> results = [info objectForKey: ZBarReaderControllerResults];
+    if ([info count]>2) {
+        int quality = 0;
+        ZBarSymbol *bestResult = nil;
+        for(ZBarSymbol *sym in results) {
+            int q = sym.quality;
+            if(quality < q) {
+                quality = q;
+                bestResult = sym;
+            }
+        }
+        [self performSelector: @selector(presentResult:) withObject: bestResult afterDelay: .001];
+    }else {
+        ZBarSymbol *symbol = nil;
+        for(symbol in results)
+            break;
+        [self performSelector: @selector(presentResult:) withObject: symbol afterDelay: .001];
+    }
+//    [picker dismissViewControllerAnimated:YES completion:^{
+//        
+//        
+//    }];
+}
+//
+- (void) presentResult: (ZBarSymbol*)sym {
+    if (sym) {
+        NSString *tempStr = sym.data;
+        if ([sym.data canBeConvertedToEncoding:NSShiftJISStringEncoding]) {
+            tempStr = [NSString stringWithCString:[tempStr cStringUsingEncoding:NSShiftJISStringEncoding] encoding:NSUTF8StringEncoding];
+        }
+        labIntroudction.text = tempStr;
+    }
+}
+
+
+
+
+
+
+- (void)readFromAlbums{
+    ZBarReaderController *reader = [ZBarReaderController new];
+    reader.allowsEditing = YES;
+    reader.readerDelegate = self;
+    reader.showsZBarControls = NO;
+    reader.showsHelpOnFail = NO;
+    reader.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:reader animated:YES completion:^{
+        NSLog(@"跳转成功---");
+    }];
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -87,15 +387,15 @@ static NSArray *effectNameKeys;
 
 - (UIImage *)qrImage {
     if (!_qrImage) {
- 
- 
-      //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
-      QRCodeGenerator *qr=  [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor blackColor]];
+        
+        
+        //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
+        QRCodeGenerator *qr=  [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor blackColor]];
         _qrImage = [qr qrImageForString:self.qrString withMargin:0 withMode:0 withOutputSize:self.resultView.bounds.size.width];
- 
-     }
+        
+    }
     
- 
+    
     return _qrImage;
 }
 
@@ -215,19 +515,9 @@ static NSArray *effectNameKeys;
     }];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
-    
-    if (selectedImage) {
-        self.userImage = selectedImage;
-        [self.resultImageDict removeAllObjects];
-        [self updateUI];
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-}
+//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//   
+//}
 
 #pragma mark ==== ImageCompose ====
 
@@ -247,11 +537,11 @@ static NSArray *effectNameKeys;
     } else if (1 == index) {
         // Pixellate : Golden
         resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
-
+        
     } else if (2 == index) {
         // Pixellate : rounded corner
         resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:0.5 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
-    
+        
     } else if (3 == index) {
         // Circum
         resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor blackColor]];
