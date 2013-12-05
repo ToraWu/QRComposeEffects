@@ -294,6 +294,10 @@ static NSArray *effectNameKeys;
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     NSLog(@"取消相册 ！~~~");
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        
+    }];
     
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
