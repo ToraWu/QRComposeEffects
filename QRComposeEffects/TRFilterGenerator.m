@@ -245,7 +245,9 @@ static CIContext *ciContextSingleton = nil;
     
     //   重新绘制背景图片大小
     CGContextSetBlendMode(ctx,  kCGBlendModeNormal);
+        CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
     CGContextDrawImage(ctx, Rect,avatarImage.CGImage);
+    
     CGImageRef backImageCGImage = CGBitmapContextCreateImage(ctx);
     
     UIImage *cirAvatarImage = [UIImage imageWithCGImage:backImageCGImage];
