@@ -536,23 +536,41 @@ static NSArray *effectNameKeys;
     
     if (0 == index) {
         // Pixellate
-        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:5 withRadius:0  withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+        resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
+                                                       qRString:self.qrString
+                                                             margin:2
+                                                               mode:5
+                                                             radius:0
+                                                         outPutSize:qrWidth
+                                                            qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
         
     } else if (1 == index) {
         // Pixellate : Golden
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:0 withMode:0 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
+                                                            qRString:self.qrString
+                                                              margin:0
+                                                                mode:0
+                                                              radius:0
+                                                      outPutSize:qrWidth
+                                                             qRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
         
     } else if (2 == index) {
         // Pixellate : rounded corner
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage withQRString:self.qrString withMargin:2 withMode:0 withRadius:0.5 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
+                                                            qRString:self.qrString
+                                                              margin:2
+                                                                mode:0
+                                                              radius:0.5
+                                                          outPutSize:qrWidth
+                                                             qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
         
     } else if (3 == index) {
         // Circum
-        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:1 withRadius:0 withOutPutSize:qrWidth withQRColor:[UIColor blackColor]];
+        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:1 radius:0 outPutSize:qrWidth qRColor:nil];
     }
     else if (4 ==index) {
         // Circum : rounded corner
-        resultImage  = [TRFilterGenerator qrEncodeWithCircle:self.userImage withQRString:self.qrString withMargin:2 withRadius:0.5 withOutPutSize:qrWidth withQRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+        resultImage  =[TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:2 radius:0.5 outPutSize:qrWidth qRColor:nil];
     }
     else if (5 == index) {
         // Blur mask

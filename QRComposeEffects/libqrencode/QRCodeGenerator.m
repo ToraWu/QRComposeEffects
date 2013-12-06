@@ -216,10 +216,14 @@ static QRCodeGenerator *instance = nil;
     
     
 	QRcode *code = QRcode_encodeString([string UTF8String], mode, level, QR_MODE_8, 1);
-	if (!code) {
-		return 0;
-	}else
-        return code->width;
+    int result;
+    if (code) {
+        result  = code->width;
+    }else
+        result = 0;
+    QRcode_free(code);
+    return result;
+	   
 }
 
 

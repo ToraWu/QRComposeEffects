@@ -8,7 +8,7 @@
 #import "ZBarSDK.h"
 #import <UIKit/UIKit.h>
 
-@interface TRViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate,ZBarReaderDelegate,ZBarCaptureDelegate>
+@interface TRViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate,ZBarReaderDelegate>
 {
 
     UILabel * labIntroudction;
