@@ -14,9 +14,9 @@ static CIContext *ciContextSingleton = nil;
 
 + (CIContext *)sharedCiContextrManager {
     if (!ciContextSingleton) {
-//        EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-//        ciContextSingleton  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
-        ciContextSingleton = [CIContext contextWithOptions:nil];
+        EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        ciContextSingleton  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
+//        ciContextSingleton = [CIContext contextWithOptions:nil];
     }
     
     return ciContextSingleton;
@@ -82,10 +82,14 @@ static CIContext *ciContextSingleton = nil;
     [filter setValue:[NSNumber numberWithDouble:scale] forKey:@"inputScale"];
     [filter setValue:forwardImage forKey:@"inputImage"];
     CGImageRef cgiimage = [context createCGImage:filter.outputImage fromRect:filter.outputImage.extent];
+    
     UIImage *newImage = [UIImage imageWithCGImage:cgiimage scale:1.0f orientation:inputImage.imageOrientation];
+    
     CGImageRef cr = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newImage.size.width-scale, newImage.size.height-scale));
     //    裁掉多余的一条边
 	UIImage *croppedImage = [UIImage imageWithCGImage:cr];
+    
+    
     CGImageRelease(cr);
     CGImageRelease(cgiimage);
     return croppedImage;
@@ -154,21 +158,22 @@ static CIContext *ciContextSingleton = nil;
 
 +(UIImage *)qrEncodeWithCircle:(UIImage *)avatarImage withQRString:(NSString *)string withMargin:(int)margin  withRadius:(float)radius withOutPutSize:(float)imagSize withQRColor:(UIColor *)color{
 
-     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
+    
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
     int widthQR = 2*margin + [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:0];
-
-    int sizeOfPix = floor(imagSize/widthQR);
+    int widthBackQR = 1.414*widthQR + 6;
+    
+    int sizeOfPix = floor(imagSize/widthBackQR);
     if (sizeOfPix%2 !=0) {
         sizeOfPix--;
     }
     
-    int widthBackQR = 1.414*widthQR + 6;
-    int versionNormal = (widthQR - 2*margin -21)/4.0 +1;
+    
+    int versionNormal =(ceilf)( (widthQR - 2*margin -21)/4.0) +1;
     int versionBig = (ceilf)((widthBackQR - 21)/4.0)+1;
     
     float bigImageSize = ((versionBig -1)*4+21)*sizeOfPix;
     float smallImageSize = widthQR * sizeOfPix;
-    
     
     
     //        绘制QR背景图
@@ -248,7 +253,7 @@ static CIContext *ciContextSingleton = nil;
     //滤镜合成
     
     UIImage *resultImage =   [TRFilterGenerator CIDissolveTransitionWithImage:cirAvatarImage WithBackImage:cirQRImage];
-    //压缩大小
+    //压缩大小 并且设置背景为白色
     resultImage = [TRFilterGenerator imageWithImageSimple:resultImage backGroundColor:[UIColor whiteColor] newSize:CGSizeMake(imagSize, imagSize)];
                    //imageWithImageSimple:resultImage scaledToSize:CGSizeMake(imagSize, imagSize)];
 
