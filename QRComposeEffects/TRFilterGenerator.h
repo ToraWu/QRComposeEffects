@@ -66,10 +66,11 @@
                     monochromeColor:(UIColor *)color
                compositeWithTexture:(UIImage *)textureImage;
 
+
 /*
- *图片压缩
+ *图片添加背景 并且压缩
  */
-+(UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize;
++(UIImage *)imageWithImageSimple:(UIImage *)image backGroundColor:(UIColor *)color newSize:(CGSize )newSize;
 
 /*
  *圆角化

@@ -96,12 +96,20 @@ static QRCodeGenerator *instance = nil;
     
 	// create context
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+        int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
+    #else
+        int bitmapInfo = kCGImageAlphaPremultipliedLast;
+    #endif
+        CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
 	
 	CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -size);
 	CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
 	CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
-    
+
+    //    加入抗锯齿 特别慢
+    CGContextSetAllowsAntialiasing(ctx, true);
+    CGContextSetShouldAntialias(ctx, true);
 	// draw QR on this context
 
     if (QRcolor == [UIColor blackColor]||QRcolor == nil) {
@@ -116,7 +124,7 @@ static QRCodeGenerator *instance = nil;
 	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
 	UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
 
-    qrImage = [TRFilterGenerator imageWithImageSimple:qrImage scaledToSize:CGSizeMake(outImagesize, outImagesize)];
+    qrImage = [TRFilterGenerator imageWithImageSimple:qrImage backGroundColor:nil newSize:CGSizeMake(outImagesize, outImagesize)];
     
 	// some releases
 	CGContextRelease(ctx);
@@ -151,11 +159,20 @@ static QRCodeGenerator *instance = nil;
     
 	// create context
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+        int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
+    #else
+        int bitmapInfo = kCGImageAlphaPremultipliedLast;
+    #endif
+	CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
 	
 	CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -size);
 	CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
 	CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
+//    抗锯齿 特别慢
+    
+    CGContextSetAllowsAntialiasing(ctx, true);
+    CGContextSetShouldAntialias(ctx, true);
     
 	// draw QR on this context
     

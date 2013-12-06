@@ -14,8 +14,9 @@ static CIContext *ciContextSingleton = nil;
 
 + (CIContext *)sharedCiContextrManager {
     if (!ciContextSingleton) {
-        EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        ciContextSingleton  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
+//        EAGLContext *myEAGLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+//        ciContextSingleton  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
+        ciContextSingleton = [CIContext contextWithOptions:nil];
     }
     
     return ciContextSingleton;
@@ -85,7 +86,7 @@ static CIContext *ciContextSingleton = nil;
     CGImageRef cr = CGImageCreateWithImageInRect([newImage CGImage], CGRectMake(0, 0, newImage.size.width-scale, newImage.size.height-scale));
     //    裁掉多余的一条边
 	UIImage *croppedImage = [UIImage imageWithCGImage:cr];
-    
+    CGImageRelease(cr);
     CGImageRelease(cgiimage);
     return croppedImage;
 
@@ -123,7 +124,8 @@ static CIContext *ciContextSingleton = nil;
    // UIImage *qrImage =  [qr qrImageForString:string withMargin:margin withMode:mode withOutputSize:imagSize];
     UIImage *qrImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:mode];
     
-    UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage scaledToSize:(qrImage.size)];
+    UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage backGroundColor:nil newSize:qrImage.size];
+                              //imageWithImageSimple:avatarImage scaledToSize:(qrImage.size)];
     
     //像素化 并裁掉了多余的一个边
     newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
@@ -131,7 +133,8 @@ static CIContext *ciContextSingleton = nil;
 //    滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
    
-    newImage = [TRFilterGenerator imageWithImageSimple:newImage scaledToSize:CGSizeMake(imagSize, imagSize)];
+    newImage = [TRFilterGenerator imageWithImageSimple:newImage backGroundColor:[UIColor whiteColor] newSize:CGSizeMake(imagSize, imagSize)];
+                //imageWithImageSimple:newImage scaledToSize:CGSizeMake(imagSize, imagSize)];
     return newImage;
     
 }
@@ -169,18 +172,6 @@ static CIContext *ciContextSingleton = nil;
     
     
     //        绘制QR背景图
-//    int versionNormal =  7;
-//    int versionBig = 14;
-//    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
-//    int leverl = [qr QRVersionForString:string withErrorLevel:QR_ECLEVEL_H withMode:versionBig];
-//    int sizeOfPix = (floor)(imagSize/(leverl+margin*2));
-//    if (sizeOfPix%2!= 0) {
-//        sizeOfPix--;
-//    }
-// 
-//    
-//    float bigImageSize = (21+ (versionBig-1)*4) * sizeOfPix;
-//    float  smallImageSize = (21+ (versionNormal-1)*4+2*margin) * sizeOfPix;
     
     UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig];
 
@@ -193,7 +184,12 @@ static CIContext *ciContextSingleton = nil;
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     //        float size = cirQRImage.size.width;
-    CGContextRef ctx = CGBitmapContextCreate(0, bigImageSize, bigImageSize, 8, bigImageSize * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+        int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
+    #else
+        int bitmapInfo = kCGImageAlphaPremultipliedLast;
+    #endif
+	CGContextRef ctx = CGBitmapContextCreate(0, bigImageSize, bigImageSize, 8, bigImageSize * 4, colorSpace, bitmapInfo);
     
     CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -bigImageSize);
     CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
@@ -219,7 +215,7 @@ static CIContext *ciContextSingleton = nil;
     
     UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
     //        切圆
-    
+    CGImageRelease(qrCGImage);
     UIImage *cirQRImage = [TRFilterGenerator createRoundedRectImage:qrImage size:qrImage.size radius:qrImage.size.width/2];
 
     //      清空画布
@@ -230,34 +226,32 @@ static CIContext *ciContextSingleton = nil;
     CGContextFillPath(ctx);
     
     //   重新绘制背景图片大小
- 
     CGContextSetBlendMode(ctx,  kCGBlendModeNormal);
-    CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
     CGContextDrawImage(ctx, Rect,avatarImage.CGImage);
+    CGImageRef backImageCGImage = CGBitmapContextCreateImage(ctx);
     
-    qrCGImage = CGBitmapContextCreateImage(ctx);
+    UIImage *backImage = [UIImage imageWithCGImage:backImageCGImage];
     
-    qrImage = [UIImage imageWithCGImage:qrCGImage];
-    
+    CGImageRelease(backImageCGImage);
     // some releases
     CGContextRelease(ctx);
-    CGImageRelease(qrCGImage);
     CGColorSpaceRelease(colorSpace);
     
    
     //头像像素化
 
-    UIImage *newImage =  [TRFilterGenerator CIPixellateWithImage:qrImage withInputScale:sizeOfPix];
+    UIImage *newImage =  [TRFilterGenerator CIPixellateWithImage:backImage withInputScale:sizeOfPix];
 
-    //       头像圆角化
+    //头像圆角化
     UIImage *cirAvatarImage = [self createRoundedRectImage:newImage size:newImage.size radius:newImage.size.width/2];
     
     //滤镜合成
     
     UIImage *resultImage =   [TRFilterGenerator CIDissolveTransitionWithImage:cirAvatarImage WithBackImage:cirQRImage];
     //压缩大小
-    resultImage = [TRFilterGenerator imageWithImageSimple:resultImage scaledToSize:CGSizeMake(imagSize, imagSize)];
-    
+    resultImage = [TRFilterGenerator imageWithImageSimple:resultImage backGroundColor:[UIColor whiteColor] newSize:CGSizeMake(imagSize, imagSize)];
+                   //imageWithImageSimple:resultImage scaledToSize:CGSizeMake(imagSize, imagSize)];
+
     return resultImage;
    
     
@@ -289,7 +283,8 @@ static CIContext *ciContextSingleton = nil;
         
         // Composite with texture
         if (textureImage) {
-            CIImage *citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage scaledToSize:CGSizeMake(imagSize, imagSize)].CGImage];
+            CIImage *citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
+//                                                            imageWithImageSimple:textureImage scaledToSize:CGSizeMake(imagSize, imagSize)].CGImage];
             
             CIFilter *affineTrans = [CIFilter filterWithName:@"CIAffineTile" keysAndValues:
                                      kCIInputImageKey, citexture, nil];
@@ -312,8 +307,10 @@ static CIContext *ciContextSingleton = nil;
     
     // Output UIImage
     CIContext *context = [TRContect sharedCiContextrManager];
-    UIImage*  resultImage = [UIImage imageWithCGImage:[context createCGImage:scrImage
-                                                                 fromRect:CGRectMake(0, 0, imagSize, imagSize)]];
+    CGImageRef imageref = [context createCGImage:scrImage
+                                        fromRect:CGRectMake(0, 0, imagSize, imagSize)];
+    UIImage*  resultImage = [UIImage imageWithCGImage:imageref];
+    CGImageRelease(imageref);
     return resultImage;
 }
 
@@ -326,7 +323,7 @@ static CIContext *ciContextSingleton = nil;
                              radius:(float)radius
                          outPutSize:(float)imagSize {
     
-    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage scaledToSize:CGSizeMake(imagSize, imagSize)].CGImage];
+    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
     
     // Affine Clamp the scrImage
     NSString *clampFilterName = @"CIAffineClamp";
@@ -366,7 +363,7 @@ static CIContext *ciContextSingleton = nil;
     NSString *maskFilterName = @"CIBlendWithAlphaMask";
     CIFilter *mask = [CIFilter filterWithName:maskFilterName];
     
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:nil];
     
     CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:5 withOutputSize:imagSize].CGImage];
     
@@ -381,13 +378,20 @@ static CIContext *ciContextSingleton = nil;
 
 #pragma mark ===图片压缩
 //图片压缩
-+(UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize
-{
-    // Create a graphics image context
+ 
++(UIImage *)imageWithImageSimple:(UIImage *)image backGroundColor:(UIColor *)color newSize:(CGSize )newSize{
+    
     UIGraphicsBeginImageContext(newSize);
     
-    // Tell the old image to draw in this new context, with the desired
-    // new size
+    if (color) {
+
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetFillColorWithColor(context, color.CGColor);
+        
+        CGContextFillRect(context, CGRectMake(0, 0, newSize.width,newSize.height));
+    }
+    
     [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
     
     // Get the new image from the context
@@ -398,7 +402,9 @@ static CIContext *ciContextSingleton = nil;
     
     // Return the new image.
     return newImage;
+
 }
+
 #pragma mark ===内部方法
 #pragma mark ===图片圆角化处理
 static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth,
@@ -440,7 +446,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     int h = size.height;
     UIImage *img = image;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context2 = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
+    CGContextRef context2 = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, 1);
     CGRect rect = CGRectMake(0, 0, w, h);
     
     CGContextBeginPath(context2);
