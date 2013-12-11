@@ -351,7 +351,7 @@ static CIContext *ciContextSingleton = nil;
     CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
     
     // Mask qr image with face
-    CIImage *facemask = [self maskFromDetectedFaceInImage:[CIImage imageWithCGImage:inputImage.CGImage]];
+    CIImage *facemask = [self maskFromDetectedFaceInImage:[CIImage imageWithCGImage:inputImage.CGImage] hollow:YES];
     if (facemask) {
         CIFilter *filter = [CIFilter filterWithName:@"CISourceOutCompositing"];
         [filter setValue:qrImage forKey:@"inputImage"];
@@ -441,10 +441,20 @@ static CIContext *ciContextSingleton = nil;
     CIFilter *mask = [CIFilter filterWithName:maskFilterName];
     
     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:nil];
-    CIImage *maskImage = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
+    CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
+    
+    // Mask qr image with face
+    CIImage *facemask = [self maskFromDetectedFaceInImage:[CIImage imageWithCGImage:inputImage.CGImage] hollow:YES];
+    if (facemask) {
+        CIFilter *filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+        [filter setValue:qrMask forKey:@"inputImage"];
+        [filter setValue:facemask forKey:@"inputBackgroundImage"];
+        qrMask = [filter valueForKey:kCIOutputImageKey];
+    }
+
     
     [mask setValue:frontground forKey:kCIInputImageKey];
-    [mask setValue:maskImage forKey:kCIInputMaskImageKey];
+    [mask setValue:qrMask forKey:kCIInputMaskImageKey];
     [mask setValue:background forKey:kCIInputBackgroundImageKey];
     
     CIImage *finalResult = [mask valueForKey:kCIOutputImageKey];
@@ -507,7 +517,7 @@ static CIContext *ciContextSingleton = nil;
     return resultImage;
 }
 
-+ (CIImage *)maskFromDetectedFaceInImage:(CIImage *)inputImage {
++ (CIImage *)maskFromDetectedFaceInImage:(CIImage *)inputImage hollow:(BOOL)isHollow {
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace
                                             context:nil
                                             options:nil];
@@ -524,10 +534,14 @@ static CIContext *ciContextSingleton = nil;
     
     CIFilter *radialGredient = [CIFilter filterWithName:@"CIRadialGradient"];
     [radialGredient setValue:center forKey:kCIInputCenterKey];
-    [radialGredient setValue:[CIColor colorWithString:@"1 1 1 1"] forKey:@"inputColor0"];
-    [radialGredient setValue:[CIColor colorWithString:@"1 1 1 0"] forKey:@"inputColor1"];
-    [radialGredient setValue:@(face.bounds.size.width * 0.2) forKey:@"inputRadius0"];
-    [radialGredient setValue:@(face.bounds.size.width * 0.4) forKey:@"inputRadius1"];
+    
+    CIColor *hollowColor = [CIColor colorWithString:@"0 0 0 0"];
+    CIColor *solidColor = [CIColor colorWithString:@"0 0 0 1"];
+    
+    [radialGredient setValue:isHollow ? solidColor : hollowColor forKey:@"inputColor0"];
+    [radialGredient setValue:isHollow ? hollowColor : solidColor forKey:@"inputColor1"];
+    [radialGredient setValue:@(face.bounds.size.width * 0.3) forKey:@"inputRadius0"];
+    [radialGredient setValue:@(face.bounds.size.width * 0.5) forKey:@"inputRadius1"];
     
     CIImage *maskImage = [radialGredient valueForKey:kCIOutputImageKey];
     
