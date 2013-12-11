@@ -40,7 +40,7 @@
                           qRString:(NSString *)string
                             margin:(int)margin
                               mode:(int)mode
-                           radius :(float)radius
+                            radius:(float)radius
                         outPutSize:(float)imagSize
                                qRColor:(UIColor*)color;
 
@@ -66,9 +66,21 @@
                    maskWithQRString:(NSString *)string
                              margin:(int)margin
                              radius:(float)radius
+                               mode:(int)qrMode
                          outPutSize:(float)imagSize
                     monochromeColor:(UIColor *)color
                compositeWithTexture:(UIImage *)textureImage;
+
+/**
+ * @brief 版画效果
+ */
++ (UIImage *)printmakingWithImage:(UIImage *)inputImage
+                 maskWithQRString:(NSString *)string
+                           margin:(int)margin
+                           radius:(float)radius
+                             mode:(int)qrMode
+                       outPutSize:(float)imagSize
+                  monochromeColor:(UIColor *)color;
 
 
 /*
@@ -80,4 +92,8 @@
  *圆角化
  */
 + (UIImage *)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r;
+
+
+
+
 @end
