@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIImage *userImage;
 @property (nonatomic, strong) NSMutableDictionary *resultImageDict;
 @property (nonatomic, copy) NSString *qrString;
+@property (nonatomic, assign) int preferredQrLevel;
 
 @property (nonatomic, strong) CIContext *ciContext;
 
@@ -46,14 +47,15 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold"];
+        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold", @"Printmaking"];
     }
     self.resultImageDict = [NSMutableDictionary new];
     self.pageControl.numberOfPages = [effectNameKeys count];
     
     // Sample data
+    self.preferredQrLevel = 5;
     self.qrString = @"http://roundqr.sinaapp.com/index.php";
-    self.userImage = [UIImage imageNamed:@"IMG_5623.JPG"];
+    self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
     
     // Motion Effects
     self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -75,29 +77,32 @@ static NSArray *effectNameKeys;
     
     //    test
     
+    /*
     UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [self.navigationController.navigationBar addGestureRecognizer:gesture];
     [gesture setMinimumPressDuration:1.0f];
     [gesture setAllowableMovement:50.0];
     
     [self.navigationController.navigationBar addGestureRecognizer:gesture];
+     */
     
     
 }
+
+/*
 - (void)longPress:(UILongPressGestureRecognizer*)gesture {
     
     if( gesture.state == UIGestureRecognizerStateBegan &&[gesture isKindOfClass:[UILongPressGestureRecognizer class]])
     {
         
-        /*扫描二维码部分：
-         导入ZBarSDK文件并引入一下框架
-         AVFoundation.framework
-         CoreMedia.framework
-         CoreVideo.framework
-         QuartzCore.framework
-         libiconv.dylib
-         引入头文件#import “ZBarSDK.h” 即可使用
-         */
+//        扫描二维码部分：
+//         导入ZBarSDK文件并引入一下框架
+//         AVFoundation.framework
+//         CoreMedia.framework
+//         CoreVideo.framework
+//         QuartzCore.framework
+//         libiconv.dylib
+//         引入头文件#import “ZBarSDK.h” 即可使用
         ZBarReaderViewController *reader = [ZBarReaderViewController new];
         reader.readerDelegate = self;
         reader.videoQuality= UIImagePickerControllerQualityTypeHigh;
@@ -122,27 +127,28 @@ static NSArray *effectNameKeys;
     
     
 #pragma mark ===自定义解码界面  或者使用ios 7 解码
-    /*自定义扫描
+    自定义扫描
      // Do any additional setup after loading the view.
-     ZBarImageScanner * scanner = [ZBarImageScanner new];
-     [scanner setSymbology: ZBAR_I25
-     config: ZBAR_CFG_ENABLE
-     to: 0];
-     readView = [[ZBarReaderView alloc] initWithImageScanner:scanner];
-     
-     
-     readView.readerDelegate = self;
-     
-     readView.frame = self.view.frame;
-     
-     [self.view addSubview:readView];
-     [self.view bringSubviewToFront:readView];
-     readView.showsFPS = YES;
-     readView.scanCrop = CGRectMake(0, 0, 1, 1);
-     [readView start];
-     
-     */
+//     ZBarImageScanner * scanner = [ZBarImageScanner new];
+//     [scanner setSymbology: ZBAR_I25
+//     config: ZBAR_CFG_ENABLE
+//     to: 0];
+//     readView = [[ZBarReaderView alloc] initWithImageScanner:scanner];
+//     
+//     
+//     readView.readerDelegate = self;
+//     
+//     readView.frame = self.view.frame;
+//     
+//     [self.view addSubview:readView];
+//     [self.view bringSubviewToFront:readView];
+//     readView.showsFPS = YES;
+//     readView.scanCrop = CGRectMake(0, 0, 1, 1);
+//     [readView start];
+ 
+ 
 }
+
 - (void)setOverlayPickerView:(ZBarReaderViewController *)reader
 
 {
@@ -290,6 +296,7 @@ static NSArray *effectNameKeys;
           fromImage: (UIImage*) image{
     ;;;
 }
+ */
 
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
@@ -302,8 +309,7 @@ static NSArray *effectNameKeys;
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
-    
-    
+    /*
     if (![picker isKindOfClass:[ZBarReaderViewController class]]) {
         UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
         
@@ -339,12 +345,23 @@ static NSArray *effectNameKeys;
             break;
         [self performSelector: @selector(presentResult:) withObject: symbol afterDelay: .001];
     }
-//    [picker dismissViewControllerAnimated:YES completion:^{
-//        
-//        
-//    }];
+    */
+    
+    UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
+    
+    if (selectedImage) {
+        self.userImage = selectedImage;
+        [self.resultImageDict removeAllObjects];
+        [self updateUI];
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    return;
 }
-//
+
+/*
 - (void) presentResult: (ZBarSymbol*)sym {
     if (sym) {
         NSString *tempStr = sym.data;
@@ -371,6 +388,7 @@ static NSArray *effectNameKeys;
         NSLog(@"跳转成功---");
     }];
 }
+ */
 
 
 
@@ -463,6 +481,12 @@ static NSArray *effectNameKeys;
     self.resultView.image = newImage;
 }
 
+- (IBAction)saveImage:(id)sender {
+    if (self.resultView.image) {
+        UIImageWriteToSavedPhotosAlbum(self.resultView.image, nil, nil, nil);
+    }
+}
+
 - (IBAction)pageChanged:(id)sender {
     
     NSInteger currentIndex = self.pageControl.currentPage;
@@ -539,7 +563,7 @@ static NSArray *effectNameKeys;
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
                                                        qRString:self.qrString
                                                              margin:2
-                                                               mode:5
+                                                               mode:self.preferredQrLevel
                                                              radius:0
                                                          outPutSize:qrWidth
                                                             qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
@@ -548,8 +572,8 @@ static NSArray *effectNameKeys;
         // Pixellate : Golden
         resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
                                                             qRString:self.qrString
-                                                              margin:0
-                                                                mode:0
+                                                              margin:2
+                                                                mode:self.preferredQrLevel
                                                               radius:0
                                                       outPutSize:qrWidth
                                                              qRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
@@ -559,7 +583,7 @@ static NSArray *effectNameKeys;
         resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
                                                             qRString:self.qrString
                                                               margin:2
-                                                                mode:0
+                                                                mode:self.preferredQrLevel
                                                               radius:0.5
                                                           outPutSize:qrWidth
                                                              qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
@@ -578,6 +602,7 @@ static NSArray *effectNameKeys;
                                                  maskWithQRString:self.qrString
                                                            margin:2
                                                            radius:0.5
+                                                             mode:self.preferredQrLevel
                                                        outPutSize:qrWidth
                                                   monochromeColor:nil
                                              compositeWithTexture:nil];
@@ -587,9 +612,19 @@ static NSArray *effectNameKeys;
                                                  maskWithQRString:self.qrString
                                                            margin:2
                                                            radius:0.5
+                                                             mode:self.preferredQrLevel
                                                        outPutSize:qrWidth
                                                   monochromeColor:[UIColor colorWithRed:0.87 green:0.66 blue:0.08 alpha:1]
                                              compositeWithTexture:[UIImage imageNamed:@"gold_texture.jpg"]];
+    } else if (7 == index) {
+        // Printmaking
+        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
+                                             maskWithQRString:self.qrString
+                                                       margin:2
+                                                       radius:0
+                                                         mode:self.preferredQrLevel
+                                                   outPutSize:qrWidth
+                                              monochromeColor:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]];
     }
     
     return resultImage;
