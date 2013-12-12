@@ -47,7 +47,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold", @"Printmaking"];
+        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold", @"Popart Portrait", @"Popart General"];
     }
     self.resultImageDict = [NSMutableDictionary new];
     self.pageControl.numberOfPages = [effectNameKeys count];
@@ -74,6 +74,10 @@ static NSArray *effectNameKeys;
     [self registerShadowEffectForView:self.resultView depth:-4*self.resultView.layer.shadowRadius];
     
     
+    //For test
+    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    
+    [self updateUI];
     
     //    test
     
@@ -398,15 +402,6 @@ static NSArray *effectNameKeys;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    //For test
-    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
-    
-    [self updateUI];
-}
-
 - (UIImage *)qrImage {
     if (!_qrImage) {
         
@@ -617,14 +612,27 @@ static NSArray *effectNameKeys;
                                                   monochromeColor:[UIColor colorWithRed:0.87 green:0.66 blue:0.08 alpha:1]
                                              compositeWithTexture:[UIImage imageNamed:@"gold_texture.jpg"]];
     } else if (7 == index) {
-        // Printmaking
+        // Popart : Portrait
         resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
                                              maskWithQRString:self.qrString
                                                        margin:2
                                                        radius:0
                                                          mode:self.preferredQrLevel
                                                    outPutSize:qrWidth
-                                              monochromeColor:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]];
+                                                       color0:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]
+                                                       color1:nil
+                                                   detectFace:YES];
+    } else if (8 == index) {
+        // Popart : general
+        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
+                                             maskWithQRString:self.qrString
+                                                       margin:2
+                                                       radius:0
+                                                         mode:self.preferredQrLevel
+                                                   outPutSize:qrWidth
+                                                       color0:[UIColor colorWithRed:0.11 green:0.07 blue:0.70 alpha:1]
+                                                       color1:[UIColor colorWithRed:1 green:1 blue:0.23 alpha:1]
+                                                   detectFace:NO];
     }
     
     return resultImage;
