@@ -79,7 +79,7 @@ static NSArray *effectNameKeys;
     
     //For test
     //self.pageControl.currentPage = self.pageControl.numberOfPages-1;
-    self.pageControl.currentPage = 6;
+    self.pageControl.currentPage = 0;
     
     [self updateUI];
     
@@ -573,7 +573,7 @@ static NSArray *effectNameKeys;
                                                                mode:self.preferredQrLevel
                                                              radius:0
                                                          outPutSize:qrWidth
-                                                            qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
+                                                            qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
         
     } else if (1 == index) {
         // Pixellate : Golden
@@ -583,7 +583,7 @@ static NSArray *effectNameKeys;
                                                                 mode:self.preferredQrLevel
                                                               radius:0
                                                       outPutSize:qrWidth
-                                                             qRColor:[UIColor colorWithRed:255.0/255.0 green:235/255.0 blue:2.0/255.0 alpha:1]];
+                                                             qRColor:self.customedColor0];
         
     } else if (2 == index) {
         // Pixellate : rounded corner
@@ -646,7 +646,6 @@ static NSArray *effectNameKeys;
                                                        color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
                                                    detectFace:NO];
  
-  
     }
     
     return resultImage;

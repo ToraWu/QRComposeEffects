@@ -99,7 +99,7 @@ typedef enum{
                   withPixSize:(float)sizeofpix
                    withMargin:(float)marginXY
                     withMode :(int)mode;
-                
+
 
 
 /**

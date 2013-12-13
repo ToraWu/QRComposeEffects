@@ -90,12 +90,5 @@
  */
 +(UIImage *)imageWithImageSimple:(UIImage *)image backGroundColor:(UIColor *)color newSize:(CGSize )newSize;
 
-/*
- *圆角化
- */
-+ (UIImage *)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r;
-
-
-
 
 @end

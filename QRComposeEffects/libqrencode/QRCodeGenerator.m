@@ -30,19 +30,6 @@
 static QRCodeGenerator *instance = nil;
 
 @implementation QRCodeGenerator
-//@synthesize QRRadious;
-//@synthesize QRcolor;
-//+(QRCodeGenerator*)shareInstance
-//{
-//    @synchronized(self){
-//        if (!instance) {
-//            instance = [[QRCodeGenerator alloc]init];
-//        }
-//    }
-//    
-//    return instance;
-//}
-
 
 -(id)initWithRadius :(float)radius withColor:(UIColor*)color{
     self = [super init];
@@ -63,8 +50,6 @@ static QRCodeGenerator *instance = nil;
  * @param marginXY 二维码距离画布边界
  * @param mode 二维码级别
  * @param outPutSize 输出图片的尺寸大小 如果为0的话，图片不做压缩，输出默认大小
- 
- 
  */
 
 - (UIImage *)qrImageForString:(NSString *)string
@@ -103,11 +88,6 @@ static QRCodeGenerator *instance = nil;
         
         code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix margin:marginXY];
     }
-    
-    
-    
-    
-
     
 	// create context
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -210,14 +190,6 @@ static QRCodeGenerator *instance = nil;
 	QRcode_free(code);
 	
 	return qrImage;
-
-
-
-
-
-
-
-
 }
 
 #pragma mark===公共方法 获取二维码版本
