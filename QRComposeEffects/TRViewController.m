@@ -644,7 +644,7 @@ static NSArray *effectNameKeys;
                                                        color0:self.customedColor0
                                                        color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
                                                    detectFace:NO];
-    }
+    } 
     
     return resultImage;
 }
