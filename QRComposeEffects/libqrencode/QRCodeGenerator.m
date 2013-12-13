@@ -101,7 +101,7 @@ static QRCodeGenerator *instance = nil;
         clearCenter.y = clearCenter.y*sizeOfPix*code->width/outImagesize;
         clearRadius = clearRadius *sizeOfPix*code->width/outImagesize;
         
-        code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix];
+        code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix margin:marginXY];
     }
     
     
@@ -723,13 +723,13 @@ static QRCodeGenerator *instance = nil;
 }
 
 #pragma mark ====内部方法 计算是否再绘制区域
--(QRcode *) qrCustomizeArea:(QRcode *)code sieOfpix :(float)size{
+-(QRcode *) qrCustomizeArea:(QRcode *)code sieOfpix :(float)size margin:(float)marginxy{
     
     for(int i = 0;i<code->width;i++){
         for(int j = 0;j<code->width;j++){
     
-            float x = j*size-size;
-            float y = i*size-size;
+            float x = j*size-size+marginxy*size;
+            float y = i*size-size+marginxy*size;
             
             
             float dd = (x-clearCenter.x)*(x-clearCenter.x)+(y-clearCenter.y)*(y-clearCenter.y);
