@@ -625,6 +625,13 @@ static NSArray *effectNameKeys;
                                                          mode:self.preferredQrLevel
                                                    outPutSize:qrWidth
                                               monochromeColor:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]];
+        
+        
+//        QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:0 withColor:nil];
+//        [qr setQRBackGroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:1]];
+//        [qr setCLearRadius:150 center:CGPointMake(400, 400)];
+//        resultImage = [qr qrImageForString:@"woshi erweima " withMargin:0 withMode:7 withOutputSize:800];
+        
     }
     
     return resultImage;

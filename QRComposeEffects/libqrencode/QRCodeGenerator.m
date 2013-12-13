@@ -48,7 +48,9 @@ static QRCodeGenerator *instance = nil;
     self = [super init];
     if (self) {
        QRRadius =  radius ;
-    QRcolor = color;
+        QRcolor = color;
+        clearCenter = CGPointMake(0, 0);
+        clearRadius = 0;
     }
     return self;
 
@@ -80,6 +82,7 @@ static QRCodeGenerator *instance = nil;
     
     
     
+    
     int leverl = code->width;
     //每一个色块的大小 取偶数
     
@@ -92,17 +95,28 @@ static QRCodeGenerator *instance = nil;
     
     float  size =(code->width+2.0*marginXY)*sizeOfPix;
     
+    if (clearRadius!=0) {
+        clearCenter.x = clearCenter.x*sizeOfPix*code->width/outImagesize;
+        clearCenter.y = clearCenter.y*sizeOfPix*code->width/outImagesize;
+        clearRadius = clearRadius *sizeOfPix*code->width/outImagesize;
+        
+        code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix];
+    }
+    
+    
+    
+    
 
     
 	// create context
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
-        int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
-    #else
-        int bitmapInfo = kCGImageAlphaPremultipliedLast;
-    #endif
-        CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
-	
+ 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+    int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
+#else
+    int bitmapInfo = kCGImageAlphaPremultipliedLast;
+#endif
+		CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
 	CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -size);
 	CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
 	CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
@@ -151,10 +165,9 @@ static QRCodeGenerator *instance = nil;
 		return nil;
 	}
     
-    
-    
     float  size =(code->width+2.0*marginXY)*sizeofpix;
     
+
     
     
 	// create context
@@ -282,6 +295,13 @@ static QRCodeGenerator *instance = nil;
     // draw
     double byte_xpos = qr_startX ;
     double byte_ypos = qr_startY ;
+    
+    
+    [self printQRbackGroundColor:ctx backcolor:backGroundColor Size:width*size];
+    
+    
+    
+    
     
 	for(int i = 0; i < width; i++) {//行数y
 		for(int j = 0; j < width; j++) {//列数x
@@ -672,16 +692,52 @@ static QRCodeGenerator *instance = nil;
     
 }
 
+-(void)printQRbackGroundColor:(CGContextRef)ctx backcolor:(UIColor *)backColor Size:(double)imageSize{
 
+    CGContextSetBlendMode(ctx, kCGBlendModeNormal);
+    
+    const CGFloat *components = CGColorGetComponents(backGroundColor.CGColor);
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+    
+    CGContextAddRect(ctx, CGRectMake(0, 0,imageSize, imageSize));
+    CGContextClosePath(ctx);
+    CGContextFillPath(ctx);
 
--(void)setQRcolor:(UIColor *)color{
-
-    QRcolor = color;
 }
 
--(void)setQRRadius:(float)radius{
-    QRRadius = radius;
+-(void)setQRBackGroundColor:(UIColor *)color{
 
+    backGroundColor = color;
 }
 
+
+-(void)setCLearRadius:(float)radius center:(CGPoint)point{
+
+    clearRadius = radius;
+    clearCenter = point;
+    
+    
+}
+
+#pragma mark ====内部方法 计算是否再绘制区域
+-(QRcode *) qrCustomizeArea:(QRcode *)code sieOfpix :(float)size{
+
+    
+    for(int i = 0;i<code->width;i++){
+        for(int j = 0;j<code->width;j++){
+    
+            float x = j*size;
+            float y = i*size;
+            
+            float dd = (x-clearCenter.x)*(x-clearCenter.x)+(y-clearCenter.y)*(y-clearCenter.y);
+            float rr = clearRadius*clearRadius;
+            if (dd<=rr) {
+                code->data[(i)*code->width+j]=0x0;;
+            }
+        }
+    }
+    return code
+    ;
+    
+}
 @end

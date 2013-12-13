@@ -50,6 +50,9 @@ typedef enum{
 
     float  QRRadius;
     UIColor * QRcolor;
+    UIColor *backGroundColor;
+    float clearRadius;
+    CGPoint clearCenter;
 }
 
 
@@ -62,18 +65,18 @@ typedef enum{
 
 
 /*
- *设置二维码颜色
+ *设置二维码背景颜色
  *
  */
 
--(void)setQRcolor:(UIColor *)QRcolor;
+-(void)setQRBackGroundColor:(UIColor *)color;
 
 /*
- *设置二维码液化半径
+ *设置二维码清除的半径与圆心
  *
  */
 
--(void)setQRRadius:(float )radius;
+-(void)setCLearRadius:(float)radius center:(CGPoint)point;
 
 
 /**
