@@ -285,54 +285,22 @@ static CIContext *ciContextSingleton = nil;
                          outPutSize:(float)imagSize
                     monochromeColor:(UIColor *)color
                compositeWithTexture:(UIImage *)textureImage {
+    
+    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
 
-    CIImage *scrImage = [self ciImageWithGussianBlur:inputImage
+    scrImage = [self ciImageWithGussianBlur:scrImage
                                     maskWithQRString:string
                                               margin:margin
                                               radius:radius
                                                 mode:qrMode
                                           outPutSize:imagSize];
     
-    // Monochromelize
-    if (color) {
-        NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
-        CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
-        [colorMonochrome setValue:scrImage forKey:kCIInputImageKey];
-        [colorMonochrome setValue:[CIColor colorWithCGColor:color.CGColor] forKey:kCIInputColorKey];
-        [colorMonochrome setValue:[NSNumber numberWithFloat:1.0] forKey:kCIInputIntensityKey];
-        scrImage = [colorMonochrome  valueForKey:kCIOutputImageKey];
-        
-        // Composite with texture
-        if (textureImage) {
-            CIImage *citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
-//                                                            imageWithImageSimple:textureImage scaledToSize:CGSizeMake(imagSize, imagSize)].CGImage];
-            
-            CIFilter *affineTrans = [CIFilter filterWithName:@"CIAffineTile" keysAndValues:
-                                     kCIInputImageKey, citexture, nil];
-            citexture = [affineTrans valueForKey:kCIOutputImageKey];
-            
-            CIFilter *textureComposite = [CIFilter filterWithName:@"CIMultiplyCompositing" keysAndValues:
-                                          kCIInputImageKey, scrImage,
-                                          kCIInputBackgroundImageKey, citexture, nil];
-            scrImage = [textureComposite valueForKey:kCIOutputImageKey];
-        }
-    } else {
-        // If no blend color designated, apply with some color controls.
-        NSString *colorControlFilterName = @"CIColorControls";
-        CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
-        [colorControl setValue:scrImage forKey:kCIInputImageKey];
-        [colorControl setValue:@(1.05) forKey:kCIInputContrastKey];
-        [colorControl setValue:@(1.1) forKey:kCIInputSaturationKey];
-        scrImage = [colorControl valueForKey:kCIOutputImageKey];
-    }
+    CIImage *citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
+    
+    scrImage = [self texturedImageWithCIImage:scrImage color:[CIColor colorWithCGColor:color.CGColor] textureImage:citexture];
     
     // Output UIImage
-    CIContext *context = [TRContect sharedCiContextrManager];
-    CGImageRef imageref = [context createCGImage:scrImage
-                                        fromRect:CGRectMake(0, 0, imagSize, imagSize)];
-    UIImage*  resultImage = [UIImage imageWithCGImage:imageref];
-    CGImageRelease(imageref);
-    return resultImage;
+    return [self outputUIImageFromCIImage:scrImage rectangle:CGRectMake(0, 0, imagSize, imagSize)];
 }
 
 + (UIImage *)printmakingWithImage:(UIImage *)inputImage
@@ -345,7 +313,14 @@ static CIContext *ciContextSingleton = nil;
                            color1:(UIColor *)color1
                        detectFace:(BOOL)detectFace {
     
-    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:inputImage color:[CIColor colorWithCGColor:color0.CGColor]];
+ 
+//    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:inputImage color:[CIColor colorWithCGColor:color0.CGColor]];
+ 
+    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
+    
+    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithCGColor:color0.CGColor]];
+    
+ 
     // Generate QRcode image
     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color0];
     
@@ -406,44 +381,25 @@ static CIContext *ciContextSingleton = nil;
     [filter setValue:printmakingResult forKey:@"inputBackgroundImage"];
     
     CIImage *compositedImage = [filter valueForKey:kCIOutputImageKey];
-    
-    CIFilter *dotScreen = [CIFilter filterWithName:@"CIDotScreen"];
-    [dotScreen setValue:compositedImage forKey:kCIInputImageKey];
-    [dotScreen setValue:[CIVector vectorWithX:0 Y:0] forKey:@"inputCenter"];
-    [dotScreen setValue:@(8.0) forKey:@"inputWidth"];
-    [dotScreen setValue:@(0.0) forKey:@"inputAngle"];
-    [dotScreen setValue:@(0.7) forKey:@"inputSharpness"];
-    compositedImage = [dotScreen valueForKey:kCIOutputImageKey];
-    
-    // False Color
-    CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
-    [falseColorFilter setValue:compositedImage forKey:kCIInputImageKey];
-    [falseColorFilter setValue:[CIColor colorWithCGColor:color0.CGColor] forKey:@"inputColor0"];
-    if (color1) {
-        [falseColorFilter setValue:[CIColor colorWithCGColor:color1.CGColor] forKey:@"inputColor1"];
-    }
-    compositedImage = [falseColorFilter valueForKey:kCIOutputImageKey];
+
+    // Popart filter
+    compositedImage = [self popartImageWithCIImage:compositedImage color0:[CIColor colorWithCGColor:color0.CGColor] color1:color1 ? [CIColor colorWithCGColor:color1.CGColor] : nil];
     
     // Output UIImage
-    CIContext *context = [TRContect sharedCiContextrManager];
-    CGImageRef imageref = [context createCGImage:compositedImage
-                                        fromRect:CGRectMake(0, 0, imagSize, imagSize)];
-    UIImage*  resultImage = [UIImage imageWithCGImage:imageref];
-    CGImageRelease(imageref);
-    return resultImage;
+    return [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imagSize, imagSize)];
 }
 
 
 #pragma mark === Private Generator : Output CIImage ====
 
-+ (CIImage *)ciImageWithGussianBlur:(UIImage *)inputImage
++ (CIImage *)ciImageWithGussianBlur:(CIImage *)inputImage
                    maskWithQRString:(NSString *)string
                              margin:(int)margin
                              radius:(float)radius
                                mode:(int)qrMode
                          outPutSize:(float)imagSize {
     
-    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
+    CIImage *scrImage = inputImage;
     
     // Affine Clamp the scrImage
     NSString *clampFilterName = @"CIAffineClamp";
@@ -488,7 +444,7 @@ static CIContext *ciContextSingleton = nil;
     CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
     
     // Mask qr image with face
-    CIImage *facemask = [self maskFromDetectedFaceInImage:[CIImage imageWithCGImage:inputImage.CGImage] hollow:YES];
+    CIImage *facemask = [self maskFromDetectedFaceInImage:inputImage hollow:YES];
     if (facemask) {
         CIFilter *filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
         [filter setValue:qrMask forKey:@"inputImage"];
@@ -506,11 +462,9 @@ static CIContext *ciContextSingleton = nil;
     return finalResult;
 }
 
-+ (CIImage *)ciImagePrintmaikingWithImage:(UIImage *)inputImage color:(CIColor *)color {
++ (CIImage *)ciImagePrintmaikingWithImage:(CIImage *)inputImage color:(CIColor *)color {
     
-    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
-    
-    CIImage *resultImage = scrImage;
+    CIImage *resultImage = inputImage;
     
 //    CIFilter *highlightShadowAdjustFilter = [CIFilter filterWithName:@"CIHighlightShadowAdjust"];
 //    [highlightShadowAdjustFilter setValue:resultImage forKey:kCIInputImageKey];
@@ -590,6 +544,65 @@ static CIContext *ciContextSingleton = nil;
     CIImage *maskImage = [radialGredient valueForKey:kCIOutputImageKey];
     
     return maskImage;
+}
+
++ (CIImage *)popartImageWithCIImage:(CIImage *)inputImage color0:(CIColor *)color0 color1:(CIColor *)color1 {
+    
+    CIFilter *dotScreen = [CIFilter filterWithName:@"CIDotScreen"];
+    [dotScreen setValue:inputImage forKey:kCIInputImageKey];
+    [dotScreen setValue:[CIVector vectorWithX:0 Y:0] forKey:@"inputCenter"];
+    [dotScreen setValue:@(8.0) forKey:@"inputWidth"];
+    [dotScreen setValue:@(0.0) forKey:@"inputAngle"];
+    [dotScreen setValue:@(0.7) forKey:@"inputSharpness"];
+    CIImage *resultImage = [dotScreen valueForKey:kCIOutputImageKey];
+    
+    // False Color
+    CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
+    [falseColorFilter setValue:resultImage forKey:kCIInputImageKey];
+    [falseColorFilter setValue:color0 forKey:@"inputColor0"];
+    if (color1) {
+        [falseColorFilter setValue:color1 forKey:@"inputColor1"];
+    }
+    resultImage = [falseColorFilter valueForKey:kCIOutputImageKey];
+    
+    return resultImage;
+}
+
++ (CIImage *)texturedImageWithCIImage:(CIImage *)inputImage color:(CIColor *)color textureImage:(CIImage *)textureImage {
+    
+    CIImage *scrImage = inputImage;
+    
+    // Monochromelize
+    if (color) {
+        NSString  *colorMonochromeFilterName = @"CIColorMonochrome";
+        CIFilter *colorMonochrome =[CIFilter filterWithName:colorMonochromeFilterName];
+        [colorMonochrome setValue:scrImage forKey:kCIInputImageKey];
+        [colorMonochrome setValue:color forKey:kCIInputColorKey];
+        [colorMonochrome setValue:[NSNumber numberWithFloat:1.0] forKey:kCIInputIntensityKey];
+        scrImage = [colorMonochrome  valueForKey:kCIOutputImageKey];
+        
+        // Composite with texture
+        if (textureImage) {
+            CIFilter *affineTrans = [CIFilter filterWithName:@"CIAffineTile" keysAndValues:
+                                     kCIInputImageKey, textureImage, nil];
+            textureImage = [affineTrans valueForKey:kCIOutputImageKey];
+            
+            CIFilter *textureComposite = [CIFilter filterWithName:@"CIMultiplyCompositing" keysAndValues:
+                                          kCIInputImageKey, scrImage,
+                                          kCIInputBackgroundImageKey, textureImage, nil];
+            scrImage = [textureComposite valueForKey:kCIOutputImageKey];
+        }
+    } else {
+        // If no blend color designated, apply with some color controls.
+        NSString *colorControlFilterName = @"CIColorControls";
+        CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
+        [colorControl setValue:scrImage forKey:kCIInputImageKey];
+        [colorControl setValue:@(1.05) forKey:kCIInputContrastKey];
+        [colorControl setValue:@(1.1) forKey:kCIInputSaturationKey];
+        scrImage = [colorControl valueForKey:kCIOutputImageKey];
+    }
+    
+    return scrImage;
 }
 
 #pragma mark ===图片压缩
@@ -679,4 +692,20 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     
     return img;
 }
+
++ (UIImage *)outputUIImageFromCIImage:(CIImage *)ciImage rectangle:(CGRect)rect {
+    
+    if (!ciImage) {
+        return nil;
+    }
+    
+    CIContext *context = [TRContect sharedCiContextrManager];
+    CGImageRef imageref = [context createCGImage:ciImage
+                                        fromRect:rect];
+    UIImage*  resultImage = [UIImage imageWithCGImage:imageref];
+    CGImageRelease(imageref);
+    
+    return resultImage;
+}
+
 @end

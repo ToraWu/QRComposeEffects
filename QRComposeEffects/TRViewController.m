@@ -27,6 +27,8 @@
 @property (nonatomic, strong) NSMutableDictionary *resultImageDict;
 @property (nonatomic, copy) NSString *qrString;
 @property (nonatomic, assign) int preferredQrLevel;
+@property (nonatomic, copy) UIColor *customedColor0;
+@property (nonatomic, copy) UIColor *customedColor1;
 
 @property (nonatomic, strong) CIContext *ciContext;
 
@@ -56,6 +58,7 @@ static NSArray *effectNameKeys;
     self.preferredQrLevel = 5;
     self.qrString = @"http://roundqr.sinaapp.com/index.php";
     self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
+    self.customedColor0 = [UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1];
     
     // Motion Effects
     self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -482,6 +485,14 @@ static NSArray *effectNameKeys;
     }
 }
 
+- (IBAction)chooseColor:(id)sender {
+    if ([sender isKindOfClass:[UIButton class]]) {
+        self.customedColor0 = [(UIButton *)sender backgroundColor];
+        [self.resultImageDict removeAllObjects];
+        [self updateUI];
+    }
+}
+
 - (IBAction)pageChanged:(id)sender {
     
     NSInteger currentIndex = self.pageControl.currentPage;
@@ -619,7 +630,7 @@ static NSArray *effectNameKeys;
                                                        radius:0
                                                          mode:self.preferredQrLevel
                                                    outPutSize:qrWidth
-                                                       color0:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]
+                                                       color0:self.customedColor0
                                                        color1:nil
                                                    detectFace:YES];
     } else if (8 == index) {
@@ -630,12 +641,10 @@ static NSArray *effectNameKeys;
                                                        radius:0
                                                          mode:self.preferredQrLevel
                                                    outPutSize:qrWidth
- 
-//                                              monochromeColor:[UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1]];
- 
-                                                       color0:[UIColor colorWithRed:0.11 green:0.07 blue:0.70 alpha:1]
-                                                       color1:[UIColor colorWithRed:1 green:1 blue:0.23 alpha:1]
+                                                       color0:self.customedColor0
+                                                       color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
                                                    detectFace:NO];
+ 
   
     }
     
