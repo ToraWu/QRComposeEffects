@@ -189,8 +189,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "535"
             endingLineNumber = "535"
-            landmarkName = "@implementation TRViewController"
-            landmarkType = "3">
+            landmarkName = "-pickAPicture:"
+            landmarkType = "5">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -315,7 +315,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "389"
             endingLineNumber = "389"
-            landmarkName = "+printmakingWithImage:maskWithQRString:margin:radius:mode:outPutSize:monochromeColor:"
+            landmarkName = "+printmakingWithImage:maskWithQRString:margin:radius:mode:outPutSize:color0:color1:detectFace:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -395,8 +395,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "551"
             endingLineNumber = "551"
-            landmarkName = "@implementation TRViewController"
-            landmarkType = "3">
+            landmarkName = "-composedImageWithEffectOfIndex:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -554,22 +554,6 @@
             startingLineNumber = "469"
             endingLineNumber = "469"
             landmarkName = "-printOnNormal:withX:withY:withSize:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QRComposeEffects/TRViewController.m"
-            timestampString = "408596033.171563"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "635"
-            endingLineNumber = "635"
-            landmarkName = "-composedImageWithEffectOfIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

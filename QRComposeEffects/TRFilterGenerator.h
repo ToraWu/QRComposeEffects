@@ -72,7 +72,7 @@
                compositeWithTexture:(UIImage *)textureImage;
 
 /**
- * @brief 版画效果
+ * @brief 版画效果，使用两色着色，波点效果，可指定面部识别功能。
  */
 + (UIImage *)printmakingWithImage:(UIImage *)inputImage
                  maskWithQRString:(NSString *)string
@@ -80,7 +80,9 @@
                            radius:(float)radius
                              mode:(int)qrMode
                        outPutSize:(float)imagSize
-                  monochromeColor:(UIColor *)color;
+                           color0:(UIColor *)color0
+                           color1:(UIColor *)color1
+                       detectFace:(BOOL)detectFace;
 
 
 /*
