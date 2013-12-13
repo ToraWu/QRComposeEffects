@@ -421,19 +421,20 @@ static CIContext *ciContextSingleton = nil;
     
     // Adjust Brightness of frontground
     
-    CIFilter *darkcolorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator" keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"0 0 0 0.5"], nil];
-    CIImage *darkColor = [darkcolorGenerateFilter valueForKey:kCIOutputImageKey];
-    
-    CIFilter *blendFilter = [CIFilter filterWithName:@"CIMultiplyBlendMode" keysAndValues:kCIInputImageKey, scrImage, kCIInputBackgroundImageKey, darkColor, nil];
-    CIImage *frontground = [blendFilter valueForKey:kCIOutputImageKey];
-    
-    // Adjust Brightness of background
-    
     CIFilter *lightcolorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator" keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"1 1 1 0.5"], nil];
     CIImage *lightColor = [lightcolorGenerateFilter valueForKey:kCIOutputImageKey];
     
-    CIFilter *bgblendFilter = [CIFilter filterWithName:@"CISourceAtopCompositing" keysAndValues:kCIInputImageKey, lightColor, kCIInputBackgroundImageKey, gaussianBlurResult, nil];
-    CIImage *background = [bgblendFilter valueForKey:kCIOutputImageKey];
+    CIFilter *bgblendFilter = [CIFilter filterWithName:@"CISourceAtopCompositing" keysAndValues:kCIInputImageKey, lightColor, kCIInputBackgroundImageKey, scrImage, nil];
+    CIImage * background = [bgblendFilter valueForKey:kCIOutputImageKey];
+    
+    
+    // Adjust Brightness of background
+    
+    CIFilter *darkcolorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator" keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"0 0 0 0.5"], nil];
+    CIImage *darkColor = [darkcolorGenerateFilter valueForKey:kCIOutputImageKey];
+    
+    CIFilter *blendFilter = [CIFilter filterWithName:@"CIMultiplyBlendMode" keysAndValues:kCIInputImageKey, gaussianBlurResult, kCIInputBackgroundImageKey, darkColor, nil];
+    CIImage * frontground = [blendFilter valueForKey:kCIOutputImageKey];
     
     
     // Compose with Mask filter
@@ -441,17 +442,16 @@ static CIContext *ciContextSingleton = nil;
     CIFilter *mask = [CIFilter filterWithName:maskFilterName];
     
     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:nil];
-    CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
     
-    // Mask qr image with face
-    CIImage *facemask = [self maskFromDetectedFaceInImage:inputImage hollow:YES];
-    if (facemask) {
-        CIFilter *filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-        [filter setValue:qrMask forKey:@"inputImage"];
-        [filter setValue:facemask forKey:@"inputBackgroundImage"];
-        qrMask = [filter valueForKey:kCIOutputImageKey];
+    CIVector *faceRectangle = [self faceRectangleVectorDetectedFromImage:inputImage];
+    if (faceRectangle) {
+        
+        CGFloat clearRadius = MIN(imagSize * 0.18, faceRectangle.Z * 0.4);
+        
+        [qr setCLearRadius:clearRadius center:CGPointMake(faceRectangle.X, imagSize - faceRectangle.Y)];
     }
-
+    
+    CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
     
     [mask setValue:frontground forKey:kCIInputImageKey];
     [mask setValue:qrMask forKey:kCIInputMaskImageKey];
@@ -516,19 +516,10 @@ static CIContext *ciContextSingleton = nil;
 }
 
 + (CIImage *)maskFromDetectedFaceInImage:(CIImage *)inputImage hollow:(BOOL)isHollow {
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace
-                                            context:nil
-                                            options:nil];
-    NSArray *faceArray = [detector featuresInImage:inputImage options:nil];
     
-    if (!([faceArray count] > 0)) {
-        return nil;
-    }
+    CIVector *faceRectangle = [self faceRectangleVectorDetectedFromImage:inputImage];
     
-    CIFeature *face = faceArray[0];
-    CGFloat xCenter = face.bounds.origin.x + face.bounds.size.width/2.0;
-    CGFloat yCenter = face.bounds.origin.y + face.bounds.size.height/2.0;
-    CIVector *center = [CIVector vectorWithX:xCenter Y:yCenter];
+    CIVector *center = [CIVector vectorWithX:faceRectangle.X Y:faceRectangle.Y];
     
     CIFilter *radialGredient = [CIFilter filterWithName:@"CIRadialGradient"];
     [radialGredient setValue:center forKey:kCIInputCenterKey];
@@ -544,6 +535,26 @@ static CIContext *ciContextSingleton = nil;
     CIImage *maskImage = [radialGredient valueForKey:kCIOutputImageKey];
     
     return maskImage;
+}
+
++ (CIVector *)faceRectangleVectorDetectedFromImage:(CIImage *)inputImage {
+    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeFace
+                                              context:nil
+                                              options:nil];
+    NSArray *faceArray = [detector featuresInImage:inputImage options:nil];
+    
+    if (!([faceArray count] > 0)) {
+        return nil;
+    }
+    
+    CIFeature *face = faceArray[0];
+    
+    CGFloat xCenter = face.bounds.origin.x + face.bounds.size.width/2.0;
+    CGFloat yCenter = face.bounds.origin.y + face.bounds.size.height/2.0;
+    
+    CIVector *faceRectangle = [CIVector vectorWithX:xCenter Y:yCenter Z:face.bounds.size.width W:face.bounds.size.height];
+    
+    return faceRectangle;
 }
 
 + (CIImage *)popartImageWithCIImage:(CIImage *)inputImage color0:(CIColor *)color0 color1:(CIColor *)color1 {

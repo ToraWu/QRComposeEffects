@@ -78,7 +78,8 @@ static NSArray *effectNameKeys;
     
     
     //For test
-    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    //self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    self.pageControl.currentPage = 6;
     
     [self updateUI];
     
