@@ -187,9 +187,9 @@ static CIContext *ciContextSingleton = nil;
     //        绘制QR背景图
     
     UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig];
-
     
     //      绘制 真正的QR图
+    
     UIImage *QRNormalImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:versionNormal ];
   
     
@@ -346,7 +346,6 @@ static CIContext *ciContextSingleton = nil;
                        detectFace:(BOOL)detectFace {
     
     CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:inputImage color:[CIColor colorWithCGColor:color0.CGColor]];
-    
     // Generate QRcode image
     QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color0];
     

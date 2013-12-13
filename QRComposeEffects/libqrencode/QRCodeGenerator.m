@@ -94,6 +94,7 @@ static QRCodeGenerator *instance = nil;
     
     
     float  size =(code->width+2.0*marginXY)*sizeOfPix;
+    //图片压缩，通过计算，转换圆心及半径
     
     if (clearRadius!=0) {
         clearCenter.x = clearCenter.x*sizeOfPix*code->width/outImagesize;
@@ -296,10 +297,12 @@ static QRCodeGenerator *instance = nil;
     double byte_xpos = qr_startX ;
     double byte_ypos = qr_startY ;
     
+    if (backGroundColor!=nil) {
+        
     
     [self printQRbackGroundColor:ctx backcolor:backGroundColor Size:width*size];
     
-    
+    }
     
     
     
@@ -721,18 +724,19 @@ static QRCodeGenerator *instance = nil;
 
 #pragma mark ====内部方法 计算是否再绘制区域
 -(QRcode *) qrCustomizeArea:(QRcode *)code sieOfpix :(float)size{
-
     
     for(int i = 0;i<code->width;i++){
         for(int j = 0;j<code->width;j++){
     
-            float x = j*size;
-            float y = i*size;
+            float x = j*size-size;
+            float y = i*size-size;
+            
             
             float dd = (x-clearCenter.x)*(x-clearCenter.x)+(y-clearCenter.y)*(y-clearCenter.y);
             float rr = clearRadius*clearRadius;
+            
             if (dd<=rr) {
-                code->data[(i)*code->width+j]=0x0;;
+                    code->data[(i)*code->width+j]=0x0;
             }
         }
     }
