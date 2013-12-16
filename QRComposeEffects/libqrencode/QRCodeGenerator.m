@@ -226,7 +226,8 @@
 	data = code->data;
 	width = code->width;
 	float zoom = size;
-	CGRect rectDraw = CGRectMake(0, 0, zoom, zoom);
+    float dxy =zoom/2*(1-QRRadius);
+	CGRect rectDraw = CGRectMake(0, 0, zoom*QRRadius, zoom*QRRadius);
 	if (backGroundColor!=nil) {
         [self printQRbackGroundColor:ctx backcolor:backGroundColor Size:width*size];
     }
@@ -238,7 +239,7 @@
 	for(int i = 0; i < width; ++i) {
 		for(int j = 0; j < width; ++j) {
 			if(*data & 1) {
-				rectDraw.origin = CGPointMake((j + marginXY) * zoom,(i + marginXY) * zoom);
+				rectDraw.origin = CGPointMake((j + marginXY) * zoom+dxy,(i + marginXY) * zoom+dxy);
 //				CGContextAddRect(ctx, rectDraw);
                 CGContextAddEllipseInRect(ctx, rectDraw);
 			}
