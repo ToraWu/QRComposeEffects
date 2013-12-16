@@ -19,5 +19,51 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QRComposeEffects/libqrencode/QRCodeGenerator.m"
+            timestampString = "408877483.806746"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "-drawRoundQRCode:context:size:withMargin:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[QRCodeGenerator drawDefaultQRCode:context:size:withMargin:]"
+                  moduleName = "QRComposeEffects"
+                  urlString = "file:///Users/liuhu/dajie%20work/%E4%BB%A3%E7%A0%81/QRcomposeEffects/QRComposeEffects/libqrencode/QRCodeGenerator.m"
+                  timestampString = "408876719.269568"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "232"
+                  endingLineNumber = "232"
+                  offsetFromSymbolStart = "349">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[QRCodeGenerator drawDefaultQRCode:context:size:withMargin:]"
+                  moduleName = "QRComposeEffects"
+                  urlString = "file:///Users/liuhu/dajie%20work/%E4%BB%A3%E7%A0%81/QRcomposeEffects/QRComposeEffects/libqrencode/QRCodeGenerator.m"
+                  timestampString = "408876719.26996"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "232"
+                  endingLineNumber = "232"
+                  offsetFromSymbolStart = "552">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

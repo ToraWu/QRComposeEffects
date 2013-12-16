@@ -27,7 +27,7 @@
 
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
-static QRCodeGenerator *instance = nil;
+ 
 
 @implementation QRCodeGenerator
 
@@ -38,6 +38,7 @@ static QRCodeGenerator *instance = nil;
         QRcolor = color;
         clearCenter = CGPointMake(0, 0);
         clearRadius = 0;
+        isRoundPixel = NO;
     }
     return self;
 
@@ -88,10 +89,6 @@ static QRCodeGenerator *instance = nil;
         
         code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix margin:marginXY];
     }
-    
- 
-
-    
     
     UIImage *qrImage = [self drawQRImageWithqrCode:code
                                      sizeOfContext:size
@@ -169,10 +166,14 @@ static QRCodeGenerator *instance = nil;
         QRcolor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1.0];
     }
     
+
     
-    
-    [self drawliquidQRCode:code context:ctx size:sizeofPix  withMargin:marginxy];
-    
+    if (isRoundPixel) {
+        [self drawRoundQRCode:code
+                        context:ctx size:sizeofPix withMargin:marginxy];
+    }else
+        [self drawliquidQRCode:code context:ctx size:sizeofPix  withMargin:marginxy];
+
 	// get image
 	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
 	UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
@@ -219,21 +220,27 @@ static QRCodeGenerator *instance = nil;
  * @param marginXY 二维码距离画布边界
  */
 
--(void)drawDefaultQRCode:(QRcode *)code context:(CGContextRef)ctx size:(CGFloat)size withMargin:(float)marginXY{
+-(void)drawRoundQRCode:(QRcode *)code context:(CGContextRef)ctx size:(CGFloat)size withMargin:(float)marginXY{
 	unsigned char *data = 0;
 	int width;
 	data = code->data;
 	width = code->width;
-	float zoom = (double)size / (code->width + 2.0 * marginXY);
+	float zoom = size;
 	CGRect rectDraw = CGRectMake(0, 0, zoom, zoom);
-	
+	if (backGroundColor!=nil) {
+        [self printQRbackGroundColor:ctx backcolor:backGroundColor Size:width*size];
+    }
+
 	// draw
-	CGContextSetFillColor(ctx, CGColorGetComponents([UIColor blackColor].CGColor));
+    const CGFloat *components = CGColorGetComponents(QRcolor.CGColor);
+    CGContextSetRGBFillColor(ctx, components[0], components[1], components[2], 1.0);
+    
 	for(int i = 0; i < width; ++i) {
 		for(int j = 0; j < width; ++j) {
 			if(*data & 1) {
 				rectDraw.origin = CGPointMake((j + marginXY) * zoom,(i + marginXY) * zoom);
-				CGContextAddRect(ctx, rectDraw);
+//				CGContextAddRect(ctx, rectDraw);
+                CGContextAddEllipseInRect(ctx, rectDraw);
 			}
 			++data;
 		}
@@ -691,6 +698,14 @@ static QRCodeGenerator *instance = nil;
     
     
 }
+/*
+ *设置是否是需要像素点圆角化绘制
+ */
+
+-(void)setIsRoundPixel:(BOOL)isRound{
+
+    isRoundPixel = isRound;
+}
 
 #pragma mark ====内部方法 计算是否再绘制区域
 -(QRcode *) qrCustomizeArea:(QRcode *)code sieOfpix :(float)size margin:(float)marginxy{
@@ -705,7 +720,7 @@ static QRCodeGenerator *instance = nil;
             float dd = (x-clearCenter.x)*(x-clearCenter.x)+(y-clearCenter.y)*(y-clearCenter.y);
             float rr = clearRadius*clearRadius;
             
-            if (dd<=rr) {
+            if (dd<=rr &&[self isQRkeyPositon:code pointX:i pointY:j]) {
                     code->data[(i)*code->width+j]=0x0;
             }
         }
@@ -713,5 +728,15 @@ static QRCodeGenerator *instance = nil;
     return code
     ;
     
+}
+
+
+-(BOOL)isQRkeyPositon:(QRcode *)code pointX:(int)x pointY:(int)y{
+    
+    int width = code->width;
+    if ((x>=0 && x<=6 && y>=0 && y<=6) || (x>=0 && x<=6 && y>=width-7-1 && y<=width-1) || (x>=width-7-1 && x<=width-1 && y>=0 && y<=6))
+        return NO;
+    else
+        return  YES;
 }
 @end

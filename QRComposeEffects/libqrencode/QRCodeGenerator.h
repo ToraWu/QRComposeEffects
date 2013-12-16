@@ -48,12 +48,15 @@ typedef enum{
 
 @interface QRCodeGenerator : NSObject{
 
-    float  QRRadius;
-    UIColor * QRcolor;
-    UIColor *backGroundColor;
-    float clearRadius;
-    CGPoint clearCenter;
+    float  QRRadius;//液化半径 0-1
+    UIColor * QRcolor; //QR 颜色
+    UIColor *backGroundColor;//QR背景颜色
+    float clearRadius;// QR不需要绘制区域的半径
+    CGPoint clearCenter;//QR不需要绘制区域的中心
+    
+    BOOL isRoundPixel;
 }
+
 
 
 /*
@@ -64,6 +67,12 @@ typedef enum{
 -(id)initWithRadius :(float)radius withColor:(UIColor*)color;
 
 
+
+/*
+ *设置是否是需要像素点圆角化绘制
+ */
+
+-(void)setIsRoundPixel:(BOOL)isRound;
 /*
  *设置二维码背景颜色
  *
@@ -77,7 +86,6 @@ typedef enum{
  */
 
 -(void)setCLearRadius:(float)radius center:(CGPoint)point;
-
 
 /**
  * @brief 公共方法返回一张二维码的图片。qrencode库 默认为最低等级 容错为最低L QRencodeMode 为QRMODE8
