@@ -183,12 +183,8 @@
 	CGContextRelease(ctx);
 	CGImageRelease(qrCGImage);
 	CGColorSpaceRelease(colorSpace);
-	QRcode_free(code);
 	
 	return qrImage;
-    
-    
-
 }
 
 #pragma mark===公共方法 获取二维码版本

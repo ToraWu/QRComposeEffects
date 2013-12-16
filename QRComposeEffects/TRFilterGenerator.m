@@ -60,7 +60,10 @@ static CIContext *ciContextSingleton = nil;
         sizeOfPix --;
     }
     
-    //如果识别出面部，配置面部减码
+    //测试：生成圆点型的二维码
+    //[qr setIsRoundPixel:YES];
+    
+    //测试：如果识别出面部，配置面部减码
     [self configureQRGeneratorToReduceFace:qr inputImage:[CIImage imageWithCGImage:avatarImage.CGImage] outputSize:imageSize];
     
     //生成二维码 不压缩
