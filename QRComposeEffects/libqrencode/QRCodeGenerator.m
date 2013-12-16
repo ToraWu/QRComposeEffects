@@ -53,9 +53,11 @@ static QRCodeGenerator *instance = nil;
  */
 
 - (UIImage *)qrImageForString:(NSString *)string
-                   withMargin:(float)marginXY
-                    withMode :(int)mode
-               withOutputSize:(float)outImagesize{
+                   Margin:(float)marginXY
+                    Mode :(int)mode
+               OutputSize:(float)outImagesize{
+    
+    
 	if (![string length]) {
 		return nil;
 	}
@@ -64,9 +66,7 @@ static QRCodeGenerator *instance = nil;
 	if (!code) {
 		return nil;
 	}
-    
-    
-    
+
     
     int leverl = code->width;
     //每一个色块的大小 取偶数
@@ -78,7 +78,7 @@ static QRCodeGenerator *instance = nil;
     
     
     
-    float  size =(code->width+2.0*marginXY)*sizeOfPix;
+    float  size =(code->width+2.0*marginXY)*sizeOfPix;//画布尺寸
     //图片压缩，通过计算，转换圆心及半径
     
     if (clearRadius!=0) {
@@ -89,52 +89,25 @@ static QRCodeGenerator *instance = nil;
         code =  [self qrCustomizeArea:code sieOfpix:sizeOfPix margin:marginXY];
     }
     
-	// create context
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
  
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
-    int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
-#else
-    int bitmapInfo = kCGImageAlphaPremultipliedLast;
-#endif
-		CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
-	CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -size);
-	CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
-	CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
 
-    //    加入抗锯齿 特别慢
-    CGContextSetAllowsAntialiasing(ctx, true);
-    CGContextSetShouldAntialias(ctx, true);
-	// draw QR on this context
-
-    if (QRcolor == [UIColor blackColor]||QRcolor == nil) {
-        QRcolor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1.0];
-    }
     
     
- 
-        [self drawliquidQRCode:code context:ctx size:sizeOfPix  withMargin:marginXY];
+    UIImage *qrImage = [self drawQRImageWithqrCode:code
+                                     sizeOfContext:size
+                                       sizeOfPixel:sizeOfPix margin:marginXY];
     
-	// get image
-	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
-	UIImage * qrImage = [UIImage imageWithCGImage:qrCGImage];
-
-    qrImage = [TRFilterGenerator imageWithImageSimple:qrImage backGroundColor:nil newSize:CGSizeMake(outImagesize, outImagesize)];
-    
-	// some releases
-	CGContextRelease(ctx);
-	CGImageRelease(qrCGImage);
-	CGColorSpaceRelease(colorSpace);
 	QRcode_free(code);
 	
 	return qrImage;
 }
 
 
-- (UIImage *)qrImageForString:(NSString *)string
-                  withPixSize:(float)sizeofpix
-                   withMargin:(float)marginXY
-                    withMode :(int)mode{
+- (UIImage *)qrImageForPixelString:(NSString *)string
+                  PixSize:(float)sizeofpix
+                   Margin:(float)marginXY
+                    Mode :(int)mode
+                   outPutSize:(float)imageSize{
 
 
 	if (![string length]) {
@@ -146,24 +119,46 @@ static QRCodeGenerator *instance = nil;
 		return nil;
 	}
     
-    float  size =(code->width+2.0*marginXY)*sizeofpix;
+    float  size =(code->width+2.0*marginXY)*sizeofpix;//画布尺寸
     
+    if (clearRadius!=0) {
+        clearCenter.x = clearCenter.x*sizeofpix*code->width/imageSize;
+        clearCenter.y = clearCenter.y*sizeofpix*code->width/imageSize;
+        clearRadius = clearRadius *sizeofpix*code->width/imageSize;
+        
+        code =  [self qrCustomizeArea:code sieOfpix:sizeofpix margin:marginXY];
+    }
+
+    UIImage *qrImage = [self drawQRImageWithqrCode:code
+                                        sizeOfContext:size
+                                       sizeOfPixel:sizeofpix margin:marginXY];
+	QRcode_free(code);
+	
+	return qrImage;
+}
+
+
+#pragma mark ===内部方法＝＝＝绘制qr
+
+-(UIImage *)drawQRImageWithqrCode:(QRcode *)code
+                    sizeOfContext:(float)size
+                      sizeOfPixel:(float)sizeofPix
+                           margin:(float)marginxy{
 
     
-    
-	// create context
+    // create context
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
-        int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
-    #else
-        int bitmapInfo = kCGImageAlphaPremultipliedLast;
-    #endif
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+    int bitmapInfo = kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast;
+#else
+    int bitmapInfo = kCGImageAlphaPremultipliedLast;
+#endif
 	CGContextRef ctx = CGBitmapContextCreate(0, size, size, 8, size * 4, colorSpace, bitmapInfo);
 	
 	CGAffineTransform translateTransform = CGAffineTransformMakeTranslation(0, -size);
 	CGAffineTransform scaleTransform = CGAffineTransformMakeScale(1, -1);
 	CGContextConcatCTM(ctx, CGAffineTransformConcat(translateTransform, scaleTransform));
-//    抗锯齿 特别慢
+    //    抗锯齿 特别慢
     
     CGContextSetAllowsAntialiasing(ctx, true);
     CGContextSetShouldAntialias(ctx, true);
@@ -176,7 +171,7 @@ static QRCodeGenerator *instance = nil;
     
     
     
-    [self drawliquidQRCode:code context:ctx size:sizeofpix  withMargin:marginXY];
+    [self drawliquidQRCode:code context:ctx size:sizeofPix  withMargin:marginxy];
     
 	// get image
 	CGImageRef qrCGImage = CGBitmapContextCreateImage(ctx);
@@ -190,6 +185,9 @@ static QRCodeGenerator *instance = nil;
 	QRcode_free(code);
 	
 	return qrImage;
+    
+    
+
 }
 
 #pragma mark===公共方法 获取二维码版本

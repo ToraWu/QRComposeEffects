@@ -64,7 +64,11 @@ static CIContext *ciContextSingleton = nil;
     [self configureQRGeneratorToReduceFace:qr inputImage:[CIImage imageWithCGImage:avatarImage.CGImage] outputSize:imageSize];
     
     //生成二维码 不压缩
-    UIImage *qrImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:mode];
+    UIImage *qrImage = [qr qrImageForPixelString:string
+                                         PixSize:sizeOfPix
+                                          Margin:margin
+                                        Mode:mode
+                                        outPutSize:imageSize];
     
     UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage backGroundColor:nil newSize:qrImage.size];
     
@@ -118,11 +122,19 @@ static CIContext *ciContextSingleton = nil;
     
     //        绘制QR背景图
     
-    UIImage *QRBackImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:0 withMode:versionBig];
+    UIImage *QRBackImage = [qr qrImageForPixelString:string
+                                        PixSize:sizeOfPix
+                                              Margin:0
+                                                Mode:versionBig
+                                outPutSize:imagSize];
     
     //      绘制 真正的QR图
     
-    UIImage *QRNormalImage = [qr qrImageForString:string withPixSize:sizeOfPix withMargin:margin withMode:versionNormal];
+    UIImage *QRNormalImage = [qr qrImageForPixelString:string
+                                               PixSize:sizeOfPix
+                                            Margin:margin
+                                                  Mode:versionNormal
+                              outPutSize:imagSize];
   
     
     //       两张图片叠加（中间部分透明 然后将小图添加上去）
@@ -268,7 +280,7 @@ static CIContext *ciContextSingleton = nil;
         faceProcessNeeded = [self configureQRGeneratorToReduceFace:qr inputImage:scrImage outputSize:imageSize];
     }
     
-    CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imageSize].CGImage];
+    CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string  Margin:2 Mode:qrMode OutputSize:imageSize].CGImage];
     
     // Mask qr image with face
     if (faceProcessNeeded) {
@@ -464,7 +476,7 @@ static CIContext *ciContextSingleton = nil;
         [qr setCLearRadius:clearRadius center:CGPointMake(faceRectangle.X, imagSize - faceRectangle.Y)];
     }
     
-    CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  withMargin:2 withMode:qrMode withOutputSize:imagSize].CGImage];
+    CIImage *qrMask = [CIImage imageWithCGImage:[qr qrImageForString:string  Margin:2 Mode:qrMode OutputSize:imagSize].CGImage];
     
     [mask setValue:frontground forKey:kCIInputImageKey];
     [mask setValue:qrMask forKey:kCIInputMaskImageKey];

@@ -412,7 +412,10 @@ static NSArray *effectNameKeys;
         
         //  _qrImage = [[QRCodeGenerator shareInstance] qrImageForString:self.qrString imageSize:400 withMargin:2];
         QRCodeGenerator *qr=  [[QRCodeGenerator alloc] initWithRadius:0 withColor:[UIColor blackColor]];
-        _qrImage = [qr qrImageForString:self.qrString withMargin:0 withMode:0 withOutputSize:self.resultView.bounds.size.width];
+        _qrImage = [qr qrImageForString:self.qrString
+                                 Margin:0
+                               Mode:0
+                             OutputSize:self.resultView.bounds.size.width];
         
     }
     

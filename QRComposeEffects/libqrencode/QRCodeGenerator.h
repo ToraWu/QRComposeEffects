@@ -88,17 +88,26 @@ typedef enum{
  
  */
 - (UIImage *)qrImageForString:(NSString *)string
-                   withMargin:(float)marginXY
-                    withMode :(int)mode
-                    withOutputSize:(float)outImagesize;
+                   Margin:(float)marginXY
+                    Mode :(int)mode
+                    OutputSize:(float)outImagesize;
 
 
 
-
-- (UIImage *)qrImageForString:(NSString *)string
-                  withPixSize:(float)sizeofpix
-                   withMargin:(float)marginXY
-                    withMode :(int)mode;
+/**
+ * @brief 公共方法返回一张二维码的图片。此方法仅供二维码像素滤镜时调用
+ * @param string 源字符串
+ * @param size 二维码中每个色块的大小 16
+ * @param marginXY 二维码距离画布边界
+ * @param mode 二维码级别
+ * @param outImageSize 输出二维码图片的大小
+ 
+ */
+- (UIImage *)qrImageForPixelString:(NSString *)string
+                  PixSize:(float)sizeofpix
+                   Margin:(float)marginXY
+                    Mode :(int)mode
+                        outPutSize: (float)outImageSize;
 
 
 
