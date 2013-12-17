@@ -724,7 +724,7 @@
             float dd = (x-clearCenter.x)*(x-clearCenter.x)+(y-clearCenter.y)*(y-clearCenter.y);
             float rr = clearRadius*clearRadius;
             
-            if (dd<=rr &&[self isQRkeyPositon:code pointX:i pointY:j]) {
+            if (dd<=rr &&(![self isQRkeyPositon:code pointX:i pointY:j])) {
                     code->data[(i)*code->width+j]=0x0;
             }
         }
@@ -738,9 +738,13 @@
 -(BOOL)isQRkeyPositon:(QRcode *)code pointX:(int)x pointY:(int)y{
     
     int width = code->width;
-    if ((x>=0 && x<=6 && y>=0 && y<=6) || (x>=0 && x<=6 && y>=width-7-1 && y<=width-1) || (x>=width-7-1 && x<=width-1 && y>=0 && y<=6))
-        return NO;
+    if ((x>=0 && x<=8 && y>=0 && y<=8)
+        || (x>=0 && x<=8 && y>=width-8-1 && y<=width-1)
+        || (x>=width-8-1 && x<=width-1 && y>=0 && y<=8)
+        ||(x>=9&&x<=12&& y==6)
+        ||(x==6 && y>=9&&y<=12))
+        return YES;
     else
-        return  YES;
+        return  NO;
 }
 @end
