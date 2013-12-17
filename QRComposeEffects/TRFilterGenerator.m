@@ -301,7 +301,10 @@ static CIContext *ciContextSingleton = nil;
         // No face detected, scale the image into a square on the center of qr code.
         CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
         [transformFilter setValue:printmakingResult forKey:kCIInputImageKey];
-        CGFloat scaleFactor = 16.0f/43.0f;
+        
+        NSInteger qrSize = [QRCodeGenerator matrixSizeOfQRVersion:qrMode margin:margin];
+        CGFloat properScaledSize = round(qrSize * 0.4);
+        CGFloat scaleFactor = properScaledSize/qrSize;
         CGFloat originX = imageSize * (1-scaleFactor) * 0.5;
         CGFloat originY = imageSize * (1-scaleFactor) * 0.5;
         CGFloat width = imageSize * scaleFactor;
@@ -396,9 +399,9 @@ static CIContext *ciContextSingleton = nil;
     // ColorControl
     CIFilter *colorControlFilter = [CIFilter filterWithName:@"CIColorControls"];
     [colorControlFilter setValue:forwardImage forKey:kCIInputImageKey];
-    [colorControlFilter setValue:@(1.1) forKey:kCIInputContrastKey];
-    [colorControlFilter setValue:@(0.00) forKey:kCIInputBrightnessKey];
-    [colorControlFilter setValue:@(6.0) forKey:kCIInputSaturationKey];
+    [colorControlFilter setValue:@(1.1) forKey:@"inputContrast"];
+    [colorControlFilter setValue:@(0.00) forKey:@"inputBrightness"];
+    [colorControlFilter setValue:@(6.0) forKey:@"inputSaturation"];
     forwardImage = colorControlFilter.outputImage;
     
     CGImageRef cgiimage = [context createCGImage:forwardImage fromRect:forwardImage.extent];
@@ -519,9 +522,9 @@ static CIContext *ciContextSingleton = nil;
     // ColorControl
     CIFilter *colorControlFilter = [CIFilter filterWithName:@"CIColorControls"];
     [colorControlFilter setValue:resultImage forKey:kCIInputImageKey];
-    [colorControlFilter setValue:@(1.95) forKey:kCIInputContrastKey];
-    [colorControlFilter setValue:@(0.06) forKey:kCIInputBrightnessKey];
-    [colorControlFilter setValue:@(1.0) forKey:kCIInputSaturationKey];
+    [colorControlFilter setValue:@(1.95) forKey:@"inputContrast"];
+    [colorControlFilter setValue:@(0.06) forKey:@"inputBrightness"];
+    [colorControlFilter setValue:@(1.0) forKey:@"inputSaturation"];
     resultImage = [colorControlFilter valueForKey:kCIOutputImageKey];
     
     // Monochrome
@@ -594,8 +597,8 @@ static CIContext *ciContextSingleton = nil;
         NSString *colorControlFilterName = @"CIColorControls";
         CIFilter *colorControl = [CIFilter filterWithName:colorControlFilterName];
         [colorControl setValue:scrImage forKey:kCIInputImageKey];
-        [colorControl setValue:@(1.05) forKey:kCIInputContrastKey];
-        [colorControl setValue:@(1.1) forKey:kCIInputSaturationKey];
+        [colorControl setValue:@(1.05) forKey:@"inputContrast"];
+        [colorControl setValue:@(1.1) forKey:@"inputSaturation"];
         scrImage = [colorControl valueForKey:kCIOutputImageKey];
     }
     

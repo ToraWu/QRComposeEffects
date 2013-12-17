@@ -43,7 +43,43 @@
     return self;
 
 }
-#pragma mark===公共方法 获取二维码图片
+
+#pragma mark === 计算工具方法 ====
+
+#define QRMatrixSizeMIN 21
+#define QRMartixSizeMAX 177
+
++ (NSInteger)matrixSizeOfQRVersion:(NSInteger)version margin:(NSInteger)margin {
+    if (version < 1) {
+        return QRMatrixSizeMIN + margin*2;
+    } else if (version > 40) {
+        return QRMartixSizeMAX + margin*2;
+    } else {
+        return QRMatrixSizeMIN + (4 * (version - 1)) + (2 * margin);
+    }
+}
+
+#pragma mark===公共方法 获取二维码版本
+/**
+ * @brief 公共方法返回二维码宽度，容错为最低L QRencodeMode 为QRMODE8，返回所需要编码的最低版本（eg:1,2,3....40）
+ * @param string 源字符串
+ * @param level 容错级别
+ */
+- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode{
+    
+    
+	QRcode *code = QRcode_encodeString([string UTF8String], mode, level, QR_MODE_8, 1);
+    int result;
+    if (code) {
+        result  = code->width;
+    }else
+        result = 0;
+    QRcode_free(code);
+    return result;
+    
+}
+
+#pragma mark ===公共方法 获取二维码图片
 /**
  * @brief 公共方法返回一张二维码的图片。qrencode库 默认为最低等级 容错为最低L QRencodeMode 为QRMODE8
  * @param string 源字符串
@@ -186,27 +222,6 @@
 	
 	return qrImage;
 }
-
-#pragma mark===公共方法 获取二维码版本
-/**
- * @brief 公共方法返回二维码宽度，容错为最低L QRencodeMode 为QRMODE8，返回所需要编码的最低版本（eg:1,2,3....40）
- * @param string 源字符串
- * @param level 容错级别
- */
-- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode{
-    
-    
-	QRcode *code = QRcode_encodeString([string UTF8String], mode, level, QR_MODE_8, 1);
-    int result;
-    if (code) {
-        result  = code->width;
-    }else
-        result = 0;
-    QRcode_free(code);
-    return result;
-	   
-}
-
 
 #pragma mark ====内部绘制二维码方法
 

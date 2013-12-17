@@ -41,6 +41,13 @@ typedef enum{
 
 }QRfilterType;
 
+typedef enum {
+    QRECCLevelLow = 0,
+    QRECCLevelMedium = 1,
+    QRECCLevelQuality = 2,
+    QRECCLevelHigh = 3
+    
+}QRECCLevel;
 
 
 #import <Foundation/Foundation.h>
@@ -57,7 +64,17 @@ typedef enum{
     BOOL isRoundPixel;
 }
 
+/*
+ * 工具方法，给定二维码版本（version）计算生成的二维码矩阵大小
+ */
++ (NSInteger)matrixSizeOfQRVersion:(NSInteger)version margin:(NSInteger)margin;
 
+/**
+ * @brief 公共方法返回二维码宽度 QRencodeMode 为QRMODE8，返回所需要编码的最低版本（eg:1,2,3....40）的宽度
+ * @param string 源字符串
+ * @param level 容错级别
+ */
+- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode;
 
 /*
  *获取二维码生成器单例
@@ -119,10 +136,4 @@ typedef enum{
 
 
 
-/**
- * @brief 公共方法返回二维码宽度 QRencodeMode 为QRMODE8，返回所需要编码的最低版本（eg:1,2,3....40）的宽度
- * @param string 源字符串
- * @param level 容错级别
- */
-- (int)QRVersionForString:(NSString *)string withErrorLevel:(QRecLevel)level withMode:(int)mode;
 @end
