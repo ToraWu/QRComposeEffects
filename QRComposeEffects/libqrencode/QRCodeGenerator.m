@@ -78,6 +78,12 @@
     }
     
     
+    if (sizeOfPix >40) {
+        sizeOfPix = 40;
+    }
+    if (sizeOfPix <20) {
+        sizeOfPix = 20;
+    }
     
     float  size =(code->width+2.0*marginXY)*sizeOfPix;//画布尺寸
     //图片压缩，通过计算，转换圆心及半径
@@ -94,6 +100,7 @@
                                      sizeOfContext:size
                                        sizeOfPixel:sizeOfPix margin:marginXY];
     
+ qrImage =  [TRFilterGenerator imageWithImageSimple:qrImage backGroundColor:nil newSize:CGSizeMake(outImagesize, outImagesize)];
 	QRcode_free(code);
 	
 	return qrImage;
