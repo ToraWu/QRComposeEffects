@@ -55,7 +55,7 @@ static NSArray *effectNameKeys;
     self.pageControl.numberOfPages = [effectNameKeys count];
     
     // Sample data
-    self.preferredQrLevel = 5;
+    self.preferredQrLevel = 6;
     self.qrString = @"http://roundqr.sinaapp.com/index.php";
     self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
     self.customedColor0 = [UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1];
@@ -78,8 +78,8 @@ static NSArray *effectNameKeys;
     
     
     //For test
-    //self.pageControl.currentPage = self.pageControl.numberOfPages-1;
-    self.pageControl.currentPage = 0;
+    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    //self.pageControl.currentPage = 0;
     
     [self updateUI];
     
