@@ -246,7 +246,10 @@ static CIContext *ciContextSingleton = nil;
                                                 mode:qrMode
                                           outPutSize:imagSize];
     
-    CIImage *citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
+    CIImage *citexture = nil;
+    if (textureImage) {
+        citexture = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:textureImage backGroundColor:nil newSize:CGSizeMake(imagSize, imagSize)].CGImage];
+    }
     
     scrImage = [self texturedImageWithCIImage:scrImage color:[CIColor colorWithCGColor:color.CGColor] textureImage:citexture];
     
@@ -342,8 +345,10 @@ static CIContext *ciContextSingleton = nil;
     
     CIImage *compositedImage = [filter valueForKey:kCIOutputImageKey];
 
-    // Popart filter
-    compositedImage = [self popartImageWithCIImage:compositedImage color0:[CIColor colorWithCGColor:color0.CGColor] color1:color1 ? [CIColor colorWithCGColor:color1.CGColor] : nil];
+    if (detectFace) {
+        // Popart filter
+        compositedImage = [self popartImageWithCIImage:compositedImage color0:[CIColor colorWithCGColor:color0.CGColor] color1:color1 ? [CIColor colorWithCGColor:color1.CGColor] : nil];
+    }
     
     // Output UIImage
     return [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
@@ -516,7 +521,7 @@ static CIContext *ciContextSingleton = nil;
     // Exposure Adjust
     CIFilter *exposureAdjustFilter = [CIFilter filterWithName:@"CIExposureAdjust"];
     [exposureAdjustFilter setValue:resultImage forKey:kCIInputImageKey];
-    [exposureAdjustFilter setValue:@(1.24) forKey:kCIInputEVKey];
+    [exposureAdjustFilter setValue:@(1.04) forKey:kCIInputEVKey];
     resultImage = [exposureAdjustFilter valueForKey:kCIOutputImageKey];
 
     // ColorControl
@@ -538,14 +543,14 @@ static CIContext *ciContextSingleton = nil;
 //    CIFilter *posterlize = [CIFilter filterWithName:@"CIColorPosterize" keysAndValues:kCIInputImageKey, resultImage, @"inputLevels", @(20.0), nil];
 //    resultImage = [posterlize valueForKey:kCIOutputImageKey];
     
-    CIFilter *colorMatrixFilter = [CIFilter filterWithName:@"CIColorMatrix"];
-    [colorMatrixFilter setValue:resultImage forKey:kCIInputImageKey];
-    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[1 0 0 0]"] forKey:@"inputRVector"];
-    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 1 0 0]"] forKey:@"inputGVector"];
-    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 1 0]"] forKey:@"inputBVector"];
-    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 0 1]"] forKey:@"inputAVector"];
-    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.35 0.35 0.35 0]"] forKey:@"inputBiasVector"];
-    resultImage = [colorMatrixFilter valueForKey:kCIOutputImageKey];
+//    CIFilter *colorMatrixFilter = [CIFilter filterWithName:@"CIColorMatrix"];
+//    [colorMatrixFilter setValue:resultImage forKey:kCIInputImageKey];
+//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[1 0 0 0]"] forKey:@"inputRVector"];
+//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 1 0 0]"] forKey:@"inputGVector"];
+//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 1 0]"] forKey:@"inputBVector"];
+//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 0 1]"] forKey:@"inputAVector"];
+//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.35 0.35 0.35 0]"] forKey:@"inputBiasVector"];
+//    resultImage = [colorMatrixFilter valueForKey:kCIOutputImageKey];
     
     return resultImage;
 }

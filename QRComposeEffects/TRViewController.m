@@ -49,7 +49,7 @@ static NSArray *effectNameKeys;
     self.ciContext  = [CIContext contextWithEAGLContext:myEAGLContext options:nil];
     
     if (!effectNameKeys) {
-        effectNameKeys = @[@"Pixellate",@"Pixellate Gold",@"Pixellate Liquid", @"Circum", @"Circum Liquid", @"Transparent Blur", @"TransBlur Gold", @"Popart Portrait", @"Popart General"];
+        effectNameKeys = @[@"Popart Portrait",@"Printmaking",@"Pixellate", @"Circum"];
     }
     self.resultImageDict = [NSMutableDictionary new];
     self.pageControl.numberOfPages = [effectNameKeys count];
@@ -69,17 +69,17 @@ static NSArray *effectNameKeys;
     [self registerShadowEffectForView:self.boardView depth:4*self.boardView.layer.shadowRadius];
     
     
-    self.resultView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.resultView.layer.shadowOffset = CGSizeMake(0,-2);
-    self.resultView.layer.shadowOpacity = 0.5;
-    self.resultView.layer.shadowRadius = 5;
-    [self registerEffectForView:self.resultView depth:5];
-    [self registerShadowEffectForView:self.resultView depth:-4*self.resultView.layer.shadowRadius];
+//    self.resultView.layer.shadowColor = [UIColor blackColor].CGColor;
+//    self.resultView.layer.shadowOffset = CGSizeMake(0,-2);
+//    self.resultView.layer.shadowOpacity = 0.5;
+//    self.resultView.layer.shadowRadius = 5;
+//    [self registerEffectForView:self.resultView depth:5];
+//    [self registerShadowEffectForView:self.resultView depth:-4*self.resultView.layer.shadowRadius];
     
     
     //For test
-    self.pageControl.currentPage = self.pageControl.numberOfPages-1;
-    //self.pageControl.currentPage = 0;
+    //self.pageControl.currentPage = self.pageControl.numberOfPages-1;
+    self.pageControl.currentPage = 0;
     
     [self updateUI];
     
@@ -492,6 +492,7 @@ static NSArray *effectNameKeys;
 - (IBAction)chooseColor:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         self.customedColor0 = [(UIButton *)sender backgroundColor];
+        self.boardView.backgroundColor = self.customedColor0;
         [self.resultImageDict removeAllObjects];
         [self updateUI];
     }
@@ -569,6 +570,29 @@ static NSArray *effectNameKeys;
     CGFloat qrWidth = self.userImage.size.width;
     
     if (0 == index) {
+        // Popart : Portrait
+        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
+                                             maskWithQRString:self.qrString
+                                                       margin:2
+                                                       radius:0
+                                                         mode:self.preferredQrLevel
+                                                   outPutSize:qrWidth
+                                                       color0:self.customedColor0
+                                                       color1:[UIColor colorWithRed:1 green:0.96 blue:0.98 alpha:1]
+                                                   detectFace:YES];
+    } else if (1 == index) {
+        // Popart : general
+        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
+                                             maskWithQRString:self.qrString
+                                                       margin:2
+                                                       radius:0.5
+                                                         mode:self.preferredQrLevel
+                                                   outPutSize:qrWidth
+                                                       color0:self.customedColor0
+                                                       color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
+                                                   detectFace:NO];
+        
+    } else if (2 == index) {
         // Pixellate
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
                                                        qRString:self.qrString
@@ -578,35 +602,10 @@ static NSArray *effectNameKeys;
                                                          outPutSize:qrWidth
                                                             qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
         
-    } else if (1 == index) {
-        // Pixellate : Golden
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
-                                                            qRString:self.qrString
-                                                              margin:2
-                                                                mode:self.preferredQrLevel
-                                                              radius:0
-                                                      outPutSize:qrWidth
-                                                             qRColor:self.customedColor0];
-        
-    } else if (2 == index) {
-        // Pixellate : rounded corner
-        resultImage  = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
-                                                            qRString:self.qrString
-                                                              margin:2
-                                                                mode:self.preferredQrLevel
-                                                              radius:0.5
-                                                          outPutSize:qrWidth
-                                                             qRColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:1]];
-        
-    } else if (3 == index) {
-        // Circum
-        resultImage = [TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:1 radius:0 outPutSize:qrWidth qRColor:nil];
-    }
-    else if (4 ==index) {
+    } else if (3 ==index) {
         // Circum : rounded corner
         resultImage  =[TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:2 radius:0.5 outPutSize:qrWidth qRColor:nil];
-    }
-    else if (5 == index) {
+    } else if (4 == index) {
         // Blur mask
         resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage
                                                  maskWithQRString:self.qrString
@@ -616,8 +615,8 @@ static NSArray *effectNameKeys;
                                                        outPutSize:qrWidth
                                                   monochromeColor:nil
                                              compositeWithTexture:nil];
-    } else if (6 == index) {
-        // Blur mask : golden
+    } else if (5 == index) {
+        // Blur mask : textured
         resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage
                                                  maskWithQRString:self.qrString
                                                            margin:2
@@ -626,29 +625,6 @@ static NSArray *effectNameKeys;
                                                        outPutSize:qrWidth
                                                   monochromeColor:[UIColor colorWithRed:0.87 green:0.66 blue:0.08 alpha:1]
                                              compositeWithTexture:[UIImage imageNamed:@"gold_texture.jpg"]];
-    } else if (7 == index) {
-        // Popart : Portrait
-        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
-                                             maskWithQRString:self.qrString
-                                                       margin:2
-                                                       radius:0
-                                                         mode:self.preferredQrLevel
-                                                   outPutSize:qrWidth
-                                                       color0:self.customedColor0
-                                                       color1:nil
-                                                   detectFace:YES];
-    } else if (8 == index) {
-        // Popart : general
-        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
-                                             maskWithQRString:self.qrString
-                                                       margin:2
-                                                       radius:0
-                                                         mode:self.preferredQrLevel
-                                                   outPutSize:qrWidth
-                                                       color0:self.customedColor0
-                                                       color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
-                                                   detectFace:NO];
- 
     }
     
     return resultImage;
