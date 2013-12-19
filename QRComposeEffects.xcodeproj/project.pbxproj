@@ -51,6 +51,8 @@
 		965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 965C77881848AC7C00A29836 /* IMG_5623.JPG */; };
 		9681B5671862EE3300014EF2 /* texture1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5661862EE3300014EF2 /* texture1.jpg */; };
 		9681B5681862EE3300014EF2 /* texture1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5661862EE3300014EF2 /* texture1.jpg */; };
+		9681B56A1863059100014EF2 /* IMG_0133.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5691863059100014EF2 /* IMG_0133.jpg */; };
+		9681B56B1863059100014EF2 /* IMG_0133.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5691863059100014EF2 /* IMG_0133.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +119,7 @@
 		965C77851848AC6B00A29836 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		965C77881848AC7C00A29836 /* IMG_5623.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_5623.JPG; sourceTree = "<group>"; };
 		9681B5661862EE3300014EF2 /* texture1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = texture1.jpg; sourceTree = "<group>"; };
+		9681B5691863059100014EF2 /* IMG_0133.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_0133.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +241,7 @@
 				965C77851848AC6B00A29836 /* Images.xcassets */,
 				965C77881848AC7C00A29836 /* IMG_5623.JPG */,
 				9647CC761855B22900DA9FD4 /* CIMG0285.JPG */,
+				9681B5691863059100014EF2 /* IMG_0133.jpg */,
 				9681B5661862EE3300014EF2 /* texture1.jpg */,
 				965C77521845EF7C00A29836 /* Supporting Files */,
 			);
@@ -357,6 +361,7 @@
 				9647CC771855B22900DA9FD4 /* CIMG0285.JPG in Resources */,
 				965C77621845EF7C00A29836 /* Main_iPad.storyboard in Resources */,
 				96528DD3184F013A00282341 /* mask.jpg in Resources */,
+				9681B56A1863059100014EF2 /* IMG_0133.jpg in Resources */,
 				965C77861848AC6B00A29836 /* Images.xcassets in Resources */,
 				965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */,
@@ -371,6 +376,7 @@
 				9681B5681862EE3300014EF2 /* texture1.jpg in Resources */,
 				965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */,
 				9647CC781855B22900DA9FD4 /* CIMG0285.JPG in Resources */,
+				9681B56B1863059100014EF2 /* IMG_0133.jpg in Resources */,
 				965C77871848AC6B00A29836 /* Images.xcassets in Resources */,
 				965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				96528DD4184F013A00282341 /* mask.jpg in Resources */,

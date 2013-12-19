@@ -57,8 +57,10 @@ static NSArray *effectNameKeys;
     // Sample data
     self.preferredQrLevel = 6;
     self.qrString = @"http://roundqr.sinaapp.com/index.php";
-    self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
-    self.customedColor0 = [UIColor colorWithRed:0.7 green:0 blue:0.07 alpha:1];
+    //self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
+    self.userImage = [UIImage imageNamed:@"IMG_0133.jpg"];
+    self.customedColor0 = [UIColor blackColor];
+    self.customedColor1 = [UIColor grayColor];
     
     // Motion Effects
     self.boardView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -492,6 +494,13 @@ static NSArray *effectNameKeys;
 - (IBAction)chooseColor:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         self.customedColor0 = [(UIButton *)sender backgroundColor];
+        UIColor *color1 = [(UIButton *)sender titleLabel].textColor;
+        self.customedColor1 = color1;
+        if (CGColorEqualToColor(color1.CGColor, [UIColor colorWithRed:1 green:1 blue:1 alpha:1].CGColor)) {
+            self.customedColor1 = nil;
+        } else {
+            self.customedColor1 = color1;
+        }
         [self.resultImageDict removeAllObjects];
         [self updateUI];
     }
@@ -586,7 +595,7 @@ static NSArray *effectNameKeys;
                                                          version:self.preferredQrLevel
                                                       outPutSize:qrWidth
                                                           color0:self.customedColor0
-                                                          color1:[UIColor colorWithRed:0.96 green:0.69 blue:0.09 alpha:1]
+                                                          color1:self.customedColor1
                                                        maskImage:nil];
         
     } else if (2 == index) {

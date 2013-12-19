@@ -172,7 +172,7 @@ static CIContext *ciContextSingleton = nil;
                                           keysAndValues:
                                 @"inputImage", resultImage0,
                                 @"inputTargetImage", resultImage1,
-                                @"inputExtent", [CIVector vectorWithX:0 Y:0 Z:imageSize W:imageSize*0.333],
+                                @"inputExtent", [CIVector vectorWithX:0 Y:0 Z:imageSize W:imageSize*0.667],
                                 @"inputColor", [CIColor colorWithRed:0 green:0 blue:0 alpha:0],
                                 @"inputAngle", @(0.5 * M_PI),
                                 @"inputWidth", @(imageSize * 0.333),
@@ -766,12 +766,23 @@ static CIContext *ciContextSingleton = nil;
         return nil;
     }
     
-    CIFeature *face = faceArray[0];
+    CIFaceFeature *face = faceArray[0];
     
-    CGFloat xCenter = face.bounds.origin.x + face.bounds.size.width/2.0;
-    CGFloat yCenter = face.bounds.origin.y + face.bounds.size.height/2.0;
+    CGFloat xCenter = 0;
+    CGFloat yCenter = 0;
+    CGFloat w = face.bounds.size.width;
+    CGFloat h = face.bounds.size.height;
     
-    CIVector *faceRectangle = [CIVector vectorWithX:xCenter Y:yCenter Z:face.bounds.size.width W:face.bounds.size.height];
+    if (face.hasLeftEyePosition && face.hasRightEyePosition) {
+        xCenter = (face.leftEyePosition.x + face.rightEyePosition.x) * 0.5;
+        yCenter = (face.leftEyePosition.y + face.rightEyePosition.y) * 0.5;
+        w = MAX(face.bounds.size.width, face.bounds.size.height);
+        h = MAX(face.bounds.size.width, face.bounds.size.height);
+    } else {
+        xCenter = face.bounds.origin.x + face.bounds.size.width/2.0;
+        yCenter = face.bounds.origin.y + face.bounds.size.height/2.0;
+    }
+    CIVector *faceRectangle = [CIVector vectorWithX:xCenter Y:yCenter Z:w W:h];
     
     return faceRectangle;
 }
