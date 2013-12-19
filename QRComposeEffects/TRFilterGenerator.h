@@ -14,6 +14,31 @@
 
 @interface TRFilterGenerator : NSObject
 
+/**
+ * 带面部识别的波普艺术二维码
+ *
+ */
++ (UIImage *)popartWithFaceDetectFromImage:(UIImage *)inputImage
+                          maskWithQRString:(NSString *)string
+                                    margin:(int)margin
+                                    radius:(float)radius
+                                   version:(int)qrVersion
+                                outPutSize:(float)imageSize
+                                     color:(UIColor *)color;
+
+/**
+ * 在中央区域显示图像的波普艺术二维码
+ *
+ */
++ (UIImage *)popartWithImageInCenter:(UIImage *)inputImage
+                    maskWithQRString:(NSString *)string
+                              margin:(int)margin
+                              radius:(float)radius
+                             version:(int)qrVersion
+                          outPutSize:(float)imageSize
+                              color0:(UIColor *)color0
+                              color1:(UIColor *)color1
+                            maskImage:(UIImage *)maskImage;
 
 /**
  * @brief 公共方法返回滤镜后的图片   像素化 CIPixellate
@@ -89,6 +114,11 @@
  *图片添加背景 并且压缩
  */
 +(UIImage *)imageWithImageSimple:(UIImage *)image backGroundColor:(UIColor *)color newSize:(CGSize )newSize;
+
+/*
+ * 使用原有色值变换为同色相但十分接近白色的色值
+ */
++ (UIColor *)brightColorFromOrignalColor:(UIColor *)originalColor;
 
 
 @end

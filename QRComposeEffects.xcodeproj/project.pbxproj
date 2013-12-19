@@ -30,12 +30,6 @@
 		96528DD3184F013A00282341 /* mask.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD2184F013A00282341 /* mask.jpg */; };
 		96528DD4184F013A00282341 /* mask.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD2184F013A00282341 /* mask.jpg */; };
 		96528DD6184F070100282341 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96528DD5184F070100282341 /* GLKit.framework */; };
-		96528DD8184F31C000282341 /* gold_texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD7184F31C000282341 /* gold_texture.jpg */; };
-		96528DD9184F31C000282341 /* gold_texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DD7184F31C000282341 /* gold_texture.jpg */; };
-		96528DDC184F3C3900282341 /* gold_texture2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DDA184F3C3900282341 /* gold_texture2.jpg */; };
-		96528DDD184F3C3900282341 /* gold_texture2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DDA184F3C3900282341 /* gold_texture2.jpg */; };
-		96528DDE184F3C3900282341 /* gold_texture3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DDB184F3C3900282341 /* gold_texture3.jpg */; };
-		96528DDF184F3C3900282341 /* gold_texture3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96528DDB184F3C3900282341 /* gold_texture3.jpg */; };
 		965C774C1845EF7C00A29836 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774B1845EF7C00A29836 /* Foundation.framework */; };
 		965C774E1845EF7C00A29836 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774D1845EF7C00A29836 /* CoreGraphics.framework */; };
 		965C77501845EF7C00A29836 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 965C774F1845EF7C00A29836 /* UIKit.framework */; };
@@ -55,6 +49,8 @@
 		965C77871848AC6B00A29836 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 965C77851848AC6B00A29836 /* Images.xcassets */; };
 		965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 965C77881848AC7C00A29836 /* IMG_5623.JPG */; };
 		965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 965C77881848AC7C00A29836 /* IMG_5623.JPG */; };
+		9681B5671862EE3300014EF2 /* texture1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5661862EE3300014EF2 /* texture1.jpg */; };
+		9681B5681862EE3300014EF2 /* texture1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9681B5661862EE3300014EF2 /* texture1.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,9 +94,6 @@
 		96528DCF184F001E00282341 /* TransitionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionView.m; sourceTree = "<group>"; };
 		96528DD2184F013A00282341 /* mask.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mask.jpg; sourceTree = "<group>"; };
 		96528DD5184F070100282341 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		96528DD7184F31C000282341 /* gold_texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gold_texture.jpg; sourceTree = "<group>"; };
-		96528DDA184F3C3900282341 /* gold_texture2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gold_texture2.jpg; sourceTree = "<group>"; };
-		96528DDB184F3C3900282341 /* gold_texture3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gold_texture3.jpg; sourceTree = "<group>"; };
 		965C77481845EF7C00A29836 /* QRComposeEffects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRComposeEffects.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		965C774B1845EF7C00A29836 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		965C774D1845EF7C00A29836 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -123,6 +116,7 @@
 		965C778318460E0B00A29836 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		965C77851848AC6B00A29836 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		965C77881848AC7C00A29836 /* IMG_5623.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_5623.JPG; sourceTree = "<group>"; };
+		9681B5661862EE3300014EF2 /* texture1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = texture1.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,9 +238,7 @@
 				965C77851848AC6B00A29836 /* Images.xcassets */,
 				965C77881848AC7C00A29836 /* IMG_5623.JPG */,
 				9647CC761855B22900DA9FD4 /* CIMG0285.JPG */,
-				96528DD7184F31C000282341 /* gold_texture.jpg */,
-				96528DDA184F3C3900282341 /* gold_texture2.jpg */,
-				96528DDB184F3C3900282341 /* gold_texture3.jpg */,
+				9681B5661862EE3300014EF2 /* texture1.jpg */,
 				965C77521845EF7C00A29836 /* Supporting Files */,
 			);
 			path = QRComposeEffects;
@@ -361,13 +353,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96528DDE184F3C3900282341 /* gold_texture3.jpg in Resources */,
-				96528DDC184F3C3900282341 /* gold_texture2.jpg in Resources */,
+				9681B5671862EE3300014EF2 /* texture1.jpg in Resources */,
 				9647CC771855B22900DA9FD4 /* CIMG0285.JPG in Resources */,
 				965C77621845EF7C00A29836 /* Main_iPad.storyboard in Resources */,
 				96528DD3184F013A00282341 /* mask.jpg in Resources */,
 				965C77861848AC6B00A29836 /* Images.xcassets in Resources */,
-				96528DD8184F31C000282341 /* gold_texture.jpg in Resources */,
 				965C77891848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				965C775F1845EF7C00A29836 /* Main_iPhone.storyboard in Resources */,
 				965C77561845EF7C00A29836 /* InfoPlist.strings in Resources */,
@@ -378,12 +368,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96528DDD184F3C3900282341 /* gold_texture2.jpg in Resources */,
+				9681B5681862EE3300014EF2 /* texture1.jpg in Resources */,
 				965C77781845EF7D00A29836 /* InfoPlist.strings in Resources */,
 				9647CC781855B22900DA9FD4 /* CIMG0285.JPG in Resources */,
 				965C77871848AC6B00A29836 /* Images.xcassets in Resources */,
-				96528DDF184F3C3900282341 /* gold_texture3.jpg in Resources */,
-				96528DD9184F31C000282341 /* gold_texture.jpg in Resources */,
 				965C778A1848AC7C00A29836 /* IMG_5623.JPG in Resources */,
 				96528DD4184F013A00282341 /* mask.jpg in Resources */,
 			);

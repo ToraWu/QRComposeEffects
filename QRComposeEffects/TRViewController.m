@@ -492,7 +492,6 @@ static NSArray *effectNameKeys;
 - (IBAction)chooseColor:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         self.customedColor0 = [(UIButton *)sender backgroundColor];
-        self.boardView.backgroundColor = self.customedColor0;
         [self.resultImageDict removeAllObjects];
         [self updateUI];
     }
@@ -571,32 +570,30 @@ static NSArray *effectNameKeys;
     
     if (0 == index) {
         // Popart : Portrait
-        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
-                                             maskWithQRString:self.qrString
-                                                       margin:2
-                                                       radius:0
-                                                         mode:self.preferredQrLevel
-                                                   outPutSize:qrWidth
-                                                       color0:self.customedColor0
-                                                       color1:[UIColor colorWithRed:1 green:0.96 blue:0.98 alpha:1]
-                                                   detectFace:YES];
+        resultImage = [TRFilterGenerator popartWithFaceDetectFromImage:self.userImage
+                                                      maskWithQRString:self.qrString
+                                                                margin:3
+                                                                radius:0
+                                                               version:self.preferredQrLevel
+                                                            outPutSize:qrWidth
+                                                                 color:self.customedColor0];
     } else if (1 == index) {
         // Popart : general
-        resultImage = [TRFilterGenerator printmakingWithImage:self.userImage
-                                             maskWithQRString:self.qrString
-                                                       margin:2
-                                                       radius:0.5
-                                                         mode:self.preferredQrLevel
-                                                   outPutSize:qrWidth
-                                                       color0:self.customedColor0
-                                                       color1:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
-                                                   detectFace:NO];
+        resultImage = [TRFilterGenerator popartWithImageInCenter:self.userImage
+                                                maskWithQRString:self.qrString
+                                                          margin:3
+                                                          radius:0.5
+                                                         version:self.preferredQrLevel
+                                                      outPutSize:qrWidth
+                                                          color0:self.customedColor0
+                                                          color1:[UIColor colorWithRed:0.96 green:0.69 blue:0.09 alpha:1]
+                                                       maskImage:nil];
         
     } else if (2 == index) {
         // Pixellate
         resultImage = [TRFilterGenerator qrEncodeWithAatarPixellate:self.userImage
                                                        qRString:self.qrString
-                                                             margin:2
+                                                             margin:1
                                                                mode:self.preferredQrLevel
                                                              radius:0
                                                          outPutSize:qrWidth
@@ -604,7 +601,7 @@ static NSArray *effectNameKeys;
         
     } else if (3 ==index) {
         // Circum : rounded corner
-        resultImage  =[TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:2 radius:0.5 outPutSize:qrWidth qRColor:nil];
+        resultImage  =[TRFilterGenerator qrEncodeWithCircle:self.userImage qRString:self.qrString margin:1 radius:0.5 outPutSize:qrWidth qRColor:nil];
     } else if (4 == index) {
         // Blur mask
         resultImage  = [TRFilterGenerator qrEncodeWithGussianBlur:self.userImage

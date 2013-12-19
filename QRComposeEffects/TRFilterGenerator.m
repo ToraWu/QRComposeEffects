@@ -34,7 +34,170 @@ static CIContext *ciContextSingleton = nil;
 #define SmallImageSize (21+((QRModeNormal-1)*4)+QRMargin*2)*pixSize
 @implementation TRFilterGenerator
 
-#pragma mark === 第一种二维码效果 像素化背景+二维码
+/**
+ * 带面部识别的波普艺术二维码
+ *
+ */
++ (UIImage *)popartWithFaceDetectFromImage:(UIImage *)inputImage
+                          maskWithQRString:(NSString *)string
+                                    margin:(int)margin
+                                    radius:(float)radius
+                                   version:(int)qrVersion
+                                outPutSize:(float)imageSize
+                                     color:(UIColor *)color {
+    
+    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
+    
+    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithCGColor:color.CGColor] needBrighten:YES];
+    
+    
+    // Generate QRcode image
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color];
+    
+    BOOL faceDeteced = [self configureQRGeneratorToReduceFace:qr inputImage:scrImage outputSize:imageSize];
+    
+    CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string Margin:margin Mode:qrVersion OutputSize:imageSize].CGImage];
+    
+    // Composite
+    CIFilter *filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+    [filter setValue:qrImage forKey:@"inputImage"];
+    [filter setValue:printmakingResult forKey:@"inputBackgroundImage"];
+    
+    CIImage *compositedImage = [filter valueForKey:kCIOutputImageKey];
+    
+    compositedImage = [self popartImageWithCIImage:compositedImage
+                                            color0:[CIColor colorWithCGColor:color.CGColor]
+                                            color1:[CIColor colorWithCGColor:[self brightColorFromOrignalColor:color].CGColor]];
+    
+    compositedImage = [self borderedImageWithImage:compositedImage outputSize:imageSize inset:(imageSize / [QRCodeGenerator matrixSizeOfQRVersion:qrVersion margin:margin]) color:color];
+    
+    // Output UIImage
+    return [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
+}
+
+
+/**
+ * 在中央区域显示图像的波普艺术二维码
+ *
+ */
++ (UIImage *)popartWithImageInCenter:(UIImage *)inputImage
+                    maskWithQRString:(NSString *)string
+                              margin:(int)margin
+                              radius:(float)radius
+                             version:(int)qrVersion
+                          outPutSize:(float)imageSize
+                              color0:(UIColor *)color0
+                              color1:(UIColor *)color1
+                           maskImage:(UIImage *)maskImage {
+    
+    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
+    
+    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithString:@"[0 0 0 1]"] needBrighten:NO];
+    
+    
+    // Generate QRcode image
+    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:[UIColor blackColor]];
+    
+    CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string Margin:margin Mode:qrVersion OutputSize:imageSize].CGImage];
+    
+    // Mask qr image with face
+    // scale the image into a square on the center of qr code.
+    CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
+    [transformFilter setValue:printmakingResult forKey:kCIInputImageKey];
+    
+    NSInteger qrSize = [QRCodeGenerator matrixSizeOfQRVersion:qrVersion margin:margin];
+    long int properScaledSize = lround(qrSize * 0.4);
+    if (properScaledSize%2 == 0) {
+        properScaledSize += 1;
+    }
+    CGFloat scaleFactor = (CGFloat)properScaledSize/qrSize;
+    CGFloat originX = imageSize * (1-scaleFactor) * 0.5;
+    CGFloat originY = imageSize * (1-scaleFactor) * 0.5;
+    CGFloat width = imageSize * scaleFactor;
+    CGFloat height = imageSize * scaleFactor;
+    [transformFilter setValue:[CIVector vectorWithX:originX Y:originY] forKey:@"inputBottomLeft"];
+    [transformFilter setValue:[CIVector vectorWithX:originX + width Y:originY] forKey:@"inputBottomRight"];
+    [transformFilter setValue:[CIVector vectorWithX:originX + width Y:originY + height] forKey:@"inputTopRight"];
+    [transformFilter setValue:[CIVector vectorWithX:originX Y:originY + height] forKey:@"inputTopLeft"];
+    CIImage *scaledResult = [transformFilter valueForKey:kCIOutputImageKey];
+    
+    printmakingResult = scaledResult;
+    
+    // Source out rect of scaled image from qr.
+    CIFilter *filter = [CIFilter filterWithName:@"CISourceOutCompositing"];
+    [filter setValue:qrImage forKey:@"inputImage"];
+    [filter setValue:scaledResult forKey:@"inputBackgroundImage"];
+    qrImage = [filter valueForKey:kCIOutputImageKey];
+    
+    //background printmakingResult with a default white color.
+    CIFilter *colorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator"
+                                               keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"1 1 1 1"], nil];
+    CIImage *whiteBG = [colorGenerateFilter valueForKey:kCIOutputImageKey];
+    
+    // Source out rect of scaled image from qr.
+    CIFilter *atopFilter = [CIFilter filterWithName:@"CISourceAtopCompositing"];
+    [atopFilter setValue:printmakingResult forKey:@"inputImage"];
+    [atopFilter setValue:whiteBG forKey:@"inputBackgroundImage"];
+    printmakingResult = [atopFilter valueForKey:kCIOutputImageKey];
+    
+    // Composite
+    CIFilter *SourceOverFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+    [SourceOverFilter setValue:qrImage forKey:@"inputImage"];
+    [SourceOverFilter setValue:printmakingResult forKey:@"inputBackgroundImage"];
+    
+    CIImage *compositedImage = [SourceOverFilter valueForKey:kCIOutputImageKey];
+    
+    compositedImage = [self borderedImageWithImage:compositedImage outputSize:imageSize inset:(imageSize / [QRCodeGenerator matrixSizeOfQRVersion:qrVersion margin:margin]) color:[UIColor blackColor]];
+    
+    if (color1) {
+        // !!Important: output once to ACTUALLY run the filters.
+        UIImage *compositedUIImage = [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
+        
+        // False Color
+        CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
+        [falseColorFilter setValue:[CIImage imageWithCGImage:compositedUIImage.CGImage] forKey:kCIInputImageKey];
+        [falseColorFilter setValue:[CIColor colorWithCGColor:color0.CGColor] forKey:@"inputColor0"];
+        [falseColorFilter setValue:[CIColor colorWithString:@"1 1 1 1"] forKey:@"inputColor1"];
+        CIImage *resultImage0 = [falseColorFilter valueForKey:kCIOutputImageKey];
+        
+        CIFilter *falseColorFilter1 = [CIFilter filterWithName:@"CIFalseColor"];
+        [falseColorFilter1 setValue:[CIImage imageWithCGImage:compositedUIImage.CGImage] forKey:kCIInputImageKey];
+        [falseColorFilter1 setValue:[CIColor colorWithCGColor:color1.CGColor] forKey:@"inputColor0"];
+        [falseColorFilter1 setValue:[CIColor colorWithString:@"1 1 1 1"] forKey:@"inputColor1"];
+        CIImage *resultImage1 = [falseColorFilter1 valueForKey:kCIOutputImageKey];
+        
+        // Radient transition
+        // !!The 2 sources of transition must use images origined from different source.
+        CIFilter *transition = [CIFilter filterWithName:@"CISwipeTransition"
+                                          keysAndValues:
+                                @"inputImage", resultImage0,
+                                @"inputTargetImage", resultImage1,
+                                @"inputExtent", [CIVector vectorWithX:0 Y:0 Z:imageSize W:imageSize*0.333],
+                                @"inputColor", [CIColor colorWithRed:0 green:0 blue:0 alpha:0],
+                                @"inputAngle", @(0.5 * M_PI),
+                                @"inputWidth", @(imageSize * 0.333),
+                                @"inputOpacity", @0,
+                                @"inputTime", @0.5,
+                                nil];
+        
+        compositedImage = [transition valueForKey:kCIOutputImageKey];
+        
+    } else {
+        
+        // False Color
+        CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
+        [falseColorFilter setValue:compositedImage forKey:kCIInputImageKey];
+        [falseColorFilter setValue:[CIColor colorWithCGColor:color0.CGColor] forKey:@"inputColor0"];
+        [falseColorFilter setValue:[CIColor colorWithString:@"1 1 1 1"] forKey:@"inputColor1"];
+        compositedImage = [falseColorFilter valueForKey:kCIOutputImageKey];
+    }
+    
+    
+    // Output UIImage
+    return [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
+
+}
+
 /**
  * @brief 公共方法返回 像素化效果的二维码图片 默认容错为H 头像与二维码合成后的头片
  * @param avatarImage 头像图片作为背景
@@ -64,7 +227,7 @@ static CIContext *ciContextSingleton = nil;
     //[qr setIsRoundPixel:YES];
     
     //测试：如果识别出面部，配置面部减码
-    [self configureQRGeneratorToReduceFace:qr inputImage:[CIImage imageWithCGImage:avatarImage.CGImage] outputSize:imageSize];
+    //[self configureQRGeneratorToReduceFace:qr inputImage:[CIImage imageWithCGImage:avatarImage.CGImage] outputSize:imageSize];
     
     //生成二维码 不压缩
     UIImage *qrImage = [qr qrImageForPixelString:string
@@ -75,21 +238,25 @@ static CIContext *ciContextSingleton = nil;
     
     UIImage *newAvtarImage = [TRFilterGenerator imageWithImageSimple:avatarImage backGroundColor:nil newSize:qrImage.size];
     
+    
     //像素化 并裁掉了多余的一个边
     newAvtarImage =  [TRFilterGenerator CIPixellateWithImage:newAvtarImage withInputScale:(sizeOfPix)];
 
     //滤镜合成
     UIImage *newImage = [self CIDissolveTransitionWithImage:newAvtarImage WithBackImage:qrImage];
-   
+    
     newImage = [TRFilterGenerator imageWithImageSimple:newImage backGroundColor:[UIColor whiteColor] newSize:CGSizeMake(imageSize, imageSize)];
+    
+    CIImage *resultImage = [CIImage imageWithCGImage:newImage.CGImage];
+    CIImage *textureImage = [CIImage imageWithCGImage:[UIImage imageNamed:@"texture1.jpg"].CGImage];
+    resultImage = [self texturedImageWithCIImage:resultImage color:nil textureImage:textureImage];
+   
+    newImage = [self outputUIImageFromCIImage:resultImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
+    
     return newImage;
     
 }
 
-
-
-
-#pragma mark === 第二种二维码效果 圆形二维码类似微信的效果
 /**
  * @brief 公共方法返回 圆形二维码类似微信的效果
  * @param avatarImage 头像图片作为背景
@@ -258,103 +425,6 @@ static CIContext *ciContextSingleton = nil;
 }
 
 
-/**
- * 第四类效果：版画风格的波普艺术
- *
- */
-+ (UIImage *)printmakingWithImage:(UIImage *)inputImage
-                 maskWithQRString:(NSString *)string
-                           margin:(int)margin
-                           radius:(float)radius
-                             mode:(int)qrMode
-                       outPutSize:(float)imageSize
-                           color0:(UIColor *)color0
-                           color1:(UIColor *)color1
-                       detectFace:(BOOL)detectFace {
- 
-    CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
-    
-    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithCGColor:color0.CGColor]];
-    
- 
-    // Generate QRcode image
-    QRCodeGenerator *qr = [[QRCodeGenerator alloc] initWithRadius:radius withColor:color0];
-    
-    BOOL faceProcessNeeded = NO;
-    
-    if (detectFace) {
-        faceProcessNeeded = [self configureQRGeneratorToReduceFace:qr inputImage:scrImage outputSize:imageSize];
-    }
-    
-    CIImage *qrImage = [CIImage imageWithCGImage:[qr qrImageForString:string  Margin:2 Mode:qrMode OutputSize:imageSize].CGImage];
-    
-    // Mask qr image with face
-    if (faceProcessNeeded) {
-        /*
-        // Face regonised, reduce a circle around the face from qr.
-        CIImage *facemask = [self maskFromDetectedFaceInImage:scrImage hollow:YES];
-        CIFilter *filter = [CIFilter filterWithName:@"CISourceOutCompositing"];
-        [filter setValue:qrImage forKey:@"inputImage"];
-        [filter setValue:facemask forKey:@"inputBackgroundImage"];
-        qrImage = [filter valueForKey:kCIOutputImageKey];
-         */
-        
-    } else {
-        
-        // No face detected, scale the image into a square on the center of qr code.
-        CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
-        [transformFilter setValue:printmakingResult forKey:kCIInputImageKey];
-        
-        NSInteger qrSize = [QRCodeGenerator matrixSizeOfQRVersion:qrMode margin:margin];
-        CGFloat properScaledSize = round(qrSize * 0.4);
-        CGFloat scaleFactor = properScaledSize/qrSize;
-        CGFloat originX = imageSize * (1-scaleFactor) * 0.5;
-        CGFloat originY = imageSize * (1-scaleFactor) * 0.5;
-        CGFloat width = imageSize * scaleFactor;
-        CGFloat height = imageSize * scaleFactor;
-        [transformFilter setValue:[CIVector vectorWithX:originX Y:originY] forKey:@"inputBottomLeft"];
-        [transformFilter setValue:[CIVector vectorWithX:originX + width Y:originY] forKey:@"inputBottomRight"];
-        [transformFilter setValue:[CIVector vectorWithX:originX + width Y:originY + height] forKey:@"inputTopRight"];
-        [transformFilter setValue:[CIVector vectorWithX:originX Y:originY + height] forKey:@"inputTopLeft"];
-        CIImage *scaledResult = [transformFilter valueForKey:kCIOutputImageKey];
-        
-        printmakingResult = scaledResult;
-        
-        // Source out rect of scaled image from qr.
-        CIFilter *filter = [CIFilter filterWithName:@"CISourceOutCompositing"];
-        [filter setValue:qrImage forKey:@"inputImage"];
-        [filter setValue:scaledResult forKey:@"inputBackgroundImage"];
-        qrImage = [filter valueForKey:kCIOutputImageKey];
-        
-        //background printmakingResult with a default white color.
-        CIFilter *colorGenerateFilter = [CIFilter filterWithName:@"CIConstantColorGenerator"
-                                                   keysAndValues:kCIInputColorKey, [CIColor colorWithString:@"1 1 1 1"], nil];
-        CIImage *whiteBG = [colorGenerateFilter valueForKey:kCIOutputImageKey];
-        
-        // Source out rect of scaled image from qr.
-        CIFilter *atopFilter = [CIFilter filterWithName:@"CISourceAtopCompositing"];
-        [atopFilter setValue:printmakingResult forKey:@"inputImage"];
-        [atopFilter setValue:whiteBG forKey:@"inputBackgroundImage"];
-        printmakingResult = [atopFilter valueForKey:kCIOutputImageKey];
-    }
-    
-    // Composite
-    CIFilter *filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-    [filter setValue:qrImage forKey:@"inputImage"];
-    [filter setValue:printmakingResult forKey:@"inputBackgroundImage"];
-    
-    CIImage *compositedImage = [filter valueForKey:kCIOutputImageKey];
-
-    if (detectFace) {
-        // Popart filter
-        compositedImage = [self popartImageWithCIImage:compositedImage color0:[CIColor colorWithCGColor:color0.CGColor] color1:color1 ? [CIColor colorWithCGColor:color1.CGColor] : nil];
-    }
-    
-    // Output UIImage
-    return [self outputUIImageFromCIImage:compositedImage rectangle:CGRectMake(0, 0, imageSize, imageSize)];
-}
-
-
 #pragma mark === Private Process : Output CIImage ====
 
 /**
@@ -370,7 +440,7 @@ static CIContext *ciContextSingleton = nil;
     
     CIFilter *  filter = [CIFilter filterWithName:@"CIDissolveTransition"];
     [filter setValue:forwardImage forKey:@"inputImage"];
-    [filter setValue: inputBackImage forKey:@"inputTargetImage"];
+    [filter setValue:inputBackImage forKey:@"inputTargetImage"];
     [filter setValue:[NSNumber numberWithFloat:0.65] forKey:@"inputTime"];
     
     
@@ -502,15 +572,11 @@ static CIContext *ciContextSingleton = nil;
  * 将CIImage进行特征抽象，并输出为单色的版画效果。
  *
  */
-+ (CIImage *)ciImagePrintmaikingWithImage:(CIImage *)inputImage color:(CIColor *)color {
++ (CIImage *)ciImagePrintmaikingWithImage:(CIImage *)inputImage color:(CIColor *)color needBrighten:(BOOL)needsBrighten {
     
     CIImage *resultImage = inputImage;
     
-//    CIFilter *highlightShadowAdjustFilter = [CIFilter filterWithName:@"CIHighlightShadowAdjust"];
-//    [highlightShadowAdjustFilter setValue:resultImage forKey:kCIInputImageKey];
-//    [highlightShadowAdjustFilter setValue:@(1.0) forKey:@"inputHighlightAmount"];
-//    [highlightShadowAdjustFilter setValue:@(1.0) forKey:@"inputShadowAmount"];
-//    resultImage = [highlightShadowAdjustFilter valueForKey:kCIOutputImageKey];
+    CGFloat greyscale = [self greyscaleFromRGBColor:color];
     
     // False Color
     CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
@@ -521,7 +587,12 @@ static CIContext *ciContextSingleton = nil;
     // Exposure Adjust
     CIFilter *exposureAdjustFilter = [CIFilter filterWithName:@"CIExposureAdjust"];
     [exposureAdjustFilter setValue:resultImage forKey:kCIInputImageKey];
-    [exposureAdjustFilter setValue:@(1.04) forKey:kCIInputEVKey];
+    if (needsBrighten) {
+        [exposureAdjustFilter setValue:@(1.6 - greyscale) forKey:kCIInputEVKey];
+    } else {
+        [exposureAdjustFilter setValue:@(1.6 - greyscale*1.5) forKey:kCIInputEVKey];
+    }
+    
     resultImage = [exposureAdjustFilter valueForKey:kCIOutputImageKey];
 
     // ColorControl
@@ -535,22 +606,20 @@ static CIContext *ciContextSingleton = nil;
     // Monochrome
     CIFilter *monochromeFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
     [monochromeFilter setValue:resultImage forKey:kCIInputImageKey];
-    [monochromeFilter setValue:color forKey:kCIInputColorKey];
+    [monochromeFilter setValue:[CIColor colorWithRed:0 green:0 blue:0] forKey:kCIInputColorKey];
     [monochromeFilter setValue:[NSNumber numberWithFloat:1] forKey:kCIInputIntensityKey];
     resultImage = [monochromeFilter valueForKey:kCIOutputImageKey];
     
-    // Apply Posterlize
-//    CIFilter *posterlize = [CIFilter filterWithName:@"CIColorPosterize" keysAndValues:kCIInputImageKey, resultImage, @"inputLevels", @(20.0), nil];
-//    resultImage = [posterlize valueForKey:kCIOutputImageKey];
-    
-//    CIFilter *colorMatrixFilter = [CIFilter filterWithName:@"CIColorMatrix"];
-//    [colorMatrixFilter setValue:resultImage forKey:kCIInputImageKey];
-//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[1 0 0 0]"] forKey:@"inputRVector"];
-//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 1 0 0]"] forKey:@"inputGVector"];
-//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 1 0]"] forKey:@"inputBVector"];
-//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 0 1]"] forKey:@"inputAVector"];
-//    [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.35 0.35 0.35 0]"] forKey:@"inputBiasVector"];
-//    resultImage = [colorMatrixFilter valueForKey:kCIOutputImageKey];
+    if (needsBrighten) {
+        CIFilter *colorMatrixFilter = [CIFilter filterWithName:@"CIColorMatrix"];
+        [colorMatrixFilter setValue:resultImage forKey:kCIInputImageKey];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[1 0 0 0]"] forKey:@"inputRVector"];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 1 0 0]"] forKey:@"inputGVector"];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 1 0]"] forKey:@"inputBVector"];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 0 1]"] forKey:@"inputAVector"];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.35 0.35 0.35 0]"] forKey:@"inputBiasVector"];
+        resultImage = [colorMatrixFilter valueForKey:kCIOutputImageKey];
+    }
     
     return resultImage;
 }
@@ -620,6 +689,18 @@ static CIContext *ciContextSingleton = nil;
     }
     
     return scrImage;
+}
+
++ (CIImage *)borderedImageWithImage:(CIImage *)inputImage outputSize:(CGFloat)imageSize inset:(CGFloat)inset color:(UIColor *)color {
+    UIImage *borderImage = [self createBorderImageOfSize:CGSizeMake(imageSize, imageSize) inset:inset color:color];
+    
+    // Composite
+    CIFilter *compositingFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+    [compositingFilter setValue:[CIImage imageWithCGImage:borderImage.CGImage] forKey:@"inputImage"];
+    [compositingFilter setValue:inputImage forKey:@"inputBackgroundImage"];
+    CIImage *compositedImage = compositingFilter.outputImage;
+    
+    return compositedImage;
 }
 
 #pragma mark ===图片压缩
@@ -700,7 +781,7 @@ static CIContext *ciContextSingleton = nil;
     CIVector *faceRectangle = [self faceRectangleVectorDetectedFromImage:scrImage];
     
     if (faceRectangle) {
-        CGFloat clearRadius = MIN(imageSize * 0.2, faceRectangle.Z * 0.6);
+        CGFloat clearRadius = MIN(imageSize * 0.18, faceRectangle.Z * 0.6);
         [qrGenerator setCLearRadius:clearRadius center:CGPointMake(faceRectangle.X, imageSize - faceRectangle.Y)];
         return YES;
     }
@@ -743,7 +824,6 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 + (UIImage *)createRoundedRectImage:(UIImage*)image size:(CGSize)size radius:(NSInteger)r
 {
     // the size of CGContextRef
-    r = r;
     int w = size.width;
     int h = size.height;
     UIImage *img = image;
@@ -766,6 +846,30 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     return img;
 }
 
++ (UIImage *)createBorderImageOfSize:(CGSize)size inset:(CGFloat)inset color:(UIColor *)color {
+    int w = size.width;
+    int h = size.height;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context2 = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, 1);
+    CGRect rect = CGRectMake(0, 0, w, h);
+    CGRect insetRect = CGRectInset(rect, inset, inset);
+    
+    CGContextBeginPath(context2);
+    CGContextSetFillColorWithColor(context2, color.CGColor);
+    CGContextFillRect(context2, rect);
+    CGContextSetFillColorWithColor(context2, [UIColor clearColor].CGColor);
+    CGContextSetBlendMode(context2, kCGBlendModeClear);
+    CGContextFillRect(context2, insetRect);
+    CGImageRef resultImage = CGBitmapContextCreateImage(context2);
+    UIImage *img = [UIImage imageWithCGImage:resultImage];
+    
+    CGContextRelease(context2);
+    CGColorSpaceRelease(colorSpace);
+    CGImageRelease(resultImage);
+    
+    return img;
+}
+
 + (UIImage *)outputUIImageFromCIImage:(CIImage *)ciImage rectangle:(CGRect)rect {
     
     if (!ciImage) {
@@ -779,6 +883,38 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     CGImageRelease(imageref);
     
     return resultImage;
+}
+
+#pragma mark === 色值换算 ===
++ (CGFloat)greyscaleFromRGBColor:(CIColor *)rgbColor {
+
+    CGFloat gamma = 1.8f;
+    
+    //Apple RGB [gamma=1.80]
+    //Gray = (R^1.8 * 0.2446  + G^1.8  * 0.6720  + B^1.8  * 0.0833)^(1/1.8)
+    CGFloat greyscale = pow((pow(rgbColor.red, gamma) * 0.2446
+                             + pow(rgbColor.green, gamma) * 0.6720
+                             + pow(rgbColor.blue, gamma)* 0.0833),
+                            1/gamma);
+    
+    return greyscale;
+    
+}
+
++ (UIColor *)brightColorFromOrignalColor:(UIColor *)originalColor {
+    
+    CGFloat hue;
+    CGFloat saturation;
+    CGFloat brightness;
+    CGFloat alpha;
+    BOOL isCompatible = [originalColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    
+    if (isCompatible) {
+        UIColor *brightColor = [UIColor colorWithHue:hue saturation:0.05f brightness:1.0f alpha:alpha];
+        return brightColor;
+    }
+    
+    return nil;
 }
 
 @end
