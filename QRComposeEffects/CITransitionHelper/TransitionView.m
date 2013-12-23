@@ -80,7 +80,7 @@
                                       Y:0
                                       Z:image.size.width
                                       W:image.size.height];
-    [self changeTransition:random()%5];
+    [self changeTransition:4];
     _image = image;
     // 遷移アニメーション制御の基準となる時刻
     base = [NSDate timeIntervalSinceReferenceDate];

@@ -65,9 +65,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.98823535439999999" green="0.16862745579999999" blue="0.40784317260000003" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <color key="tintColor" red="0.98823535439999999" green="0.36078432199999999" blue="0.2588235438" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="tintColor" red="0.98823535439999999" green="0.42795508609999999" blue="0.17765807219999999" alpha="1" colorSpace="deviceRGB"/>
                                 <state key="normal" title="Italy">
-                                    <color key="titleColor" red="0.98823535439999999" green="0.36078432199999999" blue="0.2588235438" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="chooseColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Pwk-EM-xQJ"/>
@@ -76,9 +76,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cn-Vg-DzT">
                                 <rect key="frame" x="64" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.77377965329999998" green="0.031135948909999999" blue="0.43117016419999998" alpha="1" colorSpace="deviceRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="13"/>
-                                <state key="normal" title="Magenta">
+                                <color key="backgroundColor" red="0.87608348540145986" green="0.090725798898782614" blue="0.62072206299185395" alpha="1" colorSpace="deviceRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Pink">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -88,9 +89,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ve7-bm-iR7">
                                 <rect key="frame" x="194" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.0" green="0.4639883668" blue="0.42109869059999999" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.54921304744525545" blue="0.19908346586396619" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <state key="normal" title="Olive">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Green">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -100,9 +102,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciy-Qp-eJo">
                                 <rect key="frame" x="129" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.79215693470000004" green="0.031372550870000002" blue="0.078431375319999996" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" white="0.45000000000000001" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <state key="normal" title="Scarlet">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Grey">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -112,11 +115,11 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2t6-Kj-8k8">
                                 <rect key="frame" x="517" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.99215692280000001" green="0.67450982329999998" blue="0.180392161" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.96638343979999997" green="0.58823337580000001" blue="0.0" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <color key="tintColor" red="0.96862751250000001" green="0.45490199329999997" blue="0.21568629149999999" alpha="1" colorSpace="deviceRGB"/>
-                                <state key="normal" title="Orange">
-                                    <color key="titleColor" red="0.96862751250000001" green="0.45490199329999997" blue="0.21568629149999999" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="tintColor" red="1" green="0.37441682640000001" blue="0.0831147354" alpha="1" colorSpace="deviceRGB"/>
+                                <state key="normal" title="Sunset">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="chooseColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MnV-Rf-FZz"/>
@@ -125,11 +128,11 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vDG-we-Xga">
                                 <rect key="frame" x="582" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.48235297199999999" green="0.93725496529999996" blue="0.44705885649999999" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.15676882480000001" green="0.74309990879999999" blue="0.2175632824" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <color key="tintColor" red="0.18823531269999999" green="0.84313732389999996" blue="0.2196078598" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="tintColor" red="0.089221166369999994" green="0.68114165149999994" blue="0.61117626309999995" alpha="1" colorSpace="deviceRGB"/>
                                 <state key="normal" title="Leaf">
-                                    <color key="titleColor" red="0.18823531269999999" green="0.84313732389999996" blue="0.2196078598" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="chooseColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4A9-wF-XhS"/>
@@ -138,11 +141,11 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jib-1W-V7g">
                                 <rect key="frame" x="647" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.17254902420000001" green="0.78823536630000002" blue="0.97647064920000004" alpha="1" colorSpace="deviceRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="12"/>
-                                <color key="tintColor" red="0.1764705926" green="0.45098042490000001" blue="0.92941182850000004" alpha="1" colorSpace="deviceRGB"/>
-                                <state key="normal" title="Windows">
-                                    <color key="titleColor" red="0.1764705926" green="0.45098042490000001" blue="0.92941182850000004" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.18823531269999999" green="0.78823536630000002" blue="0.98039221759999995" alpha="1" colorSpace="deviceRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
+                                <color key="tintColor" red="0.1411764771" green="0.41960787770000002" blue="0.92941182850000004" alpha="1" colorSpace="deviceRGB"/>
+                                <state key="normal" title="Ocean">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="chooseColor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="11y-pK-mim"/>
@@ -151,9 +154,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fdc-SY-Z5B">
                                 <rect key="frame" x="259" y="786" width="57" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.094306346200000002" green="0.4200919347" blue="0.70301094890000004" alpha="1" colorSpace="deviceRGB"/>
+                                <color key="backgroundColor" red="0.1277348979076203" green="0.48628489008036591" blue="0.84272354014598538" alpha="1" colorSpace="deviceRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <state key="normal" title="Intel">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Blue">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -162,6 +166,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.93380743265151978" green="0.99842798709869385" blue="0.99987590312957764" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" red="0.18823531270027161" green="0.7882353663444519" blue="0.9803922176361084" alpha="1" colorSpace="deviceRGB"/>
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Cg3-a4-zmI" appends="YES" id="hii-KS-FHI"/>

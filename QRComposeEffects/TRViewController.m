@@ -55,8 +55,8 @@ static NSArray *effectNameKeys;
     self.pageControl.numberOfPages = [effectNameKeys count];
     
     // Sample data
-    self.preferredQrLevel = 6;
-    self.qrString = @"http://roundqr.sinaapp.com/index.php";
+    self.preferredQrLevel = 4;
+    self.qrString = @"http://www.dajie.com";
     //self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
     self.userImage = [UIImage imageNamed:@"IMG_0133.jpg"];
     self.customedColor0 = [UIColor blackColor];
@@ -81,7 +81,7 @@ static NSArray *effectNameKeys;
     
     //For test
     //self.pageControl.currentPage = self.pageControl.numberOfPages-1;
-    self.pageControl.currentPage = 0;
+    self.pageControl.currentPage = 2;
     
     [self updateUI];
     
@@ -494,7 +494,7 @@ static NSArray *effectNameKeys;
 - (IBAction)chooseColor:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         self.customedColor0 = [(UIButton *)sender backgroundColor];
-        UIColor *color1 = [(UIButton *)sender titleLabel].textColor;
+        UIColor *color1 = [(UIButton *)sender tintColor];
         self.customedColor1 = color1;
         if (CGColorEqualToColor(color1.CGColor, [UIColor colorWithRed:1 green:1 blue:1 alpha:1].CGColor)) {
             self.customedColor1 = nil;
@@ -581,7 +581,7 @@ static NSArray *effectNameKeys;
         // Popart : Portrait
         resultImage = [TRFilterGenerator popartWithFaceDetectFromImage:self.userImage
                                                       maskWithQRString:self.qrString
-                                                                margin:3
+                                                                margin:2
                                                                 radius:0
                                                                version:self.preferredQrLevel
                                                             outPutSize:qrWidth
@@ -596,7 +596,8 @@ static NSArray *effectNameKeys;
                                                       outPutSize:qrWidth
                                                           color0:self.customedColor0
                                                           color1:self.customedColor1
-                                                       maskImage:nil];
+                                                       maskImage:[UIImage imageNamed:@"a4.png"]
+                                                 maskBorderImage:[UIImage imageNamed:@"b4.png"]];
         
     } else if (2 == index) {
         // Pixellate

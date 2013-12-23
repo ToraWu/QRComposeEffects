@@ -38,7 +38,8 @@
                           outPutSize:(float)imageSize
                               color0:(UIColor *)color0
                               color1:(UIColor *)color1
-                            maskImage:(UIImage *)maskImage;
+                           maskImage:(UIImage *)maskImage
+                     maskBorderImage:(UIImage *)maskBorderImage;
 
 /**
  * @brief 公共方法返回滤镜后的图片   像素化 CIPixellate
@@ -95,19 +96,6 @@
                          outPutSize:(float)imagSize
                     monochromeColor:(UIColor *)color
                compositeWithTexture:(UIImage *)textureImage;
-
-/**
- * @brief 版画效果，使用两色着色，波点效果，可指定面部识别功能。
- */
-+ (UIImage *)printmakingWithImage:(UIImage *)inputImage
-                 maskWithQRString:(NSString *)string
-                           margin:(int)margin
-                           radius:(float)radius
-                             mode:(int)qrMode
-                       outPutSize:(float)imagSize
-                           color0:(UIColor *)color0
-                           color1:(UIColor *)color1
-                       detectFace:(BOOL)detectFace;
 
 
 /*
