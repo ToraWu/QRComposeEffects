@@ -92,7 +92,8 @@ static CIContext *ciContextSingleton = nil;
     
     CIImage *scrImage = [CIImage imageWithCGImage:[TRFilterGenerator imageWithImageSimple:inputImage backGroundColor:nil newSize:CGSizeMake(inputImage.size.width, inputImage.size.height)].CGImage];
     
-    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithString:@"[0 0 0 1]"] needBrighten:NO];
+    //CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithString:@"[0 0 0 1]"] needBrighten:NO];
+    CIImage *printmakingResult = [self ciImagePrintmaikingWithImage:scrImage color:[CIColor colorWithCGColor:color0.CGColor] needBrighten:NO];
     
     
     // Generate QRcode image
@@ -118,14 +119,14 @@ static CIContext *ciContextSingleton = nil;
     
     // scale the image into a square on the center of qr code.
     
-    NSInteger qrSize = [QRCodeGenerator matrixSizeOfQRVersion:qrVersion margin:margin];
-    long int properScaledSize = lround(qrSize * 0.4);
-    if (properScaledSize%2 == 0) {
-        properScaledSize += 1;
-    }
-    CGFloat scaleFactor = (CGFloat)properScaledSize/qrSize;
+    CGFloat scaleFactor = 0.5;
     
-    
+//    NSInteger qrSize = [QRCodeGenerator matrixSizeOfQRVersion:qrVersion margin:margin];
+//    long int properScaledSize = lround(qrSize * 0.4);
+//    if (properScaledSize%2 == 0) {
+//        properScaledSize += 1;
+//    }
+//    CGFloat scaleFactor = (CGFloat)properScaledSize/qrSize;
 //    CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
 //    [transformFilter setValue:printmakingResult forKey:kCIInputImageKey];
 //    CGFloat originX = imageSize * (1-scaleFactor) * 0.5;
@@ -276,7 +277,7 @@ static CIContext *ciContextSingleton = nil;
     
     CIImage *resultImage = [CIImage imageWithCGImage:newImage.CGImage];
     
-    UIImage *textureUIImage = [UIImage imageNamed:@"2.png"];
+    UIImage *textureUIImage = [UIImage imageNamed:@"ccc.png"];
     //CGFloat blockSize = (CGFloat)imageSize/[QRCodeGenerator matrixSizeOfQRVersion:mode margin:margin];
     CGFloat textureSize = 3*sizeOfPix;
     textureUIImage = [self imageWithImageSimple:textureUIImage backGroundColor:nil newSize:CGSizeMake(textureSize, textureSize)];
@@ -612,31 +613,41 @@ static CIContext *ciContextSingleton = nil;
     
     CIImage *resultImage = inputImage;
     
-    CGFloat greyscale = [self greyscaleFromRGBColor:color];
-    
     // False Color
     CIFilter *falseColorFilter = [CIFilter filterWithName:@"CIFalseColor"];
     [falseColorFilter setValue:resultImage forKey:kCIInputImageKey];
-    [falseColorFilter setValue:color forKey:@"inputColor0"];
+    if (needsBrighten) {
+        [falseColorFilter setValue:[CIColor colorWithString:@"[0.45 0.45 0.45 1]"] forKey:@"inputColor0"];
+    } else {
+        [falseColorFilter setValue:[CIColor colorWithString:@"[0.5 0.5 0.5 1]"] forKey:@"inputColor0"];
+    }
     resultImage = [falseColorFilter valueForKey:kCIOutputImageKey];
+    
+    //CGFloat greyscale = [self greyscaleFromRGBColor:color];
     
     // Exposure Adjust
     CIFilter *exposureAdjustFilter = [CIFilter filterWithName:@"CIExposureAdjust"];
     [exposureAdjustFilter setValue:resultImage forKey:kCIInputImageKey];
     if (needsBrighten) {
-        [exposureAdjustFilter setValue:@(1.4 - greyscale) forKey:kCIInputEVKey];
+        [exposureAdjustFilter setValue:@(0.9) forKey:kCIInputEVKey];
     } else {
-        [exposureAdjustFilter setValue:@(1.6 - greyscale*1.5) forKey:kCIInputEVKey];
+        [exposureAdjustFilter setValue:@(1.0) forKey:kCIInputEVKey];
     }
-    
     resultImage = [exposureAdjustFilter valueForKey:kCIOutputImageKey];
 
     // ColorControl
     CIFilter *colorControlFilter = [CIFilter filterWithName:@"CIColorControls"];
     [colorControlFilter setValue:resultImage forKey:kCIInputImageKey];
-    [colorControlFilter setValue:@(1.95) forKey:@"inputContrast"];
-    [colorControlFilter setValue:@(0.06) forKey:@"inputBrightness"];
-    [colorControlFilter setValue:@(1.0) forKey:@"inputSaturation"];
+    if (needsBrighten) {
+        [colorControlFilter setValue:@(1.85) forKey:@"inputContrast"];
+        [colorControlFilter setValue:@(0.06) forKey:@"inputBrightness"];
+        [colorControlFilter setValue:@(1.0) forKey:@"inputSaturation"];
+    } else {
+        [colorControlFilter setValue:@(1.55) forKey:@"inputContrast"];
+        [colorControlFilter setValue:@(0.00) forKey:@"inputBrightness"];
+        [colorControlFilter setValue:@(1.0) forKey:@"inputSaturation"];
+    }
+    
     resultImage = [colorControlFilter valueForKey:kCIOutputImageKey];
     
     // Monochrome
@@ -646,6 +657,11 @@ static CIContext *ciContextSingleton = nil;
     [monochromeFilter setValue:[NSNumber numberWithFloat:1] forKey:kCIInputIntensityKey];
     resultImage = [monochromeFilter valueForKey:kCIOutputImageKey];
     
+    CIFilter *gammaFilter = [CIFilter filterWithName:@"CIGammaAdjust"];
+    [gammaFilter setValue:resultImage forKey:kCIInputImageKey];
+    [gammaFilter setValue:@0.90 forKey:@"inputPower"];
+    resultImage = gammaFilter.outputImage;
+    
     if (needsBrighten) {
         CIFilter *colorMatrixFilter = [CIFilter filterWithName:@"CIColorMatrix"];
         [colorMatrixFilter setValue:resultImage forKey:kCIInputImageKey];
@@ -653,14 +669,12 @@ static CIContext *ciContextSingleton = nil;
         [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 1 0 0]"] forKey:@"inputGVector"];
         [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 1 0]"] forKey:@"inputBVector"];
         [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0 0 0 1]"] forKey:@"inputAVector"];
-        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.35 0.35 0.35 0]"] forKey:@"inputBiasVector"];
+        [colorMatrixFilter setValue:[CIVector vectorWithString:@"[0.45 0.45 0.45 0]"] forKey:@"inputBiasVector"];
+
         resultImage = [colorMatrixFilter valueForKey:kCIOutputImageKey];
-        
-        CIFilter *gammaFilter = [CIFilter filterWithName:@"CIGammaAdjust"];
-        [gammaFilter setValue:resultImage forKey:kCIInputImageKey];
-        [gammaFilter setValue:@0.90 forKey:@"inputPower"];
-        resultImage = gammaFilter.outputImage;
     }
+    
+    
     
     return resultImage;
 }
@@ -674,7 +688,7 @@ static CIContext *ciContextSingleton = nil;
     CIFilter *dotScreen = [CIFilter filterWithName:@"CIDotScreen"];
     [dotScreen setValue:inputImage forKey:kCIInputImageKey];
     [dotScreen setValue:[CIVector vectorWithX:0 Y:0] forKey:@"inputCenter"];
-    [dotScreen setValue:@(6.0) forKey:@"inputWidth"];
+    [dotScreen setValue:@(inputImage.extent.size.width*6.0/960) forKey:@"inputWidth"];
     [dotScreen setValue:@(0.0) forKey:@"inputAngle"];
     [dotScreen setValue:@(0.7) forKey:@"inputSharpness"];
     CIImage *resultImage = [dotScreen valueForKey:kCIOutputImageKey];
@@ -728,6 +742,22 @@ static CIContext *ciContextSingleton = nil;
                                       kCIInputImageKey, scrImage,
                                       kCIInputBackgroundImageKey, textureImage, nil];
         scrImage = [textureComposite valueForKey:kCIOutputImageKey];
+        
+//        CIFilter *radialGredient = [CIFilter filterWithName:@"CIRadialGradient"];
+//        [radialGredient setValue:[CIVector vectorWithX:inputImage.extent.size.width * 0.7 Y:inputImage.extent.size.height*0.7] forKey:kCIInputCenterKey];
+//        CIColor *hollowColor = [CIColor colorWithString:@"0 0 0 0"];
+//        CIColor *solidColor = [CIColor colorWithString:@"0 0 0 0.7"];
+//        [radialGredient setValue:hollowColor forKey:@"inputColor0"];
+//        [radialGredient setValue:solidColor forKey:@"inputColor1"];
+//        [radialGredient setValue:@(inputImage.extent.size.width * 0.2) forKey:@"inputRadius0"];
+//        [radialGredient setValue:@(inputImage.extent.size.width * 0.8) forKey:@"inputRadius1"];
+//        CIImage *lightingImage = [radialGredient valueForKey:kCIOutputImageKey];
+//        
+//        CIFilter *lightingComposite = [CIFilter filterWithName:@"CIOverlayBlendMode" keysAndValues:
+//                                      kCIInputImageKey, scrImage,
+//                                      kCIInputBackgroundImageKey, lightingImage, nil];
+//        scrImage = [lightingComposite valueForKey:kCIOutputImageKey];
+
     }
     
     return scrImage;
@@ -832,7 +862,7 @@ static CIContext *ciContextSingleton = nil;
     CIVector *faceRectangle = [self faceRectangleVectorDetectedFromImage:scrImage];
     
     if (faceRectangle) {
-        CGFloat clearRadius = MIN(imageSize * 0.18, faceRectangle.Z * 0.6);
+        CGFloat clearRadius = MIN(imageSize * 0.2, faceRectangle.Z * 0.6);
         [qrGenerator setCLearRadius:clearRadius center:CGPointMake(faceRectangle.X, imageSize - faceRectangle.Y)];
         return YES;
     }

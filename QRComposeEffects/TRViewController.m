@@ -58,7 +58,8 @@ static NSArray *effectNameKeys;
     self.preferredQrLevel = 4;
     self.qrString = @"http://www.dajie.com";
     //self.userImage = [UIImage imageNamed:@"CIMG0285.JPG"];
-    self.userImage = [UIImage imageNamed:@"IMG_0133.jpg"];
+    //self.userImage = [UIImage imageNamed:@"IMG_0133.jpg"];
+    self.userImage = [UIImage imageNamed:@"avatar3.jpg"];
     self.customedColor0 = [UIColor blackColor];
     self.customedColor1 = [UIColor grayColor];
     
